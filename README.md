@@ -5,6 +5,8 @@ Tomni is created by CytoSMART.
 The package was developed in house to centralize helper function for computer vision problems.
 But in 2021 we went open source with it.
 
+Tomni contains a collection of helpers functions based on openCV and numpy.
+It used the image coordinates (same as openCV, different from numpy).
 # Features
 
 * Bounding box fitting (bbox fitting)
