@@ -1,7 +1,9 @@
 Tomni
 =====
 
-Tomni is created by CytoSMART
+Tomni is created by CytoSMART.
+The package was developed in house to centralize helper function for computer vision problems.
+But in 2021 we went open source with it.
 
 # Features
 
@@ -12,7 +14,7 @@ Tomni is created by CytoSMART
 * Json operation
   * Add circularity property
   * Scale object
-  * Yranslate object
+  * Translate object
 * Make a mask
   * Ellipse
   * Polygon
