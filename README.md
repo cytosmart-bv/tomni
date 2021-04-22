@@ -1,10 +1,7 @@
 Tomni
 =====
 
-# Usage
-
-
-Tomni is a collection of image analysis functions useful for CytoSmart solution.
+Tomni is created by CytoSMART
 
 # Features
 
