@@ -7,6 +7,7 @@ Migrate to github
 1.7.1 (2020-12-23)
 ------------------
 updated setup file simplification<0.6
+
 1.7.0 (2020-12-03)
 ------------------
 added new functions
@@ -15,9 +16,13 @@ added new functions
 - json2dict
 
 1.6.4 (2020-11-26)
+------------------
 - add  missing requirements in setup file
+
 1.6.3 (2020-11-25)
-bug fix. cropping now with deepcopy
+------------------
+- bug fix. cropping now with deepcopy
+
 1.6.2 (2020-11-10)
 ------------------
 -add fluo_tophat background subtraction
@@ -42,6 +47,7 @@ add json_operations
 - add crop list of jsons
 - add flipping json
 - add rotation json
+
 1.4.0
 ------------------
 - add get center point contour
