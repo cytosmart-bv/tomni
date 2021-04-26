@@ -1,11 +1,15 @@
 Tomni
 =====
 
-Tomni is created by CytoSMART.
+Tomni is a python package that contains a collection of helpers functions based on openCV and numpy.
+It can be used for any python based computer vision or image analysis problem.
+The package will simplify the code and takes care of edge cages.
+
+It used the image coordinates (same as openCV).
+Tomni is created by [CytoSMART](https://cytosmart.com).
 The package was developed in house to centralize helper function for computer vision problems.
 But in 2021 we went open source with it, so that researchers and educators can use it for free.
 
-Tomni contains a collection of helpers functions based on openCV and numpy.
 It used the image coordinates (same as openCV).
 
 The function range from simplifying code like img_dim, to compute optimization like labels2contours, to processing of image like illumination correction.
