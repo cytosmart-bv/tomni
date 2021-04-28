@@ -1,29 +1,27 @@
 Tomni
 =====
 
-Tomni is a python package that contains a collection of helpers functions based on openCV and numpy.
-It can be used for any python based computer vision or image analysis problem.
-The package will simplify the code and takes care of edge cages.
+Tomni is a python package that contains a collection of helper functions based on OpenCV and NumPy. It can be used for any python based computer vision or image analysis problem. The package simplifies the code and takes care of edge cages, everything from simplifying code like img_dim to compute optimization like labels2contours or illumination correction image processing. Tomni uses the image coordinates (same as OpenCV). 
 
-It used the image coordinates (same as openCV).
 Tomni is created by [CytoSMART](https://cytosmart.com).
-The package was developed in house to centralize helper function for computer vision problems.
-But in 2021 we went open source with it, so that researchers and educators can use it for free.
 
-It used the image coordinates (same as openCV).
-
-The function range from simplifying code like img_dim, to compute optimization like labels2contours, to processing of image like illumination correction.
+The package was developed in-house to centralize the helper function for computer vision problems. In 2021, CytoSMART engineers turned it to open source, enabling researchers and educators to use it for free.
 
 ## The name
 
-Tomni is named by Denissa Daroţi after she won a bet with her mentor, by getting a (well deserved) 9/10 for her internship.
-
-She choice to name as a combination of creator (Tom) and the main product of CytoSMART he was working on, [the Omni](https://cytosmart.com/products/omni).
+The name Tomni is a combination of creator (Tom) and other CytoSMART product he was working on, [the Omni](https://cytosmart.com/products/omni). Tomni name was proposed by Denissa Daroţi, a former CytoSMART intern, who won a bet with her mentor by getting a (well deserved) 9/10 for her internship. 
 
 ## License
 
-Tomni is free for academic and education use.
+Tomni is free for academic and educational use.
+
 For commercial use please contact [CytoSMART](https://cytosmart.com/contact).
+
+## Getting Tomni
+
+``` cmd
+pip install tomni
+```
 
 ## Features
 
