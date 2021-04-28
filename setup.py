@@ -28,19 +28,22 @@ setup_requirements = ["pytest-runner"]
 test_requirements = ["pytest"]
 
 setup(
-    author="tom nijhof",
+    author="Tom Nijhof",
     classifiers=[
-        "Development Status :: 2 - Pre-Alpha",
-        "Intended Audience :: Developers",
+        "Development Status :: 4 - Beta",
+        "Intended Audience :: Science/Research",
+        "License :: OSI Approved :: ACADEMIC PUBLIC LICENSE",
         "Natural Language :: English",
         "Programming Language :: Python :: 3",
         "Programming Language :: Python :: 3.6",
         "Programming Language :: Python :: 3.7",
+        "Programming Language :: Python :: 3.8",
     ],
     description="Tomni is a collection of image analysis functions usefull for CytoSmart solution.",
     entry_points={"console_scripts": ["tomni=tomni.cli:__init__"]},
     install_requires=requirements,
     long_description=readme + "\n\n" + history + "\n\n" + license,
+    long_description_content_type="text/markdown",
     include_package_data=True,
     keywords="tomni",
     name="tomni",
@@ -48,7 +51,7 @@ setup(
     setup_requires=setup_requirements,
     test_suite="tests",
     tests_require=test_requirements,
-    url="https://cytosmart.com",
+    url="https://github.com/cytosmart-bv/tomni",
     version="1.7.2",
     zip_safe=False,
 )
