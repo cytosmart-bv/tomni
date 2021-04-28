@@ -7,9 +7,11 @@ Tomni is created by [CytoSMART](https://cytosmart.com).
 
 The package was developed in-house to centralize the helper function for computer vision problems. In 2021, CytoSMART engineers turned it to open source, enabling researchers and educators to use it for free.
 
-## The name
+## Getting Tomni
 
-The name Tomni is a combination of creator (Tom) and other CytoSMART product he was working on, [the Omni](https://cytosmart.com/products/omni). Tomni name was proposed by Denissa Daroţi, a former CytoSMART intern, who won a bet with her mentor by getting a (well deserved) 9/10 for her internship. 
+``` cmd
+pip install tomni
+```
 
 ## License
 
@@ -17,11 +19,11 @@ Tomni is free for academic and educational use.
 
 For commercial use please contact [CytoSMART](https://cytosmart.com/contact).
 
-## Getting Tomni
+## The name
 
-``` cmd
-pip install tomni
-```
+The name Tomni is a combination of creator (Tom) and other CytoSMART product he was working on, [the Omni](https://cytosmart.com/products/omni). Tomni name was proposed by Denissa Daroţi, a former CytoSMART intern, who won a bet with her mentor by getting a (well deserved) 9/10 for her internship. 
+
+
 
 ## Features
 
