@@ -1,4 +1,4 @@
-History
+# History
 
 1.7.2 (2021-04-21)
 ------------------
@@ -34,6 +34,7 @@ added new functions
 1.6.0 (2020-11-03)
 ------------------
 - add json2vgg
+
 1.5.2
 ------------------
 - add ellipse to vgg2json
@@ -120,15 +121,15 @@ STRUCTURE:
 BGR: All colors are Gray, BGR or BGRA. This because tomni is mostly combined with openCV usage.
 
 FUNCTION:
-* Add color converter
-* Add circle draw function that works with the input of the cell counter
+- Add color converter
+- Add circle draw function that works with the input of the cell counter
 
 
 0.1.8 (2019-02-21)
 ------------------
-* imdim: Function what gives the dimensions of an image from a numpy.ndarray
-* ellipse_mask: creates an ellipse at a given position, with given radius length but a fixed rotation
+- imdim: Function what gives the dimensions of an image from a numpy.ndarray
+- ellipse_mask: creates an ellipse at a given position, with given radius length but a fixed rotation
 
 0.0.1 (2018-10-15)
-
-* First release on PyPI.
+------------------
+- First release on PyPI.
