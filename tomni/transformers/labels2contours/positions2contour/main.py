@@ -9,10 +9,10 @@ def positions2contour(positions: np.ndarray, simplify_error: float = 0):
     min_y = np.min(positions[:, 1])
 
     positions -= np.array([min_x, min_y])
-
+    transposed_positions = positions.transpose()
+    
     array_mask = np.zeros((max_y + 1 - min_y, max_x + 1 - min_x), dtype="uint8")
-    for p in positions:
-        array_mask[p[1], p[0]] = 255
+    array_mask[transposed_positions[1], transposed_positions[0]] = 255
 
     contours = cv2.findContours(array_mask, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)[
         0
