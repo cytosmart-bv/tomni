@@ -1,5 +1,9 @@
 # History
 
+1.7.3 (2021-06-23)
+------------------
+speedup positions2contour by replacing for-loop with numpy slicing
+
 1.7.2 (2021-04-21)
 ------------------
 Migrate to github
