@@ -18,7 +18,7 @@ def positions2contour(positions: np.ndarray, simplify_error: float = 0):
         0
     ][0] + [min_x, min_y]
 
-    simple_contours = rdp(contours[:, 0, :], epsilon=simplify_error)
-
-    contours = simple_contours.reshape([simple_contours.shape[0], 1, simple_contours.shape[1]])
+    if simplify_error > 0:
+        simple_contours = rdp(contours[:, 0, :], epsilon=simplify_error)
+        contours = simple_contours.reshape([simple_contours.shape[0], 1, simple_contours.shape[1]])
     return contours
