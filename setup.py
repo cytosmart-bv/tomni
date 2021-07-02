@@ -16,7 +16,7 @@ with open("LICENSE") as license_file:
 
 requirements = [
     "Numpy>=1, <2",
-    "opencv-python-headless==4.3.0.38",
+    "opencv-python-headless>=4.3.0.38,<5",
     "numpy_indexed>=0.3.5, <0.4",
     "scipy>=1.4.1, <2",
     "scikit-image>=0.16.2, <1",
