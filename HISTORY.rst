@@ -1,5 +1,12 @@
 # History
 
+1.7.3 (2021-07-02)
+------------------
+Upgrade/change requirements to work with python 3.9
+Opencv needed fuzzy requirments
+simplification is now done with rdp NOT simplify
+Remove scikit-image from requirements by replacing the function with numpy function
+
 1.7.3 (2021-06-23)
 ------------------
 speedup positions2contour by replacing for-loop with numpy slicing
