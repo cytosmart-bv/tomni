@@ -14,14 +14,8 @@ with open("HISTORY.rst") as history_file:
 with open("LICENSE") as license_file:
     license = license_file.read()
 
-requirements = [
-    "Numpy>=1, <2",
-    "opencv-python-headless>=4.3.0.38,<5",
-    "numpy_indexed>=0.3.5, <0.4",
-    "scipy>=1.4.1, <2",
-    "scikit-image>=0.16.2, <1",
-    "simplification>=0.4, <0.6",
-]
+with open("requirements.txt") as requirements_file:
+    requirements = requirements_file.read().split("\n")
 
 setup_requirements = ["pytest-runner"]
 
