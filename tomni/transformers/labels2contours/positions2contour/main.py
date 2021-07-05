@@ -1,6 +1,6 @@
 import numpy as np
 import cv2
-from rdp import rdp
+from simplification.cutil import simplify_coords
 
 def positions2contour(positions: np.ndarray, simplify_error: float = 0):
     max_x = np.max(positions[:, 0])
@@ -18,7 +18,7 @@ def positions2contour(positions: np.ndarray, simplify_error: float = 0):
         0
     ][0] + [min_x, min_y]
 
-    if simplify_error > 0:
-        simple_contours = rdp(contours[:, 0, :], epsilon=simplify_error)
-        contours = simple_contours.reshape([simple_contours.shape[0], 1, simple_contours.shape[1]])
+    simple_contours = simplify_coords(contours[:, 0, :], simplify_error)
+
+    contours = simple_contours.reshape([simple_contours.shape[0], 1, simple_contours.shape[1]])
     return contours
