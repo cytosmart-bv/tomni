@@ -2,7 +2,7 @@ import json
 import cv2
 from tkinter import filedialog
 
-from main import mask2json
+from tomni.transformers import mask2json
 
 file = filedialog.askopenfilename()
 mask = cv2.imread(file, 0)
