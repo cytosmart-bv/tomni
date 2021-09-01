@@ -92,9 +92,17 @@ class TestJson2Mask(TestCase):
         self.img_dim = (10, 10)
 
     def test_single_object(self):
-        expected_result = np.zeros((10, 10), dtype=np.uint8)
-        expected_result[2:5, 2:5] = 1
-
+        expected_result = np.array([
+            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 1, 1, 1, 0, 0, 0, 0, 0],
+            [0, 0, 1, 1, 1, 0, 0, 0, 0, 0],
+            [0, 0, 1, 1, 1, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]], dtype=np.uint8)
         result = json2mask(self.json_objects, self.img_dim)
 
         assert_array_equal(expected_result, result)
