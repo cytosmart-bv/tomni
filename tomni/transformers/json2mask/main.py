@@ -1,28 +1,22 @@
+from tomni.img_dim.main import img_dim
 import cv2
 import numpy as np
 
 from ..json2contours import json2contours
+from tomni import img_dim
+from tomni.make_mask.contour_mask_maker import make_mask_contour
 
 
 def contour2mask(mask: np.ndarray, contour: list) -> np.ndarray:
     """ Converts contour to mask """
-    contour = np.array(contour, dtype=np.int32)
-    shapeC = np.shape(contour)
-
-    if len(shapeC) != 2:
-        raise ValueError
-
-    if shapeC[1] != 2:
-        raise ValueError
-
-    contour = contour.reshape((1, shapeC[0], 2))
-
-    cv2.fillPoly(mask, contour, 1)
+    add_mask = make_mask_contour(img_dim(mask), contour)
+    mask = mask + add_mask
+    mask[mask > 1] = 1
     return mask
 
 
 def json2mask(
-    json_objects: list, img_dim: tuple, minimum_size_contours: int = 3
+    json_objects: list, img_shape: tuple, minimum_size_contours: int = 3
 ) -> np.ndarray:
     """
     Convert standard cytosmart format to binary mask
@@ -70,13 +64,13 @@ def json2mask(
 
     Args:
         json_objects (list): json with annotations in standard cytosmart format
-        img_dim (tuple): the dimensions of the mask
+        img_shape (tuple): the dimensions of the mask
         minimum_size_contours (int): The minimum number of points an contour should have to be included. Defaults to 3.
 
     Returns:
         np.ndarray: binary mask
     """
-    mask = np.zeros(img_dim, dtype=np.uint8)
+    mask = np.zeros(img_shape, dtype=np.uint8)
     for json_object in json_objects:
         if len(json_object["points"]) >= minimum_size_contours:
 

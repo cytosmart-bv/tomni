@@ -69,6 +69,26 @@ class TestJson2Mask(TestCase):
                 ],
             },
         ]
+        self.json_objects_multi_overlap = [
+            {
+                "type": "polygon",
+                "points": [
+                    {"x": 2, "y": 2},
+                    {"x": 2, "y": 4},
+                    {"x": 4, "y": 4},
+                    {"x": 4, "y": 2},
+                ],
+            },
+            {
+                "type": "polygon",
+                "points": [
+                    {"x": 4, "y": 4},
+                    {"x": 4, "y": 7},
+                    {"x": 7, "y": 7},
+                    {"x": 7, "y": 4},
+                ],
+            },
+        ]
         self.img_dim = (10, 10)
 
     def test_single_object(self):
@@ -108,6 +128,14 @@ class TestJson2Mask(TestCase):
 
         result = json2mask(self.json_objects_multi, self.img_dim)
 
+        assert_array_equal(expected_result, result)
+
+    def test_multiple_objects_overlap(self):
+        expected_result = np.zeros((10, 10), dtype=np.uint8)
+        expected_result[2:5, 2:5] = 1
+        expected_result[4:8, 4:8] = 1
+
+        result = json2mask(self.json_objects_multi_overlap, self.img_dim)
         assert_array_equal(expected_result, result)
 
     def test_to_small_objects(self):
