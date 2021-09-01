@@ -26,6 +26,47 @@ def json2mask(
 ) -> np.ndarray:
     """
     Convert standard cytosmart format to binary mask
+    WARNING(1): objects with less than 3 components will get filtered out as default.
+    Put minimum_size_contours to 0 if you want them included.
+    WARNING(2): small objects will get some extra pixels when it has certain angles
+    e.g json_object:
+
+            {
+                "type": "polygon",
+                "points": [
+                    {"x": 2, "y": 2},
+                    {"x": 3, "y": 3},
+                    {"x": 4, "y": 2},
+                ],
+            }
+
+        expected result:
+
+            [[0 0 0 0 0 0 0 0 0 0]
+            [0 0 0 0 0 0 0 0 0 0]
+            [0 0 1 1 1 0 0 0 0 0]
+            [0 0 0 1 0 0 0 0 0 0]
+            [0 0 0 1 0 0 0 0 0 0]
+            [0 0 0 0 0 0 0 0 0 0]
+            [0 0 0 0 0 0 0 0 0 0]
+            [0 0 0 0 0 0 0 0 0 0]
+            [0 0 0 0 0 0 0 0 0 0]
+            [0 0 0 0 0 0 0 0 0 0]]
+
+        result:
+
+            [[0 0 0 0 0 0 0 0 0 0]
+            [0 0 0 0 0 0 0 0 0 0]
+            [0 0 1 1 1 0 0 0 0 0]
+            [0 0 1 1 0 0 0 0 0 0]
+            [0 0 0 1 0 0 0 0 0 0]
+            [0 0 0 0 0 0 0 0 0 0]
+            [0 0 0 0 0 0 0 0 0 0]
+            [0 0 0 0 0 0 0 0 0 0]
+            [0 0 0 0 0 0 0 0 0 0]
+            [0 0 0 0 0 0 0 0 0 0]]
+
+    This is a bug that should be removed in the future
 
     Args:
         json_objects (list): json with annotations in standard cytosmart format
