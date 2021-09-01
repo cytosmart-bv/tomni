@@ -1,6 +1,9 @@
 # History
+1.8.0 (2021-09-01)
+add mask2json
+add json2mask
 
-1.7.3 (2021-07-02)
+1.7.4 (2021-07-02)
 ------------------
 Upgrade/change requirements to work with python 3.9
 Opencv needed fuzzy requirments
