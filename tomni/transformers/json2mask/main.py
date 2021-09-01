@@ -5,19 +5,7 @@ from ..json2contours import json2contours
 
 
 def contour2mask(mask: np.ndarray, contour: list) -> np.ndarray:
-    """[summary]
-
-    Args:
-        mask (np.ndarray): [description]
-        contour (list): [description]
-
-    Raises:
-        ValueError: [description]
-        ValueError: [description]
-
-    Returns:
-        np.ndarray: [description]
-    """
+    """ Converts contour to mask """
     contour = np.array(contour, dtype=np.int32)
     shapeC = np.shape(contour)
 
@@ -33,22 +21,26 @@ def contour2mask(mask: np.ndarray, contour: list) -> np.ndarray:
     return mask
 
 
-def json2mask(json_objects: list, img_dim: tuple) -> np.ndarray:
+def json2mask(
+    json_objects: list, img_dim: tuple, minimum_size_contours: int = 3
+) -> np.ndarray:
     """
     Convert standard cytosmart format to binary mask
 
     Args:
         json_objects (list): json with annotations in standard cytosmart format
         img_dim (tuple): the dimensions of the mask
+        minimum_size_contours (int): The minimum number of points an contour should have to be included. Defaults to 3.
 
     Returns:
         np.ndarray: binary mask
     """
     mask = np.zeros(img_dim, dtype=np.uint8)
     for json_object in json_objects:
+        if len(json_object["points"]) >= minimum_size_contours:
 
-        contour = json2contours(json_object)
-        contour = [x[0] for x in contour]
-        mask = contour2mask(mask, contour)
+            contour = json2contours(json_object)
+            contour = [x[0] for x in contour]
+            mask = contour2mask(mask, contour)
 
     return mask
