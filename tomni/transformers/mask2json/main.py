@@ -52,7 +52,6 @@ def mask2json(
     edges = edges * labels
     del labels
     edges = edges[1:, 1:]  # remove border
-    print(edges)
     contours = labels2contours(edges)
     json_objects = contours2json(contours)
     json_objects = [
