@@ -91,8 +91,9 @@ class TestMask2Json(TestCase):
     def test_single_object(self):
         input_mask = np.zeros((10, 10), dtype=np.uint8)
         input_mask[2:5, 2:5] = 1
-
+        print(input_mask)
         result = mask2json(input_mask)
+        print(result)
 
         assert len(result) == len(self.json_objects)
         for json_object, result_object in zip(self.json_objects, result):
@@ -150,8 +151,16 @@ class TestMask2Json(TestCase):
         ):
             self.assertCountEqual(json_object["points"], result_object["points"])
 
+    def test_no_mask(self):
+        input_mask = np.zeros((10, 10), dtype=np.uint8)
+
+        result = mask2json(input_mask)
+
+        assert len(result) == len({}) == 0
+
     def test_to_small_objects(self):
         input_mask = np.zeros((10, 10), dtype=np.uint8)
+        input_mask[2:4, 2] = 1
 
         result = mask2json(input_mask)
 
