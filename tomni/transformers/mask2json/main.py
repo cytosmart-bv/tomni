@@ -7,14 +7,24 @@ from ..labels2contours import labels2contours
 
 def get_edges(mask: np.ndarray):
     """ get edges of the mask"""
-    edges = cv2.Canny(mask, 50, 150)
+    mask_copy = cv2.copyMakeBorder(
+        mask,
+        top=1,
+        bottom=1,
+        left=1,
+        right=1,
+        borderType=cv2.BORDER_CONSTANT,
+        value=0,
+    )
+    edges = cv2.Canny(mask_copy, 50, 150)
 
     edges = cv2.dilate(edges, np.ones((5, 5)))
 
     edges = np.divide(edges, 255, dtype=np.float16)
     edges = edges.astype(np.uint8)
+    edges = edges[1:-1, 1:-1]
 
-    return mask
+    return edges
 
 
 def mask2json(
@@ -35,23 +45,13 @@ def mask2json(
     if is_diagonal_connected:
         connectivity = 8
 
-    mask = cv2.copyMakeBorder(
-        mask,
-        top=1,
-        bottom=1,
-        left=1,
-        right=1,
-        borderType=cv2.BORDER_CONSTANT,
-        value=0,
-    )
-    edges = get_edges(mask)
     labels = cv2.connectedComponents(mask.astype(np.uint8), connectivity=connectivity)[
         1
     ]
+    edges = get_edges(mask)
 
     edges = edges * labels
     del labels
-    edges = edges[1:, 1:]  # remove border
     contours = labels2contours(edges)
     json_objects = contours2json(contours)
     json_objects = [

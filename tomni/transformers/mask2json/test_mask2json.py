@@ -90,7 +90,7 @@ class TestMask2Json(TestCase):
 
     def test_single_object(self):
         input_mask = np.zeros((10, 10), dtype=np.uint8)
-        input_mask[2:5, 2:5] = 1
+        input_mask[2:5, 2:5] = 255
         print(input_mask)
         result = mask2json(input_mask)
         print(result)
@@ -101,8 +101,8 @@ class TestMask2Json(TestCase):
 
     def test_single_tri(self):
         input_mask = np.zeros((10, 10), dtype=np.uint8)
-        input_mask[2:4, 2] = 1
-        input_mask[2, 2:4] = 1
+        input_mask[2:4, 2] = 255
+        input_mask[2, 2:4] = 255
 
         result = mask2json(input_mask)
 
@@ -112,10 +112,10 @@ class TestMask2Json(TestCase):
 
     def test_single_tri2(self):
         input_mask = np.zeros((10, 10), dtype=np.uint8)
-        input_mask[2, 2:9] = 1
-        input_mask[3, 3:8] = 1
-        input_mask[4, 4:7] = 1
-        input_mask[5, 5] = 1
+        input_mask[2, 2:9] = 255
+        input_mask[3, 3:8] = 255
+        input_mask[4, 4:7] = 255
+        input_mask[5, 5] = 255
         print(input_mask)
 
         result = mask2json(input_mask)
@@ -127,8 +127,8 @@ class TestMask2Json(TestCase):
 
     def test_multiple_objects_not_connected(self):
         input_mask = np.zeros((10, 10), dtype=np.uint8)
-        input_mask[2:5, 2:5] = 1
-        input_mask[5:8, 5:8] = 1
+        input_mask[2:5, 2:5] = 255
+        input_mask[5:8, 5:8] = 255
         print(input_mask)
         result = mask2json(input_mask, is_diagonal_connected=False)
         print(result)
@@ -139,8 +139,8 @@ class TestMask2Json(TestCase):
 
     def test_multiple_objects(self):
         input_mask = np.zeros((10, 10), dtype=np.uint8)
-        input_mask[2:5, 2:5] = 1
-        input_mask[5:8, 5:8] = 1
+        input_mask[2:5, 2:5] = 255
+        input_mask[5:8, 5:8] = 255
         print(input_mask)
         result = mask2json(input_mask, is_diagonal_connected=True)
         print(result)
@@ -160,7 +160,7 @@ class TestMask2Json(TestCase):
 
     def test_to_small_objects(self):
         input_mask = np.zeros((10, 10), dtype=np.uint8)
-        input_mask[2:4, 2] = 1
+        input_mask[2:4, 2] = 255
 
         result = mask2json(input_mask)
 
@@ -168,7 +168,7 @@ class TestMask2Json(TestCase):
 
     def test_to_small_objects_lim0(self):
         input_mask = np.zeros((10, 10), dtype=np.uint8)
-        input_mask[2, 2:5] = 1
+        input_mask[2, 2:5] = 255
 
         result = mask2json(input_mask, 0)
 
