@@ -7,3 +7,5 @@ from .json2labels import json2labels
 from .vgg2json import vgg2json
 from .json2vgg import json2vgg
 from .json2dict import json2dict
+from .mask2json import mask2json
+from .json2mask import json2mask
