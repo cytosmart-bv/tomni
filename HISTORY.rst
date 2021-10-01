@@ -1,7 +1,14 @@
 # History
+1.9.0 (2021-10-01)
+------------------
+- add mask2bbox
+- add contour2bbox
+- add check_overlap_bbox
+
 1.8.0 (2021-09-01)
-add mask2json
-add json2mask
+------------------
+- add mask2json
+- add json2mask
 
 1.7.4 (2021-07-02)
 ------------------

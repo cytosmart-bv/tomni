@@ -9,3 +9,5 @@ from .json2vgg import json2vgg
 from .json2dict import json2dict
 from .mask2json import mask2json
 from .json2mask import json2mask
+from .mask2bbox import mask2bbox
+from .contour2bbox import contour2bbox
