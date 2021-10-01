@@ -30,10 +30,10 @@ def contour2bbox(contour: np.ndarray) -> tuple:
                 [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
                 [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]], dtype=uint8)
 
-        boundingbox (3, 3, 5, 5)
+        boundingbox (3, 3, 6, 6)
 
     Returns:
         tuple: (xmin, ymin, xmax, ymax)
     """
     x_min, y_min, w, h = cv2.boundingRect(contour)
-    return (x_min, y_min, x_min + w - 1, y_min + h - 1)
+    return (x_min, y_min, x_min + w, y_min + h)

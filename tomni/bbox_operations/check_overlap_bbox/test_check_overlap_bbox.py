@@ -3,6 +3,7 @@ from .main import check_overlap_bbox
 
 
 class TestOverlap(unittest.TestCase):
+    # (xmin, ymin, xmax, ymax)
     def test_overlap_x(self):
         bb1 = [0, 0, 10, 10]
         bb2 = [5, 0, 15, 10]

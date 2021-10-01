@@ -20,7 +20,7 @@ class TestContour2Bbox(unittest.TestCase):
             [[[3, 3]], [[3, 5]], [[5, 5]], [[5, 3]]], dtype=np.int32
         )
 
-        expected_result = (3, 3, 5, 5)
+        expected_result = (3, 3, 6, 6)
         result = contour2bbox(input_contour)
         self.assertTupleEqual(expected_result, result)
 
@@ -28,6 +28,6 @@ class TestContour2Bbox(unittest.TestCase):
         input_contour = np.array(
             [[[-3, -3]], [[-3, -5]], [[-5, -5]], [[-5, -3]]], dtype=np.int32
         )
-        expected_result = (-5, -5, -3, -3)
+        expected_result = (-5, -5, -2, -2)
         result = contour2bbox(input_contour)
         self.assertTupleEqual(expected_result, result)
