@@ -3,9 +3,37 @@ import numpy as np
 
 
 def contour2bbox(contour: np.ndarray) -> tuple:
-    box_points_array = cv2.boundingRect(contour)
-    x_min, y_min, w, h = box_points_array
-    x_max = x_min + w - 1
-    y_max = y_min + h - 1
-    box_points = x_min, x_max, y_min, y_max
-    return box_points
+    """
+    Converts opencv2 contours into (xmin, ymin, xmax, ymax) bounding box format
+
+    Args:
+        contour (np.ndarray): an array with the coordinates that defines the contour of a object
+        e.g
+        Contour
+        array( [[[3, 3]],
+
+                [[3, 5]],
+
+                [[5, 5]],
+
+                [[5, 3]]], dtype=int32)
+
+        The object
+        array( [[0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                [0, 0, 0, 1, 1, 1, 0, 0, 0, 0],
+                [0, 0, 0, 1, 1, 1, 0, 0, 0, 0],
+                [0, 0, 0, 1, 1, 1, 0, 0, 0, 0],
+                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]], dtype=uint8)
+
+        boundingbox (3, 3, 5, 5)
+
+    Returns:
+        tuple: (xmin, ymin, xmax, ymax)
+    """
+    x_min, y_min, w, h = cv2.boundingRect(contour)
+    return (x_min, y_min, x_min + w - 1, y_min + h - 1)
