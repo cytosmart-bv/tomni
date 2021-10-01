@@ -4,44 +4,44 @@ from .main import check_overlap_bbox
 
 class TestOverlap(unittest.TestCase):
     def test_overlap_x(self):
-        bb1 = [0, 10, 0, 10]
-        bb2 = [5, 15, 0, 10]
+        bb1 = [0, 0, 10, 10]
+        bb2 = [5, 0, 15, 10]
         output = check_overlap_bbox(bb1, bb2)
         self.assertEqual(output, True)
 
     def test_overlap_y(self):
-        bb1 = [0, 10, 0, 10]
-        bb2 = [0, 10, 5, 15]
+        bb1 = [0, 0, 10, 10]
+        bb2 = [0, 5, 10, 15]
         output = check_overlap_bbox(bb1, bb2)
         self.assertEqual(output, True)
 
     def test_overlap_xy(self):
-        bb1 = [0, 10, 0, 10]
-        bb2 = [5, 15, 5, 15]
+        bb1 = [0, 0, 10, 10]
+        bb2 = [5, 5, 15, 15]
         output = check_overlap_bbox(bb1, bb2)
         self.assertEqual(output, True)
 
     def test_touch_x(self):
-        bb1 = [0, 10, 0, 10]
-        bb2 = [10, 15, 0, 10]
+        bb1 = [0, 0, 10, 10]
+        bb2 = [10, 0, 15, 10]
         output = check_overlap_bbox(bb1, bb2)
         self.assertEqual(output, False)
 
     def test_touch_y(self):
-        bb1 = [0, 10, 0, 10]
+        bb1 = [0, 0, 10, 10]
         bb2 = [0, 10, 10, 15]
         output = check_overlap_bbox(bb1, bb2)
         self.assertEqual(output, False)
 
     def test_touch_xy(self):
-        bb1 = [0, 10, 0, 10]
-        bb2 = [10, 15, 10, 15]
+        bb1 = [0, 0, 10, 10]
+        bb2 = [10, 10, 15, 15]
         output = check_overlap_bbox(bb1, bb2)
         self.assertEqual(output, False)
 
     def test_complete_miss(self):
-        bb1 = [0, 10, 0, 10]
-        bb2 = [20, 30, 20, 30]
+        bb1 = [0, 0, 10, 10]
+        bb2 = [20, 20, 30, 30]
         output = check_overlap_bbox(bb1, bb2)
         self.assertEqual(output, False)
 
