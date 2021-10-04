@@ -49,11 +49,11 @@ class TestOverlap(unittest.TestCase):
     def test_wrong_length(self):
         bb1 = [0, 10, 0, 10, 2]
         bb2 = [10, 15, 10, 15, 2]
-        with self.assertRaises(TypeError):
+        with self.assertRaises(ValueError):
             check_overlap_bbox(bb1, bb2)
 
     def test_wrong_length_one(self):
         bb1 = [0, 10, 0, 10, 2]
         bb2 = [10, 15, 10, 15]
-        with self.assertRaises(TypeError):
+        with self.assertRaises(ValueError):
             check_overlap_bbox(bb1, bb2)

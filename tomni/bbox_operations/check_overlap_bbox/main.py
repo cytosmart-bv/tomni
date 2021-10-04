@@ -14,13 +14,13 @@ def check_overlap_bbox(bb1: Union[tuple, list], bb2: Union[tuple, list]) -> bool
         bb2 (Union[tuple, list]): boundingbox 2, (x1, y1, x2 ,y2)
 
     Raises:
-        TypeError: Length of bounding box is the wrong size
+        ValueError: Length of bounding box is the wrong size
 
     Returns:
         bool: if the bounding boxes are touching
     """
     if len(bb1) != 4 or len(bb2) != 4:
-        raise TypeError("The bounding boxes must be tuples or list of length 4")
+        raise ValueError("The bounding boxes must be tuples or list of length 4")
 
     if (bb1[0] >= bb2[2]) or (bb2[0] >= bb1[2]):
         return False
