@@ -11,10 +11,46 @@ class TestMakeMaskEllipse(TestCase):
         size = (8, 4)
         x = 3
         y = 1
-        r1 = 3
-        r2 = 1
+        r1 = 0
+        r2 = -1
 
         self.assertRaises(ValueError, make_mask_ellipse, size, x, y, r1, r2)
+
+    def test_5x5_5(self):
+        size = (5, 5)
+        x = 2
+        y = 2
+        r1 = 2
+        r2 = 2
+
+        expected = np.array([
+            [0, 0, 1, 0, 0],
+            [0, 1, 1, 1, 0],
+            [1, 1, 1, 1, 1],
+            [0, 1, 1, 1, 0],
+            [0, 0, 1, 0, 0]
+        ])
+
+        result = make_mask_ellipse(size, x, y, r1, r2)
+        np.testing.assert_array_equal(result, expected)
+
+    def test_5x5_1(self):
+        size = (5, 5)
+        x = 2
+        y = 2
+        r1 = 1
+        r2 = 1
+
+        expected = np.array([
+            [0, 0, 0, 0, 0],
+            [0, 0, 1, 0, 0],
+            [0, 1, 1, 1, 0],
+            [0, 0, 1, 0, 0],
+            [0, 0, 0, 0, 0]
+        ])
+
+        result = make_mask_ellipse(size, x, y, r1, r2)
+        np.testing.assert_array_equal(result, expected)
 
     def test_MMESmall_even_radii_length(self):
         size = (13, 11)

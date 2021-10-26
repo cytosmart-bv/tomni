@@ -19,8 +19,8 @@ def make_mask_ellipse(image_size, x1, y1, rx, ry):
 
     """
 
-    if rx < 3 or ry < 3:
-        raise ValueError("Radii must be greater than 3.")
+    if rx < 1 or ry < 1:
+        raise ValueError("Radii must be greater than 1.")
     else:
         if (rx < 100) or (ry < 100):
             return make_small_mask_ellipse(image_size, x1, y1, rx, ry)
