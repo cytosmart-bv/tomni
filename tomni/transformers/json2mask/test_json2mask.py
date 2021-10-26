@@ -4,7 +4,7 @@ from numpy.testing import assert_array_equal
 from unittest import TestCase
 
 from .main import json2mask
-
+from ...make_mask import make_mask_circle
 
 class TestJson2Mask(TestCase):
     @classmethod
@@ -227,28 +227,57 @@ class TestJson2Mask(TestCase):
         size = (11, 13)
         json_objects = [
             {
-        "type": "ellipse",
-        "center": {"x": 6, "y": 4},
-        "radiusX": 6,
-        "radiusY": 4,
-        "angleOfRotation": 0,
-        "id": "unicorn",
-    }
+                "type": "ellipse",
+                "center": {"x": 6, "y": 4},
+                "radiusX": 6,
+                "radiusY": 4,
+                "angleOfRotation": 0,
+                "id": "unicorn",
+            }
         ]
 
+        expected = np.array(
+            [
+                [0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0],
+                [0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0],
+                [0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0],
+                [0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0],
+                [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+                [0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0],
+                [0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0],
+                [0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0],
+                [0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0],
+                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+            ]
+        )
 
-        expected = np.array([
-            [0., 0., 0., 0., 0., 0., 1., 0., 0., 0., 0., 0., 0.],
-            [0., 0., 0., 1., 1., 1., 1., 1., 1., 1., 0., 0., 0.],
-            [0., 1., 1., 1., 1., 1., 1., 1., 1., 1., 1., 1., 0.],
-            [0., 1., 1., 1., 1., 1., 1., 1., 1., 1., 1., 1., 0.],
-            [1., 1., 1., 1., 1., 1., 1., 1., 1., 1., 1., 1., 1.],
-            [0., 1., 1., 1., 1., 1., 1., 1., 1., 1., 1., 1., 0.],
-            [0., 1., 1., 1., 1., 1., 1., 1., 1., 1., 1., 1., 0.],
-            [0., 0., 0., 1., 1., 1., 1., 1., 1., 1., 0., 0., 0.],
-            [0., 0., 0., 0., 0., 0., 1., 0., 0., 0., 0., 0., 0.],
-            [0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0.],
-            [0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0.]])
+        result = json2mask(json_objects, size, 0)
+        assert_array_equal(result, expected)
+
+    def test_big_image_ellipse(self):
+        size = (500, 500)
+        json_objects = [
+            {
+                "type": "ellipse",
+                "center": {"x": 100, "y": 100},
+                "radiusX": 25,
+                "radiusY": 25,
+                "angleOfRotation": 0,
+                "id": "48881bfa-59bb-42a8-bb6a-8fb91486b023",
+                "accuracy": 0.59511399269104,
+                "label": "organoid",
+                "area": 1134.1149479459152,
+                "diameter": 38.0,
+                "aspect_ratio": 1.0,
+                "roundness": 4.0,
+                "circularity": 1.0,
+                "created_using": "organoid_run_16_v0_3",
+            }
+        ]
+
+        expected = np.zeros((500, 500), dtype=np.uint8)
+        expected[75:125, 75:125] = make_mask_circle((50, 50), 50)
 
         result = json2mask(json_objects, size, 0)
         assert_array_equal(result, expected)
