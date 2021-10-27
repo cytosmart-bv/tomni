@@ -34,6 +34,42 @@ class TestMakeMaskEllipse(TestCase):
         result = make_mask_ellipse(size, x, y, r1, r2)
         np.testing.assert_array_equal(result, expected)
 
+    def test_5x5_5_float_radius(self):
+        size = (5, 5)
+        x = 2
+        y = 2
+        r1 = 2.
+        r2 = 2.
+
+        expected = np.array([
+            [0, 0, 1, 0, 0],
+            [0, 1, 1, 1, 0],
+            [1, 1, 1, 1, 1],
+            [0, 1, 1, 1, 0],
+            [0, 0, 1, 0, 0]
+        ])
+
+        result = make_mask_ellipse(size, x, y, r1, r2)
+        np.testing.assert_array_equal(result, expected)
+
+    def test_5x5_5_all_float(self):
+        size = (5, 5)
+        x = 2.
+        y = 2.
+        r1 = 2.
+        r2 = 2.
+
+        expected = np.array([
+            [0, 0, 1, 0, 0],
+            [0, 1, 1, 1, 0],
+            [1, 1, 1, 1, 1],
+            [0, 1, 1, 1, 0],
+            [0, 0, 1, 0, 0]
+        ])
+
+        result = make_mask_ellipse(size, x, y, r1, r2)
+        np.testing.assert_array_equal(result, expected)
+
     def test_5x5_1(self):
         size = (5, 5)
         x = 2
