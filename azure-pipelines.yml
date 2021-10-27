@@ -10,7 +10,7 @@ jobs:
 - job: RunInContainer
   
   pool:
-    vmImage: 'ubuntu-16.04'
+    vmImage: 'ubuntu-20.04'
 
   container:
     image: cytosmarttestreg.azurecr.io/omni/base:24470

@@ -1,4 +1,10 @@
 # History
+1.9.1 (2021-10-26)
+------------------
+- add ellipse to json2mask
+- BUGFIX: Bufferoverflow make_mask_ellipse
+- BUGFIX: Make make_mask_ellipse accept floats
+
 1.9.0 (2021-10-01)
 ------------------
 - add mask2bbox

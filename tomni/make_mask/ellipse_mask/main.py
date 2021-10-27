@@ -18,11 +18,15 @@ def make_mask_ellipse(image_size, x1, y1, rx, ry):
     The small ellipse function is more precise.
 
     """
-
-    if rx < 3 or ry < 3:
-        raise ValueError("Radii must be greater than 3.")
+    x1 = int(x1)
+    y1 = int(y1)
+    rx = int(rx)
+    ry = int(ry)
+    
+    if rx < 1 or ry < 1:
+        raise ValueError("Radii must be greater than 1.")
     else:
-        if (rx < 100) or (ry < 100):
+        if (rx < 100) and (ry < 100):
             return make_small_mask_ellipse(image_size, x1, y1, rx, ry)
         else:
             return make_big_mask_ellipse(image_size, x1, y1, rx, ry)
@@ -50,12 +54,12 @@ def make_small_mask_ellipse(image_size, x1, y1, rx, ry):
     circle = ((xx * math.cos(alpha) + yy * math.sin(alpha)) ** 2) * (rx ** 2) +\
              # ((xx * math.sin(alpha) - yy * math.cos(alpha)) ** 2) * (ry ** 2)
     """
-
+    
     # Make sure everything is integers (no floats) -> double all values
     rx = 2 * rx
     ry = 2 * ry
 
-    yy, xx = np.mgrid[:image_size[1], :image_size[0]] * 2
+    yy, xx = np.mgrid[: image_size[1], : image_size[0]] * 2
 
     xx = xx.astype(np.int32)
     yy = yy.astype(np.int32)
@@ -72,7 +76,8 @@ def make_small_mask_ellipse(image_size, x1, y1, rx, ry):
     # The ellipse formula determines if a point is inside the ellipse or not
     # x^2 * (ry)^2 + y^2 * (rx)^2 <= (rx)^2 * (ry)^2
     kernel = ellipse <= (rx ** 2) * (ry ** 2)
-
+    kernel = kernel * (np.abs(xx) <= rx)
+    kernel = kernel * (np.abs(yy) <= ry)
     return kernel
 
 
@@ -94,4 +99,3 @@ def make_big_mask_ellipse(image_size, xe, ye, rex, rey):
     y1 = image_size[1] + y0
     out = bbox_fitting(out, x0, y0, x1, y1)
     return out
-
