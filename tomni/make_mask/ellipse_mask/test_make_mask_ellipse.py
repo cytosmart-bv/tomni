@@ -341,7 +341,7 @@ class TestMakeMaskEllipse(TestCase):
         r2 = 25
 
         expected = np.zeros(size)
-        expected[75:125, 75:125] = make_mask_ellipse((50, 50), 25, 25, r1, r2)
+        expected[75:126, 75:126] = make_mask_ellipse((51, 51), 25, 25, r1, r2)
 
         result = make_mask_ellipse(size, x, y, r1, r2)
         np.testing.assert_array_equal(result, expected)
