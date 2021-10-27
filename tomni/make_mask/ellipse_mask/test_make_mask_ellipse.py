@@ -270,6 +270,33 @@ class TestMakeMaskEllipse(TestCase):
         self.assertEqual(True, mask[4157][5000])
         self.assertEqual(False, mask[4161][5000])
 
+    def test_MMEBig_expected_odd_size_floats(self):
+        size = (10000, 10001)
+        x = 5000.
+        y = 2467.
+        rx = 3200.
+        ry = 1692.
+
+        mask = make_mask_ellipse(size, x, y, rx, ry)
+        self.assertEqual(True, mask[2467][5000])
+        self.assertEqual(True, mask[3000][5000])
+
+        # X minimum
+        self.assertEqual(False, mask[2467][1798])
+        self.assertEqual(True, mask[2467][1801])
+
+        # X Maximum
+        self.assertEqual(True, mask[2467][8198])
+        self.assertEqual(False, mask[2467][8201])
+        
+        # Y minimum
+        self.assertEqual(False, mask[773][5000])
+        self.assertEqual(True, mask[777][5000])
+
+        # Y maximum
+        self.assertEqual(True, mask[4157][5000])
+        self.assertEqual(False, mask[4161][5000])
+
     def test_500x500_bufferoverflow(self):
         size = (500, 500)
         x = 100

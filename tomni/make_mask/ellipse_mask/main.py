@@ -18,6 +18,10 @@ def make_mask_ellipse(image_size, x1, y1, rx, ry):
     The small ellipse function is more precise.
 
     """
+    x1 = int(x1)
+    y1 = int(y1)
+    rx = int(rx)
+    ry = int(ry)
 
     if rx < 1 or ry < 1:
         raise ValueError("Radii must be greater than 1.")
