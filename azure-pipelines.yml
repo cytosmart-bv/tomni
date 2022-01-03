@@ -14,7 +14,7 @@ jobs:
 
   container:
     image: cytosmarttestreg.azurecr.io/omni/base:24470
-    endpoint: DockerRegTest
+    endpoint: DockerRegTest2
 
   steps:
   - script: |
