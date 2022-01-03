@@ -345,3 +345,22 @@ class TestMakeMaskEllipse(TestCase):
 
         result = make_mask_ellipse(size, x, y, r1, r2)
         np.testing.assert_array_equal(result, expected)
+
+    def test_1000x1000_bufferoverflow(self):
+        image_size = (1000, 1000)
+        x1 = 800
+        y1 = 800
+        rx = 99
+        ry = 99
+
+        expected = np.zeros(image_size)
+        expected[701:900, 701:900] = make_mask_ellipse((199, 199), 99, 99, rx, ry)
+
+        result = make_mask_ellipse(image_size, x1, y1, rx, ry)
+        np.testing.assert_array_equal(result, expected)
+
+        # Check the corners
+        self.assertEqual(False, result[899][899])
+        self.assertEqual(False, result[899][701])
+        self.assertEqual(False, result[701][899])
+        self.assertEqual(False, result[701][701])

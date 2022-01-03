@@ -22,7 +22,7 @@ def make_mask_ellipse(image_size, x1, y1, rx, ry):
     y1 = int(y1)
     rx = int(rx)
     ry = int(ry)
-    
+
     if rx < 1 or ry < 1:
         raise ValueError("Radii must be greater than 1.")
     else:
@@ -54,19 +54,15 @@ def make_small_mask_ellipse(image_size, x1, y1, rx, ry):
     circle = ((xx * math.cos(alpha) + yy * math.sin(alpha)) ** 2) * (rx ** 2) +\
              # ((xx * math.sin(alpha) - yy * math.cos(alpha)) ** 2) * (ry ** 2)
     """
-    
-    # Make sure everything is integers (no floats) -> double all values
-    rx = 2 * rx
-    ry = 2 * ry
 
-    yy, xx = np.mgrid[: image_size[1], : image_size[0]] * 2
+    yy, xx = np.mgrid[: image_size[1], : image_size[0]]
 
     xx = xx.astype(np.int32)
     yy = yy.astype(np.int32)
 
     # Center point of the ellipse becomes the (0, 0) point of the image
-    xx -= 2 * x1
-    yy -= 2 * y1
+    xx -= x1 
+    yy -= y1 
 
     # The ellipse formula used to calculate the points is
     # x^2 * (ry)^2 + y^2 * (rx)^2

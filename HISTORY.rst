@@ -1,4 +1,9 @@
 # History
+1.9.2 (2022-01-03)
+------------------
+- BUGFIX: Bufferoverflow make_mask_ellipse (again/still) 
+    remove times 2 for all values in the function
+
 1.9.1 (2021-10-26)
 ------------------
 - add ellipse to json2mask
