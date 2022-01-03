@@ -11,10 +11,82 @@ class TestMakeMaskEllipse(TestCase):
         size = (8, 4)
         x = 3
         y = 1
-        r1 = 3
-        r2 = 1
+        r1 = 0
+        r2 = -1
 
         self.assertRaises(ValueError, make_mask_ellipse, size, x, y, r1, r2)
+
+    def test_5x5_5(self):
+        size = (5, 5)
+        x = 2
+        y = 2
+        r1 = 2
+        r2 = 2
+
+        expected = np.array([
+            [0, 0, 1, 0, 0],
+            [0, 1, 1, 1, 0],
+            [1, 1, 1, 1, 1],
+            [0, 1, 1, 1, 0],
+            [0, 0, 1, 0, 0]
+        ])
+
+        result = make_mask_ellipse(size, x, y, r1, r2)
+        np.testing.assert_array_equal(result, expected)
+
+    def test_5x5_5_float_radius(self):
+        size = (5, 5)
+        x = 2
+        y = 2
+        r1 = 2.
+        r2 = 2.
+
+        expected = np.array([
+            [0, 0, 1, 0, 0],
+            [0, 1, 1, 1, 0],
+            [1, 1, 1, 1, 1],
+            [0, 1, 1, 1, 0],
+            [0, 0, 1, 0, 0]
+        ])
+
+        result = make_mask_ellipse(size, x, y, r1, r2)
+        np.testing.assert_array_equal(result, expected)
+
+    def test_5x5_5_all_float(self):
+        size = (5, 5)
+        x = 2.
+        y = 2.
+        r1 = 2.
+        r2 = 2.
+
+        expected = np.array([
+            [0, 0, 1, 0, 0],
+            [0, 1, 1, 1, 0],
+            [1, 1, 1, 1, 1],
+            [0, 1, 1, 1, 0],
+            [0, 0, 1, 0, 0]
+        ])
+
+        result = make_mask_ellipse(size, x, y, r1, r2)
+        np.testing.assert_array_equal(result, expected)
+
+    def test_5x5_1(self):
+        size = (5, 5)
+        x = 2
+        y = 2
+        r1 = 1
+        r2 = 1
+
+        expected = np.array([
+            [0, 0, 0, 0, 0],
+            [0, 0, 1, 0, 0],
+            [0, 1, 1, 1, 0],
+            [0, 0, 1, 0, 0],
+            [0, 0, 0, 0, 0]
+        ])
+
+        result = make_mask_ellipse(size, x, y, r1, r2)
+        np.testing.assert_array_equal(result, expected)
 
     def test_MMESmall_even_radii_length(self):
         size = (13, 11)
@@ -234,3 +306,42 @@ class TestMakeMaskEllipse(TestCase):
         self.assertEqual(True, mask[4157][5000])
         self.assertEqual(False, mask[4161][5000])
 
+    def test_MMEBig_expected_odd_size_floats(self):
+        size = (10000, 10001)
+        x = 5000.
+        y = 2467.
+        rx = 3200.
+        ry = 1692.
+
+        mask = make_mask_ellipse(size, x, y, rx, ry)
+        self.assertEqual(True, mask[2467][5000])
+        self.assertEqual(True, mask[3000][5000])
+
+        # X minimum
+        self.assertEqual(False, mask[2467][1798])
+        self.assertEqual(True, mask[2467][1801])
+
+        # X Maximum
+        self.assertEqual(True, mask[2467][8198])
+        self.assertEqual(False, mask[2467][8201])
+        
+        # Y minimum
+        self.assertEqual(False, mask[773][5000])
+        self.assertEqual(True, mask[777][5000])
+
+        # Y maximum
+        self.assertEqual(True, mask[4157][5000])
+        self.assertEqual(False, mask[4161][5000])
+
+    def test_500x500_bufferoverflow(self):
+        size = (500, 500)
+        x = 100
+        y = 100
+        r1 = 25
+        r2 = 25
+
+        expected = np.zeros(size)
+        expected[75:126, 75:126] = make_mask_ellipse((51, 51), 25, 25, r1, r2)
+
+        result = make_mask_ellipse(size, x, y, r1, r2)
+        np.testing.assert_array_equal(result, expected)

@@ -1,15 +1,21 @@
-from tomni.img_dim.main import img_dim
-import cv2
 import numpy as np
 
+from ... import img_dim
+from ...make_mask import make_mask_contour, make_mask_ellipse
 from ..json2contours import json2contours
-from tomni import img_dim
-from tomni.make_mask.contour_mask_maker import make_mask_contour
 
 
 def contour2mask(mask: np.ndarray, contour: list) -> np.ndarray:
-    """ Converts contour to mask """
+    """Converts contour to mask"""
     add_mask = make_mask_contour(img_dim(mask), contour)
+    mask = mask + add_mask
+    mask[mask > 1] = 1
+    return mask
+
+
+def ellipse2mask(mask: np.ndarray, x: int, y: int, r1: float, r2: float) -> np.ndarray:
+    """Converts ellipse to mask"""
+    add_mask = make_mask_ellipse(img_dim(mask), x, y, r1, r2)
     mask = mask + add_mask
     mask[mask > 1] = 1
     return mask
@@ -72,10 +78,21 @@ def json2mask(
     """
     mask = np.zeros(img_shape, dtype=np.uint8)
     for json_object in json_objects:
-        if len(json_object["points"]) >= minimum_size_contours:
+        if json_object["type"] == "polygon":
+            if len(json_object["points"]) >= minimum_size_contours:
 
-            contour = json2contours(json_object)
-            contour = [x[0] for x in contour]
-            mask = contour2mask(mask, contour)
+                contour = json2contours(json_object)
+                contour = [x[0] for x in contour]
+                mask = contour2mask(mask, contour)
+        elif json_object["type"] == "ellipse":
+            x = json_object["center"]["x"]
+            y = json_object["center"]["y"]
+            r1 = json_object["radiusX"]
+            r2 = json_object["radiusY"]
+            mask = ellipse2mask(mask, x, y, r1, r2)
+        else:
+            raise TypeError(
+                f"json object {json_object['type']} could not be converted to a mask"
+            )
 
     return mask
