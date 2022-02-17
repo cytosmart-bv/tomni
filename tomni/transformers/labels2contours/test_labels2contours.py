@@ -1,7 +1,7 @@
 from __future__ import absolute_import
 from unittest import TestCase
 import numpy as np
-from numpy import array, uint8, uint16, uint32, int64
+from numpy import array
 from .main import labels2contours
 
 
@@ -33,4 +33,20 @@ class TestSelect_labels2Contours(TestCase):
             x = result[i]
             print(x)
             np.testing.assert_array_equal(x, expected_output[i])
+
+    def test_deprated_warning(self):
+        data = array(
+            [
+                [0, 5, 5, 0, 0, 0],
+                [0, 5, 5, 0, 0, 0],
+                [1, 1, 1, 0, 0, 0],
+                [0, 2, 0, 0, 0, 0],
+                [0, 2, 2, 0, 0, 0],
+                [0, 2, 2, 2, 0, 0],
+                [0, 2, 2, 2, 2, 0],
+            ]
+        )
+        
+        with self.assertRaises(DeprecationWarning):
+            labels2contours(data, simplify_error=0.1)
 
