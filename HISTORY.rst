@@ -3,8 +3,8 @@
 ------------------
 - Add approximate_circle_by_area to contour operations
 - BUGFIX: Change type np.array to np.ndarray
-- DEPERATE: Remove simplification so python 3.8+ can be used
- 
+- DEPRECATE: Remove simplification so python 3.8+ can be used
+
 1.9.2 (2022-01-03)
 ------------------
 - BUGFIX: Bufferoverflow make_mask_ellipse (again/still) 
