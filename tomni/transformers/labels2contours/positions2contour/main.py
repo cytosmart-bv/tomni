@@ -1,8 +1,21 @@
 import numpy as np
 import cv2
-from simplification.cutil import simplify_coords
 
-def positions2contour(positions: np.ndarray, simplify_error: float = 0):
+
+def positions2contour(positions: np.ndarray, simplify_error: float = 0) -> np.ndarray:
+    """Transforms a list of positions to opencv contour format
+
+    Args:
+        positions (np.ndarray): 2 dimensional array with shape [N, 2].
+            For the N pixels of the shape given as x, y
+        simplify_error (float, optional): Deprecated!!
+
+    Raises:
+        DeprecationWarning: simplification is no longer supported
+
+    Returns:
+        np.ndarray: Opencv contour
+    """    
     max_x = np.max(positions[:, 0])
     min_x = np.min(positions[:, 0])
     max_y = np.max(positions[:, 1])
@@ -10,7 +23,7 @@ def positions2contour(positions: np.ndarray, simplify_error: float = 0):
 
     positions -= np.array([min_x, min_y])
     transposed_positions = positions.transpose()
-    
+
     array_mask = np.zeros((max_y + 1 - min_y, max_x + 1 - min_x), dtype="uint8")
     array_mask[transposed_positions[1], transposed_positions[0]] = 255
 
@@ -18,7 +31,7 @@ def positions2contour(positions: np.ndarray, simplify_error: float = 0):
         0
     ][0] + [min_x, min_y]
 
-    simple_contours = simplify_coords(contours[:, 0, :], simplify_error)
+    if simplify_error > 0:
+        raise DeprecationWarning('As of Tomni 1.10 simplify is no longer supported')
 
-    contours = simple_contours.reshape([simple_contours.shape[0], 1, simple_contours.shape[1]])
     return contours

@@ -8,7 +8,7 @@ def labels2contours(labels: np.ndarray, simplify_error: float = 0) -> list:
     Transforms an image with labels into opencv contours
 
     labels: (numpy.array) An array where every pixels is label to which object it belongs
-    simplify_error: (float) the amount of error allowed well simplifying the contours
+    # simplify_error: (float) DEPRECATED the amount of error allowed well simplifying the contours
     '''
     listPoints = labels2listsOfPoints(labels)
     contours = [

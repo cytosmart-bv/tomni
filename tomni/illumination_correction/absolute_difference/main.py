@@ -4,8 +4,8 @@ import warnings
 
 
 def absolute_difference(
-    img: np.array, gauss_size: int = 21, new_median: int = 128
-) -> np.array:
+    img: np.ndarray, gauss_size: int = 21, new_median: int = 128
+) -> np.ndarray:
     """
     Remove big blurry artifact from the image.
     It will do this by taking the absolute difference between the blurred and raw image.

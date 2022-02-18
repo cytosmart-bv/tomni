@@ -2,7 +2,7 @@
 import numpy as np
 import cv2
 
-def relative_difference(img: np.array, gauss_size: int = 301, smooth_size=None, do_normalize: bool= False, resize_ratio= None) -> np.array:
+def relative_difference(img: np.ndarray, gauss_size: int = 301, smooth_size=None, do_normalize: bool= False, resize_ratio= None) -> np.array:
     """
     Remove big blurry artifact from the image.
     It will do this by taking the ratio difference between the blurred and raw image.

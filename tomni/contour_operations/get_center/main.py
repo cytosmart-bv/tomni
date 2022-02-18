@@ -4,7 +4,7 @@ from typing import Tuple
 import cv2
 import numpy as np
 
-def get_center(contour: np.array) -> Tuple[int, int]:
+def get_center(contour: np.ndarray) -> Tuple[int, int]:
     '''
     Return the center of a contour
     '''

@@ -33,6 +33,9 @@ The name Tomni is a combination of creator (Tom) and other CytoSMART product he 
 * Illumination correction 
   * Brightfield
   * Fluorescence
+* Contour operations
+  * Get center
+  * Approximate circle by area
 * Json operation
   * Add circularity property
   * Scale object
