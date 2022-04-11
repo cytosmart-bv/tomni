@@ -16,7 +16,7 @@ def positions2contour(
         return_inner_contours (bool, optional): return the internal contours.
             These contours are around the holes with the contour
             default: False
-        
+
     Raises:
         DeprecationWarning: simplification is no longer supported
 
@@ -48,6 +48,6 @@ def positions2contour(
     if len(contours) == 1:
         internal_contours = []
     else:
-        internal_contours = [i +[min_x, min_y] for i in contours[1:]]
+        internal_contours = [i + [min_x, min_y] for i in contours[1:]]
 
     return external_contour, internal_contours
