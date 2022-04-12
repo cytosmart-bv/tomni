@@ -236,9 +236,82 @@ class TestMask2Json(TestCase):
                             {"x": 2, "y": 4},
                         ],
                     },
-                    
                 ],
             }
+        ]
+
+        result = mask2json(input_mask, return_inner_contours=True)
+        print(result)
+
+        self.compare_result_to_expected(result, expected_result)
+
+    def test_double_donut_and_friend(self):
+        input_mask = (
+            np.array(
+                [
+                    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                    [0, 0, 1, 1, 1, 1, 1, 1, 1, 0],
+                    [0, 0, 1, 0, 0, 1, 0, 0, 1, 0],
+                    [0, 0, 1, 0, 0, 1, 0, 0, 1, 0],
+                    [0, 0, 1, 1, 1, 1, 1, 1, 1, 0],
+                    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                    [0, 1, 1, 0, 0, 0, 0, 0, 0, 0],
+                    [0, 1, 1, 0, 0, 0, 0, 0, 0, 0],
+                    [0, 1, 1, 0, 0, 0, 0, 0, 0, 0],
+                ],
+                dtype=np.uint8,
+            )
+            * 255
+        )
+
+        expected_result = [
+            {
+                "type": "polygon",
+                "points": [
+                    {"x": 2, "y": 2},
+                    {"x": 2, "y": 5},
+                    {"x": 8, "y": 5},
+                    {"x": 8, "y": 2},
+                ],
+                "innerObjects": [
+                    {
+                        "type": "polygon",
+                        "points": [
+                            {"x": 5, "y": 3},
+                            {"x": 6, "y": 2},
+                            {"x": 7, "y": 2},
+                            {"x": 8, "y": 3},
+                            {"x": 8, "y": 4},
+                            {"x": 7, "y": 5},
+                            {"x": 6, "y": 5},
+                            {"x": 5, "y": 4},
+                        ],
+                    },
+                    {
+                        "type": "polygon",
+                        "points": [
+                            {"x": 2, "y": 3},
+                            {"x": 3, "y": 2},
+                            {"x": 4, "y": 2},
+                            {"x": 5, "y": 3},
+                            {"x": 5, "y": 4},
+                            {"x": 4, "y": 5},
+                            {"x": 3, "y": 5},
+                            {"x": 2, "y": 4},
+                        ],
+                    },
+                ],
+            },
+            {
+                "type": "polygon",
+                "points": [
+                    {"x": 1, "y": 7},
+                    {"x": 1, "y": 9},
+                    {"x": 2, "y": 9},
+                    {"x": 2, "y": 7},
+                ],
+            },
         ]
 
         result = mask2json(input_mask, return_inner_contours=True)
