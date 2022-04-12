@@ -37,6 +37,8 @@ def positions2contour(
     array_mask = np.zeros((max_y + 1 - min_y, max_x + 1 - min_x), dtype="uint8")
     array_mask[transposed_positions[1], transposed_positions[0]] = 255
 
+    # Chose between RETR_CCOMP to retrieve all of the contours and organizes them into a two-level hierarchy
+    # Or RETR_EXTERNAL retrieves only the extreme outer contours
     mode = cv2.RETR_CCOMP if return_inner_contours else cv2.RETR_EXTERNAL
     contours = cv2.findContours(array_mask, mode, cv2.CHAIN_APPROX_SIMPLE)[0]
 
