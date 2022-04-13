@@ -7,10 +7,14 @@ Bounding boxes
 ----------------
 
 A bounding box is an rectangle defined by 4 number.
-:x1: lowest x value
-:x2: highest x value
-:y1: lowest y value
-:y2: highest y value
+
+x1: lowest x value
+
+x2: highest x value
+
+y1: lowest y value
+
+y2: highest y value
 
 An bounding box is never rotated.
 The bounding box can be outside the image or even bigger as the image.
