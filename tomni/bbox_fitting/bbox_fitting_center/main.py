@@ -4,7 +4,7 @@ from . import bbox_fitting
 from math import ceil
 import numpy as np
 
-def bbox_fitting_center(img: np.ndarray, size: List[int, int], padding_value: int=0) -> np.ndarray:
+def bbox_fitting_center(img: np.ndarray, size, padding_value: int=0) -> np.ndarray:
     '''
     Creates an image of size 'size' ([(int) x, (int) y]) in IMAGE-Coordinates).
     The orignal image will be centered and padded and/or cropped to fit the size.
