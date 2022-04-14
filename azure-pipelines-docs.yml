@@ -31,5 +31,5 @@ jobs:
     displayName: publish website
     inputs:
       PathtoPublish: 'docs/_build'
-      ArtifactName: 'dist_$(build.buildID)'
+      ArtifactName: 'drop'
       publishLocation: 'Container'
