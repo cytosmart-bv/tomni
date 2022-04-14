@@ -30,6 +30,6 @@ jobs:
   - task: PublishBuildArtifacts@1
     displayName: publish website
     inputs:
-      PathtoPublish: 'docs/_build'
+      PathtoPublish: 'docs/_build/html'
       ArtifactName: 'drop'
       publishLocation: 'Container'
