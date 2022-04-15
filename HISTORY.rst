@@ -1,4 +1,9 @@
 # History
+1.11.0 (2022-04-11)
+------------------
+- Add inner contours to labels2contours
+- Add inner contours to mask2json
+
 1.10.0 (2022-02-17)
 ------------------
 - Add approximate_circle_by_area to contour operations
