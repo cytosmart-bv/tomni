@@ -59,3 +59,13 @@ class TestRoundness(TestCase):
         result = roundness(contour)
 
         self.assertAlmostEqual(result, expectedResult, 5)
+
+    def test_flat_rectangle(self):
+        # A rectangle of 450 by 50
+        contour = np.array([[[0, 50]], [[0, 100]], [[450, 100]], [[450, 50]]])
+
+        expectedResult = 0.13974567201687108
+
+        result = roundness(contour)
+
+        self.assertAlmostEqual(result, expectedResult)
