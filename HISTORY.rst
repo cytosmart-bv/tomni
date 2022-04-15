@@ -1,4 +1,9 @@
 # History
+
+1.11.0 (2022-04-15)
+------------------
+- BUGFIX: Import approximate_circle_by_area
+
 1.10.0 (2022-02-17)
 ------------------
 - Add approximate_circle_by_area to contour operations
