@@ -38,3 +38,30 @@ class TestCircularity(TestCase):
         result = circularity(contour)
 
         self.assertAlmostEqual(result, expectedResult)
+
+    def test_square_with_dent(self):
+        """
+        A dent has a big impact on circularity because the perimeter get a lot bigger but the area gets smaller
+        """
+        contour = np.array(
+            [
+                [[500, 50]],
+                [[500, 100]],
+                # start dent
+                [[524, 100]],
+                [[524, 51]],
+                [[525, 51]],
+                [[525, 100]],
+                # end ent
+                [[550, 100]],
+                [[550, 50]],
+            ]
+        )
+
+        A = (50 * 50 - 49)
+        P = 50 * 4 + 2 * 49
+        expectedResult = (np.pi * 4 * A) / (P**2) # 0.34683318742167396
+
+        result = circularity(contour)
+
+        self.assertAlmostEqual(result, expectedResult, 5)
