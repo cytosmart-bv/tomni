@@ -14,6 +14,7 @@ Before submitting/accepting this Pull Request, please make sure:
 - [ ] Functions are named based on [Python naming conventions](https://visualgit.readthedocs.io/en/latest/pages/naming_convention.html)
 - [ ] Function is added to apidocx.rst
 - [ ] New feature is added to `README.md` subsection `Features`
+- [ ] New function is imported in all `__init__.py` that are needed
 
 **For bugfix**
 - [ ] Unit test is added that covers the bug (if possible)
@@ -32,6 +33,7 @@ Before submitting/accepting this Pull Request, please make sure:
 - [ ] Functions are named based on [Python naming conventions](https://visualgit.readthedocs.io/en/latest/pages/naming_convention.html)
 - [ ] Function is added to apidocx.rst
 - [ ] New feature is added to `README.md` subsection `Features`
+- [ ] New function is imported in all `__init__.py` that are needed
 
 **For bugfix**
 - [ ] Unit test is added that covers the bug (if possible)
