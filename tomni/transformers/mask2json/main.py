@@ -6,7 +6,7 @@ from ..labels2contours import labels2contours
 
 
 def get_edges(mask: np.ndarray):
-    """ get edges of the mask"""
+    """get edges of the mask"""
     mask_copy = cv2.copyMakeBorder(
         mask,
         top=1,
@@ -28,7 +28,10 @@ def get_edges(mask: np.ndarray):
 
 
 def mask2json(
-    mask: np.ndarray, minimum_size_contours: int = 3, is_diagonal_connected=True
+    mask: np.ndarray,
+    minimum_size_contours: int = 3,
+    is_diagonal_connected=True,
+    return_inner_contours: bool = False,
 ) -> list:
     """
     Converts binary mask to standard cytosmart format
@@ -37,9 +40,30 @@ def mask2json(
         mask (np.ndarray): binary mask
         minimum_size_contours (int, optional): The minimum number of points an contour should have to be included. Defaults to 3.
         is_diagonal_connected (bool, optional): If true diagonal pixels [[1, 0][0,1]] will be seen as the same object. Defaults to True.
+        return_inner_contours (bool, optional): return the internal contours.
+            These contours are around the holes with the contour
+            default: False
 
     Returns:
-        list: json_objects, e.g [{'type':'polygon', 'points':[{'x':1,'y':4},{'x':2,'y':3},{'x':4,'y':4} ]
+        list: json_objects, 
+            e.g [
+                    {
+                        'type':'polygon', 
+                        'points':[
+                            {'x':1,'y':4},
+                            {'x':2,'y':3},
+                            {'x':4,'y':4} 
+                        ], 
+                        "innerObjects": [
+                            {
+                                'type':'polygon', 
+                                'points':[
+                                    {'x':3,'y':2}
+                                ]
+                            }
+                        ]
+                    }
+                ]
     """
     connectivity = 4
     if is_diagonal_connected:
@@ -52,8 +76,16 @@ def mask2json(
 
     edges = edges * labels
     del labels
-    contours = labels2contours(edges)
-    json_objects = contours2json(contours)
+    contours = labels2contours(edges, return_inner_contours=return_inner_contours)
+
+    if return_inner_contours:
+        json_objects = []
+        for contour in contours:
+            json_object = contours2json([contour[0]])[0]
+            json_object["innerObjects"] = contours2json(contour[1])
+            json_objects.append(json_object)
+    else:
+        json_objects = contours2json(contours)
     json_objects = [
         json_object
         for i, json_object in enumerate(json_objects)
