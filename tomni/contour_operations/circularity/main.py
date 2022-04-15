@@ -1,8 +1,9 @@
 import cv2
 import numpy as np
 
+
 def circularity(cnt: np.ndarray) -> float:
-    """ 
+    """
     Calculates the circularity of a contour
     This is based on the perimeter and area of the contour.
     A circle will give the smallest area for a given perimeter, so this is 1
@@ -28,10 +29,10 @@ def circularity(cnt: np.ndarray) -> float:
     """
     # calculate size
     area = cv2.contourArea(cnt)
-    
+
     # calculate shape
     perimeter = cv2.arcLength(cnt, True)
 
-    circularity = (4 * np.pi * area) / (perimeter ** 2)
+    circularity = (4 * np.pi * area) / (perimeter**2)
 
     return circularity
