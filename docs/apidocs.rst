@@ -20,9 +20,19 @@ An bounding box is never rotated.
 The bounding box can be outside the image or even bigger as the image.
 
 .. automodule:: tomni
-   :members: bbox_fitting, bbox_fitting_center, bbox_operations
+   :members: bbox_fitting, bbox_fitting_center
    :show-inheritance:
 
 .. automodule:: tomni.bbox_operations
    :members: check_overlap_bbox
+   :show-inheritance:
+
+Contour operations
+-------------------------------------
+
+OpenCV has all ready nice `operations <https://docs.opencv.org/4.5.5/dd/d49/tutorial_py_contour_features.html>`_ to apply to your contours.
+We have some additional ones
+
+.. automodule:: tomni.contour_operations
+   :members: approximate_circle_by_area, get_center
    :show-inheritance:
