@@ -4,6 +4,7 @@
 ------------------
 - BUGFIX: Import approximate_circle_by_area
 - Add roundness
+- Add contour operation circularity
 
 1.11.0 (2022-04-11)
 ------------------
