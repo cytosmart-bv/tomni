@@ -4,7 +4,7 @@ import numpy as np
 
 def circularity(contour: np.ndarray) -> float:
     """
-    Calculates the circularity of a contour
+    Calculates the circularity of a contour.
     This is based on the perimeter and area of the contour.
     A circle will give the smallest area for a given perimeter, so this is 1.
 
