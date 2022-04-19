@@ -1,0 +1,35 @@
+# Python package
+# Create and test a Python package on multiple Python versions.
+# Add steps that analyze code, save the dist with the build record, publish to a PyPI-compatible index, and more:
+# https://docs.microsoft.com/azure/devops/pipelines/languages/python
+
+trigger:
+- main
+
+jobs:
+- job: RunInContainer
+  
+  pool:
+    vmImage: 'ubuntu-latest'
+
+  steps:
+  - script: |
+      pip install --user -r requirements.txt
+    displayName: 'Install dependencies general'
+
+  - script: |
+      pip install --user -r requirements_docs.txt
+    displayName: 'Install dependencies document'
+
+  - script: |
+      cd docs
+      make html
+      cd ..
+    displayName: 'Build documents'
+
+  - task: PublishBuildArtifacts@1
+    displayName: publish website
+    inputs:
+      PathtoPublish: 'docs/_build/html'
+      ArtifactName: 'drop'
+      publishLocation: 'Container'
