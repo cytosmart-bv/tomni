@@ -12,7 +12,7 @@ Circularity is the difference between area and perimeter.
 If the object is a circle the area to perimeter is maximum (1)
 
 This is done using both the Area and Perimeter to calculate the squared radius.
-Then diving the 2 be each other.
+Then dividing the 2 be each other.
 
 Via Area
 
@@ -36,9 +36,9 @@ Roundness
 -----------
 
 Roundness is based on the relation between the enclosing circle and the object.
-It calculates the area of both and dived them.
+It calculates the area of both and divided them.
 
-This means roundness is more focussed if the contours covers a perfect area and less if the perimeter is bumpy or not.
+This means roundness is more focused if the contours covers a perfect area and less if the perimeter is bumpy or not.
 
 Difference with an Oval
 ------------------------
@@ -74,7 +74,7 @@ Make circularity
 Difference with an dented circle
 --------------------------------
 
-Lets take a perfect circle and remove a pizza slice of 1 degree (you know what you do a fun math parties).
+Lets take a perfect circle and remove a pizza slice of 1 degree (you know what you do at fun math parties).
 
 The area will be :math:`\frac{359}{360} r^2 \pi`
 
