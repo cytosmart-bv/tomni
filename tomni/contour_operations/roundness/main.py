@@ -6,8 +6,8 @@ import numpy as np
 
 def roundness(contour: np.ndarray) -> float:
     """
-    Return roundess of the contour
-    Roundness is terminend by difference in areas of the contour and enclosing circle
+    Returns roundess of the contour
+    Roundness is determined by difference in areas of the contour and enclosing circle
 
 
     Args:

@@ -17,7 +17,7 @@ y1: lowest y value
 y2: highest y value
 
 An bounding box is never rotated.
-The bounding box can be outside the image or even bigger as the image.
+The bounding box can be outside the image or even bigger than the image.
 
 .. automodule:: tomni
    :members: bbox_fitting, bbox_fitting_center
@@ -30,7 +30,7 @@ The bounding box can be outside the image or even bigger as the image.
 Contour operations
 -------------------------------------
 
-OpenCV has all ready nice `operations <https://docs.opencv.org/4.5.5/dd/d49/tutorial_py_contour_features.html>`_ to apply to your contours.
+OpenCV has already nice `operations <https://docs.opencv.org/4.5.5/dd/d49/tutorial_py_contour_features.html>`_ to apply to your contours.
 We have some additional ones
 
 .. automodule:: tomni.contour_operations
