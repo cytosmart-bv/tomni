@@ -42,4 +42,4 @@ def make_small_mask_circle(img_shape, diameter):
 def make_big_mask_circle(img_shape, diameter):
     out = cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (diameter, diameter))
     out = bbox_fitting_center(out, img_shape)
-    return out.astype(np.bool)
+    return out.astype(bool)
