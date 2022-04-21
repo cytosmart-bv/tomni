@@ -34,5 +34,5 @@ OpenCV has all ready nice `operations <https://docs.opencv.org/4.5.5/dd/d49/tuto
 We have some additional ones
 
 .. automodule:: tomni.contour_operations
-   :members: approximate_circle_by_area, get_center
+   :members: approximate_circle_by_area, get_center, roundness
    :show-inheritance:
