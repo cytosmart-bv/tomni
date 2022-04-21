@@ -95,3 +95,9 @@ Conclusion
 
 Circularity is great for quantifying how smooth a surface is.
 Where roundness is great for quantifying how much it overlaps with a circle
+
+Sources
+--------
+
+- `Engineering the geometrical shape of mesenchymal stromal cells through defined cyclic stretch regimens <https://rdcu.be/cLN85>`_
+- `Microenvironment complexity and matrix stiffness regulate breast cancer cell activity in a 3D in vitro model <https://rdcu.be/cLN9S>`_
