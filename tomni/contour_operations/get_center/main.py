@@ -6,7 +6,7 @@ import numpy as np
 
 def get_center(contour: np.ndarray) -> Tuple[int, int]:
     """
-    Return the center of a contour
+    Returns the center of a contour
 
     Args:
         contour (np.ndarray): An opencv contour of a single object
