@@ -38,6 +38,8 @@ The name Tomni is a combination of creator (Tom) and other CytoSMART product he 
 * Contour operations
   * Get center
   * Approximate circle by area
+  * Get roundness
+  * Get circularity
 * Json operation
   * Add circularity property
   * Scale object

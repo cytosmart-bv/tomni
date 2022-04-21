@@ -1,4 +1,11 @@
 # History
+
+1.12.0 (2022-04-15)
+------------------
+- BUGFIX: Import approximate_circle_by_area
+- Add roundness
+- Add contour operation circularity
+
 1.11.0 (2022-04-11)
 ------------------
 - Add inner contours to labels2contours

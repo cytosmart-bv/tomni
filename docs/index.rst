@@ -13,6 +13,7 @@ Welcome to Tomni documentation!
 
    quickstart
    apidocs
+   tutorials
 
 
 
