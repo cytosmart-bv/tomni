@@ -7,7 +7,7 @@ def roundness(contour: np.ndarray) -> float:
     Returns roundess of the contour
     Roundness is determined by difference in areas of the contour and enclosing circle
     Roundness = :math:`\frac{A}{r_e^2 \pi}` 
-        With :math:`r_e` being the radius of the enclosing circle.
+    With :math:`r_e` being the radius of the enclosing circle.
 
     Args:
         contour (np.ndarray): An opencv contour of a single object
