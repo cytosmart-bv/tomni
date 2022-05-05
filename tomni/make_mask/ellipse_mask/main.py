@@ -41,9 +41,9 @@ def make_small_mask_ellipse(image_size, x1, y1, rx, ry):
     :param rx: the length of the radius on the x axis of the ellipse
     :param ry: the length of the radius on the y axis of the ellipse
     :return: an image with an ellipse of True surrounded by False
-    
+
     Futere request: Variable Alpha.
-    
+
     For rotated ellipses, the alpha value is used to find the translated points
     alpha = angle of rotation (in degrees)
     alpha = 0 gives no rotation of the ellipse
@@ -61,17 +61,17 @@ def make_small_mask_ellipse(image_size, x1, y1, rx, ry):
     yy = yy.astype(np.int32)
 
     # Center point of the ellipse becomes the (0, 0) point of the image
-    xx -= x1 
-    yy -= y1 
+    xx -= x1
+    yy -= y1
 
     # The ellipse formula used to calculate the points is
     # x^2 * (ry)^2 + y^2 * (rx)^2
     # Calculating the value of each point depending on the ellipse equation
-    ellipse = (xx ** 2) * (ry ** 2) + (yy ** 2) * (rx ** 2)
+    ellipse = (xx**2) * (ry**2) + (yy**2) * (rx**2)
 
     # The ellipse formula determines if a point is inside the ellipse or not
     # x^2 * (ry)^2 + y^2 * (rx)^2 <= (rx)^2 * (ry)^2
-    kernel = ellipse <= (rx ** 2) * (ry ** 2)
+    kernel = ellipse <= (rx**2) * (ry**2)
     kernel = kernel * (np.abs(xx) <= rx)
     kernel = kernel * (np.abs(yy) <= ry)
     return kernel

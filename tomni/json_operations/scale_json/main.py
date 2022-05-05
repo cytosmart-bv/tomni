@@ -6,20 +6,20 @@ def scale_json(json_object: dict, scaling_factor: float):
 
     example:
     json_object = {
-        "type": "ellipse", 
-        "center": {"x": 100, "y": 200}, 
-        "radiusX": 50, 
-        "radiusY": 100, 
-        "angleOfRotation": 0, 
+        "type": "ellipse",
+        "center": {"x": 100, "y": 200},
+        "radiusX": 50,
+        "radiusY": 100,
+        "angleOfRotation": 0,
         "id": "12345-abcde"}
     scaling_factor = 2
 
     result = {
-        "type": "ellipse", 
-        "center": {"x": 200, "y": 400}, 
-        "radiusX": 100, 
-        "radiusY": 200, 
-        "angleOfRotation": 0, 
+        "type": "ellipse",
+        "center": {"x": 200, "y": 400},
+        "radiusX": 100,
+        "radiusY": 200,
+        "angleOfRotation": 0,
         "id": "12345-abcde"}
 
     """
@@ -48,4 +48,3 @@ def scale_json(json_object: dict, scaling_factor: float):
         raise ValueError(f"type {json_object['type']} is not supported")
 
     return newjson_object
-

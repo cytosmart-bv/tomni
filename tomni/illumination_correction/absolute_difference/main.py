@@ -16,11 +16,11 @@ def absolute_difference(
     This is good as algorithm input for algorithms that rely on absolute pixel difference.
 
     # Fractal
-    This algorithm is fractal. 
+    This algorithm is fractal.
     Meaning the illumination correction followed by cropping will given the same result than first cropping.
 
     img (np.array): input image
-    gauss_size (int): needs to be an odd number. 
+    gauss_size (int): needs to be an odd number.
         This is corralated to the size of the big artifact to remove.
     """
 
@@ -36,7 +36,7 @@ def absolute_difference(
         )
 
     """
-    The illumination is every detail bigger than the gauss_size. 
+    The illumination is every detail bigger than the gauss_size.
     This includes the inside of square bigger than gauss_size, but not its borders.
     """
     img -= cv2.GaussianBlur(img, (gauss_size, gauss_size), 0)

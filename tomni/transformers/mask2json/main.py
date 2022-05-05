@@ -45,18 +45,18 @@ def mask2json(
             default: False
 
     Returns:
-        list: json_objects, 
+        list: json_objects,
             e.g [
                     {
-                        'type':'polygon', 
+                        'type':'polygon',
                         'points':[
                             {'x':1,'y':4},
                             {'x':2,'y':3},
-                            {'x':4,'y':4} 
-                        ], 
+                            {'x':4,'y':4}
+                        ],
                         "innerObjects": [
                             {
-                                'type':'polygon', 
+                                'type':'polygon',
                                 'points':[
                                     {'x':3,'y':2}
                                 ]

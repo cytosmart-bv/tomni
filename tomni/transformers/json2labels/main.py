@@ -30,7 +30,9 @@ def json2labels(json_list: List[dict], output_dim: tuple) -> np.ndarray:
         elif obj["type"] == "polygon":
             points = np.empty((len(obj["points"]), 2))
             for j in range(len(obj["points"])):
-                points[j,] = [obj["points"][j]["x"], obj["points"][j]["y"]]
+                points[
+                    j,
+                ] = [obj["points"][j]["x"], obj["points"][j]["y"]]
             cv2.fillConvexPoly(seg_map, np.int32([points]), i + 1)
         else:
             raise ValueError("Object type not supported")

@@ -2,6 +2,7 @@ from unittest import TestCase
 from .main import approximate_circle_by_area
 import numpy as np
 
+
 class TestGetAppoxCircleArea(TestCase):
     def test_free_shape(self):
         contour = np.array([[[70, 120]], [[80, 80]], [[70, 40]], [[60, 80]]])

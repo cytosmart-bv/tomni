@@ -26,6 +26,3 @@ class TestIlluminationCorretionAlgorithm(TestCase):
         illum_img, _, _ = fluo_tophat(img)
         self.assertGreaterEqual(np.min(illum_img), 0)
         self.assertLessEqual(np.max(illum_img), 255)
-
-
-

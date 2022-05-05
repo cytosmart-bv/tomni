@@ -2,9 +2,10 @@ from unittest import TestCase
 import numpy as np
 from .main import json2contours
 
+
 class TestJson2contours(TestCase):
     def test_happy_flow(self):
-        expectedResult  = np.array([[[500, 50]], [[500, 99]], [[539, 99]], [[539, 50]]])
+        expectedResult = np.array([[[500, 50]], [[500, 99]], [[539, 99]], [[539, 50]]])
 
         inputContours = {
             "type": "polygon",

@@ -37,7 +37,7 @@ class TestRoundness(TestCase):
 
     def test_square_with_dent(self):
         """
-        A dent should not impact roundness to much as long as the area of the dent is relatively small 
+        A dent should not impact roundness to much as long as the area of the dent is relatively small
         """
         contour = np.array(
             [

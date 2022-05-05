@@ -96,7 +96,7 @@ class TestVGG2Json(TestCase):
                             "name": "circle",
                             "cx": 769,
                             "cy": 649,
-                            "r": 24
+                            "r": 24,
                         },
                         "region_attributes": {},
                     },
@@ -215,5 +215,3 @@ class TestVGG2Json(TestCase):
         for i in range(len(result)):
             for j in range(len(result[i])):
                 self.assertDictEqual(result[i][j], expected_output[i][j])
-
-

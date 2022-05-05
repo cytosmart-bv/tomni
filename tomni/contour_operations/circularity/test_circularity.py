@@ -16,12 +16,18 @@ class TestCircularity(TestCase):
     def test_octagon(self):
         # Octagon is rounder then a square
         # This is not perfect but okay
-        contour = np.array([
-            [[500, 50]], [[490, 75]], 
-            [[500, 99]], [[525, 109]], 
-            [[549, 99]], [[559, 75]], 
-            [[549, 50]], [[525, 40]], 
-            ])
+        contour = np.array(
+            [
+                [[500, 50]],
+                [[490, 75]],
+                [[500, 99]],
+                [[525, 109]],
+                [[549, 99]],
+                [[559, 75]],
+                [[549, 50]],
+                [[525, 40]],
+            ]
+        )
 
         expected_result = 0.9479813831233634
 
@@ -58,9 +64,9 @@ class TestCircularity(TestCase):
             ]
         )
 
-        A = (50 * 50 - 49)
+        A = 50 * 50 - 49
         P = 50 * 4 + 2 * 49
-        expected_result = (np.pi * 4 * A) / (P**2) # 0.34683318742167396
+        expected_result = (np.pi * 4 * A) / (P**2)  # 0.34683318742167396
 
         result = circularity(contour)
 

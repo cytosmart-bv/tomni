@@ -1,6 +1,7 @@
 from unittest import TestCase
-import numpy as np 
+import numpy as np
 from .main import img_dim
+
 
 class Test_img_dim(TestCase):
     def test_happyflow_no_channel(self):
