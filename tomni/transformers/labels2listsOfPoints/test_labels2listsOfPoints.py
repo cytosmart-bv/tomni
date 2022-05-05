@@ -35,5 +35,3 @@ class TestSelect_labels2ListOfPoints(TestCase):
             x = result[i]
             print(x)
             np.testing.assert_array_equal(x, expected_output[i])
-
-   

@@ -6,6 +6,7 @@ from unittest import TestCase
 from .main import json2mask
 from ...make_mask import make_mask_circle
 
+
 class TestJson2Mask(TestCase):
     @classmethod
     def setUp(self):
@@ -228,9 +229,9 @@ class TestJson2Mask(TestCase):
         json_objects = [
             {
                 "type": "ellipse",
-                "center": {"x": 6., "y": 4.},
-                "radiusX": 6.,
-                "radiusY": 4.,
+                "center": {"x": 6.0, "y": 4.0},
+                "radiusX": 6.0,
+                "radiusY": 4.0,
                 "angleOfRotation": 0,
                 "id": "unicorn",
             }
@@ -267,7 +268,7 @@ class TestJson2Mask(TestCase):
                 "angleOfRotation": 0,
                 "id": "unicorn",
             }
-        ]    
+        ]
 
         mask = json2mask(json_objects, size, 0)
         self.assertEqual(True, mask[2467][5000])
@@ -280,7 +281,7 @@ class TestJson2Mask(TestCase):
         # X Maximum
         self.assertEqual(True, mask[2467][8198])
         self.assertEqual(False, mask[2467][8201])
-        
+
         # Y minimum
         self.assertEqual(False, mask[773][5000])
         self.assertEqual(True, mask[777][5000])
@@ -295,13 +296,13 @@ class TestJson2Mask(TestCase):
         json_objects = [
             {
                 "type": "ellipse",
-                "center": {"x": 5000., "y": 2467.},
-                "radiusX": 3200.,
-                "radiusY": 1692.,
+                "center": {"x": 5000.0, "y": 2467.0},
+                "radiusX": 3200.0,
+                "radiusY": 1692.0,
                 "angleOfRotation": 0,
                 "id": "unicorn",
             }
-        ]    
+        ]
 
         mask = json2mask(json_objects, size, 0)
         self.assertEqual(True, mask[2467][5000])
@@ -314,7 +315,7 @@ class TestJson2Mask(TestCase):
         # X Maximum
         self.assertEqual(True, mask[2467][8198])
         self.assertEqual(False, mask[2467][8201])
-        
+
         # Y minimum
         self.assertEqual(False, mask[773][5000])
         self.assertEqual(True, mask[777][5000])

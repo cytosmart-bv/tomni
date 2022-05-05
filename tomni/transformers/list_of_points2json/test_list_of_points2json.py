@@ -2,6 +2,7 @@ from unittest import TestCase
 import numpy as np
 from .main import list_of_points2json
 
+
 class TestContour2json(TestCase):
     def test_happy_flow_np_array(self):
         list_of_points = np.array([[500, 50], [500, 99], [539, 99], [539, 50]])

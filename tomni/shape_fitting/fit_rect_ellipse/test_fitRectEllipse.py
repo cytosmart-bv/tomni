@@ -3,6 +3,7 @@ from unittest import TestCase
 from .main import fit_rect_around_ellipse
 import numpy as np
 
+
 class Testfit_rect_around_ellipse(TestCase):
     def test_fit_circle(self):
         x = 0
@@ -42,11 +43,10 @@ class Testfit_rect_around_ellipse(TestCase):
         self.assertEqual(x2, expectedX2)
         self.assertEqual(y2, expectedY2)
 
-
     def test_fit_ellipse_with_rotation(self):
-        '''
-        These number where measured using InkScape 
-        '''
+        """
+        These number where measured using InkScape
+        """
         x = 108
         y = 185
         r1 = 79

@@ -1,1 +1,1 @@
-from .main import labels2contours 
+from .main import labels2contours

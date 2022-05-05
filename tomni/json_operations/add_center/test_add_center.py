@@ -39,7 +39,9 @@ class TestAddCenterJson(TestCase):
     def test_single_point(self):
         json_object = {
             "type": "polygon",
-            "points": [{"x": 500, "y": 50},],
+            "points": [
+                {"x": 500, "y": 50},
+            ],
             "id": "unicorn",
             "parents": [],
             "children": [],
@@ -47,7 +49,9 @@ class TestAddCenterJson(TestCase):
 
         expected_result = {
             "type": "polygon",
-            "points": [{"x": 500, "y": 50},],
+            "points": [
+                {"x": 500, "y": 50},
+            ],
             "id": "unicorn",
             "parents": [],
             "children": [],

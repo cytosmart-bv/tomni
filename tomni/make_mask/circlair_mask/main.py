@@ -33,8 +33,8 @@ def make_small_mask_circle(img_shape, diameter):
     xx -= img_shape[1] - 1
     yy -= img_shape[0] - 1
 
-    circle = xx ** 2 + yy ** 2
-    kernel = circle <= diameter ** 2
+    circle = xx**2 + yy**2
+    kernel = circle <= diameter**2
 
     return kernel
 

@@ -13,8 +13,8 @@ def fit_rect_around_ellipse(
     Special thanks to: https://math.stackexchange.com/questions/91132/how-to-get-the-limits-of-rotated-ellipse
     """
     alpha = alpha / 180 * np.pi
-    a = np.sqrt(r1 ** 2 * np.cos(alpha) ** 2 + r2 ** 2 * np.sin(alpha) ** 2)
-    b = np.sqrt(r1 ** 2 * np.sin(alpha) ** 2 + r2 ** 2 * np.cos(alpha) ** 2)
+    a = np.sqrt(r1**2 * np.cos(alpha) ** 2 + r2**2 * np.sin(alpha) ** 2)
+    b = np.sqrt(r1**2 * np.sin(alpha) ** 2 + r2**2 * np.cos(alpha) ** 2)
     x1 = int(round(x - a))
     y1 = int(round(y - b))
     x2 = int(round(x + a))

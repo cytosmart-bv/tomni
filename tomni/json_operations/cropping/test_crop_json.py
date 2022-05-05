@@ -1,6 +1,7 @@
 from unittest import TestCase
 from .main import crop_json
 
+
 class TestRandomCropBbox(TestCase):
     def test_ellipse_x_movement(self):
         input_json = [
@@ -28,11 +29,10 @@ class TestRandomCropBbox(TestCase):
             }
         ]
 
-        result_json = crop_json(input_json,x_move, y_move, inputDim)
+        result_json = crop_json(input_json, x_move, y_move, inputDim)
         self.assertListEqual(result_json, expected_json)
 
     def test_ellipse_xy_movement(self):
-        
 
         input_json = [
             {
@@ -46,7 +46,7 @@ class TestRandomCropBbox(TestCase):
         ]
 
         inputDim = (5, 6)
-        x_move = 2 
+        x_move = 2
         y_move = 1
 
         expected_json = [
@@ -59,7 +59,7 @@ class TestRandomCropBbox(TestCase):
             }
         ]
 
-        result_json = crop_json(input_json,x_move, y_move, inputDim)
+        result_json = crop_json(input_json, x_move, y_move, inputDim)
 
         self.assertListEqual(result_json, expected_json)
 
@@ -75,9 +75,9 @@ class TestRandomCropBbox(TestCase):
         ]
 
         self.assertListEqual(input_json, expected_input_json)
-    
+
     def test_polygon_x_movement(self):
-    
+
         # [p, bx, by, bw, bh, c1, c2, c3]
         input_json = [
             {
@@ -101,7 +101,7 @@ class TestRandomCropBbox(TestCase):
         ]
 
         inputDim = (5, 6)
-        x_move = 2 
+        x_move = 2
         y_move = 0
 
         expected_json = [
@@ -136,7 +136,7 @@ class TestRandomCropBbox(TestCase):
                 ],
             },
         ]
-        result_json = crop_json(input_json,x_move, y_move, inputDim)
+        result_json = crop_json(input_json, x_move, y_move, inputDim)
         self.assertListEqual(result_json, expected_json)
 
         self.assertEqual(len(input_json), len(expected_input_json))
@@ -169,7 +169,7 @@ class TestRandomCropBbox(TestCase):
         inputDim = (5, 6)
         x_move = 2
         y_move = 1
-        
+
         expected_json = [
             {
                 "type": "polygon",
@@ -182,7 +182,7 @@ class TestRandomCropBbox(TestCase):
             }
         ]
 
-        result_json = crop_json(input_json,x_move, y_move,  inputDim)
+        result_json = crop_json(input_json, x_move, y_move, inputDim)
         self.assertListEqual(result_json, expected_json)
 
     def test_expected_polygon_no_crop(self):
@@ -264,6 +264,5 @@ class TestRandomCropBbox(TestCase):
 
         expected_json = []
 
-        result_json = crop_json(input_json,x_move, y_move,  inputDim)
+        result_json = crop_json(input_json, x_move, y_move, inputDim)
         self.assertListEqual(result_json, expected_json)
-

@@ -18,7 +18,7 @@ def add_circularity(json_object: dict) -> None:
         # Calculate the area of enclosing circle
         enclosing_circle = cv2.minEnclosingCircle(cnt)
         radius = enclosing_circle[1]
-        area_circle = radius ** 2 * math.pi
+        area_circle = radius**2 * math.pi
 
         # Calculate the area of contour
         area_contour = cv2.contourArea(cnt)

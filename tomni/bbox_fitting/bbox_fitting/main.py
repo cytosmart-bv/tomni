@@ -27,14 +27,14 @@ def bbox_fitting(
 
         y2: (int): Highest value of Y
 
-        padding_value: (int, optional): Every pixel outside the image bit inside the bounding box will get this value. 
+        padding_value: (int, optional): Every pixel outside the image bit inside the bounding box will get this value.
         Defaults to 0.
 
     Returns:
         np.ndarray: Extracted patch within the bounding box from the image
     """
     """
-    
+
     """
 
     if not isinstance(img, np.ndarray):

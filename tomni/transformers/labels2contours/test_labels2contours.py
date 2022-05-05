@@ -86,7 +86,7 @@ class TestSelect_labels2Contours(TestCase):
                 [[[1, 3]], [[1, 6]], [[4, 6]], [[4, 3]]],
                 # All the internal contours
                 [
-                    # Corners are interpolated as being diagonal 
+                    # Corners are interpolated as being diagonal
                     # hench the 8 points for something that looks like a square
                     [
                         [[1, 4]],
@@ -99,7 +99,7 @@ class TestSelect_labels2Contours(TestCase):
                         [[1, 5]],
                     ]
                 ],
-            ], 
+            ],
         ]
 
         result = labels2contours(data, return_inner_contours=True)

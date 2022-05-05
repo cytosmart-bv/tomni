@@ -96,7 +96,7 @@ def crop_json(
     json_list_copy = copy.deepcopy(json_list)
 
     for c, json_object in enumerate(json_list):
-        json_copy= copy.deepcopy(json_object)
+        json_copy = copy.deepcopy(json_object)
         to_keep = json_object_to_keep(
             json_copy,
             (x_translation, x_translation + crop_dim[0]),

@@ -18,16 +18,16 @@ def fluo_tophat(img, normalize=0):
     input:
         img: A standard grayscale image
         normalize: Normalizes the image from 0 to 255, this looks better but data will be lost
-    
+
     output:
         img: The result image after background subtraction
         p2 : The lower bound value where an x-amount of pixels are included
-        p98: The higher bound value where an y-amount of pixels are included  
+        p98: The higher bound value where an y-amount of pixels are included
 
     The p2 and p98 values are used to normalize the image, but won't be automatically applied
-    due to loss of data. These values should be given later to the integration part so they can 
-    pass these values to the front-end. 
-    
+    due to loss of data. These values should be given later to the integration part so they can
+    pass these values to the front-end.
+
     """
     img = img.astype(np.uint8)
     img = cv2.GaussianBlur(img, (5, 5), 0)
@@ -47,4 +47,3 @@ def fluo_tophat(img, normalize=0):
             img = rescale_intensity(img, p2, p98)
 
     return img, p2, p98
-

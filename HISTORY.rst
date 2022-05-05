@@ -19,7 +19,7 @@
 
 1.9.2 (2022-01-03)
 ------------------
-- BUGFIX: Bufferoverflow make_mask_ellipse (again/still) 
+- BUGFIX: Bufferoverflow make_mask_ellipse (again/still)
     remove times 2 for all values in the function
 
 1.9.1 (2021-10-26)
@@ -61,7 +61,7 @@ updated setup file simplification<0.6
 ------------------
 added new functions
 - add_area
-- summary_json 
+- summary_json
 - json2dict
 
 1.6.4 (2020-11-26)
@@ -109,7 +109,7 @@ add json_operations
 Updating of relative illumination correction.
 - add (optional) smoothing step
 - add (optional) resize step
-- add (optional) normalization 
+- add (optional) normalization
 
 1.2.0 (2020-07-02)
 ------------------
@@ -134,7 +134,7 @@ Restructuring of tomni:
 - Migrated validation to manVal
 - Made sure every function followed:
     function_name
-    - __init__.py 
+    - __init__.py
     - main.py
     - test_function_name
 - removed following function:

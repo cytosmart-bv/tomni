@@ -1,5 +1,3 @@
-
-
 def translation_json(json_object: dict, x_translation: int, y_translation: int):
     """
     Takes in a json object (ellipse or polygon) and translates it
@@ -9,21 +7,21 @@ def translation_json(json_object: dict, x_translation: int, y_translation: int):
 
     example:
     json_object = {
-        "type": "ellipse", 
-        "center": {"x": 100, "y": 200}, 
-        "radiusX": 50, 
-        "radiusY": 100, 
-        "angleOfRotation": 0, 
+        "type": "ellipse",
+        "center": {"x": 100, "y": 200},
+        "radiusX": 50,
+        "radiusY": 100,
+        "angleOfRotation": 0,
         "id": "12345-abcde"}
     x_translation = 100
     y_translation = -20
 
     result = {
-        "type": "ellipse", 
-        "center": {"x": 200, "y": 180}, 
-        "radiusX": 50, 
-        "radiusY": 100, 
-        "angleOfRotation": 0, 
+        "type": "ellipse",
+        "center": {"x": 200, "y": 180},
+        "radiusX": 50,
+        "radiusY": 100,
+        "angleOfRotation": 0,
         "id": "12345-abcde"}
 
     """
@@ -50,4 +48,3 @@ def translation_json(json_object: dict, x_translation: int, y_translation: int):
         raise ValueError(f"type {json_object['type']} is not supported")
 
     return newjson_object
-
