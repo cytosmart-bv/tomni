@@ -1,1 +1,1 @@
-from .main import SCFJson, is_scf_json
+from .main import SCFJson, is_scf
