@@ -15,4 +15,4 @@ from . import make_mask
 from . import transformers
 from . import json_operations
 from . import bbox_operations
-from .scf_format import SCFJson
+from . import standard_cytosmart_format
