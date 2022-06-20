@@ -1,5 +1,5 @@
-import imp
 from tomni.standard_cytosmart_format import SCFJson
+
 scf_json = [{
             "type": "polygon",
             "points": [
