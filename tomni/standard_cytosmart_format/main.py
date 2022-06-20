@@ -10,7 +10,7 @@ def is_scf(scf_json):
     """Checks if an json complies with scf"""
     for i, scf_object in enumerate(scf_json):
         if not type(dict) == dict and not 'type' in scf_object:
-            logging.error(f"the {i}th element is does not hav the Standard CytoSMART Format")
+            logging.error(f"the {i}th element does not have the Standard CytoSMART Format")
             return False
     return True
 
