@@ -19,7 +19,7 @@ class SCFJson:
         """
         STANDARD CYTOSMART FORMAT
         Standardized annotation format of cytoSMART that has the following uses:
-        - Validate that two annotations are the same even when the are processed at different times.
+        - Validate that two annotations are the same even when they are processed at different times.
 
         Args:
             scf_json (list[dict]): a list of scf_objects that comply with SCF. allowed types 'polygon' and 'ellipse'
