@@ -9,7 +9,7 @@ from ..json_operations import add_area
 def is_scf(scf_json):
     """Checks if an json complies with scf"""
     for i, scf_object in enumerate(scf_json):
-        if not type(scf_json) == dict and not "type" in scf_object:
+        if not type(scf_object) == dict and not "type" in scf_object:
             logging.error(
                 f"the {i}th element does not have the Standard CytoSMART Format"
             )
