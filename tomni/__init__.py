@@ -3,7 +3,7 @@
 
 __author__ = """Tom Nijhof & Jelle van Kerkvoorde"""
 __email__ = "tom.nijhof@cytosmart.com"
-__version__ = "1.12.0"
+__version__ = "1.13.0"
 
 from .bbox_fitting import bbox_fitting, bbox_fitting_center
 from .img_paste import img_paste
@@ -15,3 +15,4 @@ from . import make_mask
 from . import transformers
 from . import json_operations
 from . import bbox_operations
+from . import standard_cytosmart_format
