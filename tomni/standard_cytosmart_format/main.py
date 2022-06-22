@@ -21,7 +21,7 @@ class SCFJson:
     def __init__(self, scf_json: List[dict]) -> None:
         """
         STANDARD CYTOSMART FORMAT
-        Standardized annotation format of cytoSMART that has the following uses:
+        Standardized annotation format of CytoSMART that has the following uses:
         - Validate that two annotations are the same even when they are processed at different times.
 
         Args:
