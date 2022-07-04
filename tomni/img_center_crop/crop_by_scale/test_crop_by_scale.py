@@ -1,11 +1,11 @@
-import unittest
+from unittest import TestCase
 
 import numpy as np
 
 from .main import crop_image_by_scale
 
 
-class TestCropByScale(unittest.TestCase):
+class TestCropByScale(TestCase):
     @classmethod
     def setUp(self):
 
