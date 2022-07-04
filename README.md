@@ -41,6 +41,9 @@ The name Tomni is a combination of creator (Tom) and other CytoSMART product he 
   * Approximate circle by area
   * Get roundness
   * Get circularity
+* Image center crop
+  * Crop by dimension
+  * Crop by scale
 * Json operation
   * Add circularity property
   * Scale object
@@ -64,6 +67,7 @@ Sorted alphabetically
 - Coenraad Stijne
 - Denisa Daroţi
 - Hristo Atanasov
+- Jan-Niklas Schneider
 - Jelle van Kerkvoorde
 - Kirsten Koopman
 - Manon van Erp
