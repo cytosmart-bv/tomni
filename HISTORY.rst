@@ -1,5 +1,9 @@
 # History
 
+1.13.0 (2022-04-15)
+------------------
+- Add wrapper functions around bbox center fitting to crop an image by dimension and by scale.
+
 1.12.0 (2022-04-15)
 ------------------
 - BUGFIX: Import approximate_circle_by_area
