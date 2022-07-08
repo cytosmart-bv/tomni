@@ -2,7 +2,7 @@
 
 1.13.0 (2022-04-15)
 ------------------
-- Add wrapper functions around bbox center fitting to crop an image by dimension and by scale.
+- Add wrapper functions around bbox center fitting to get bbox by scale.
 
 1.12.0 (2022-04-15)
 ------------------

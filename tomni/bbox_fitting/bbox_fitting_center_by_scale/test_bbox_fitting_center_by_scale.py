@@ -5,7 +5,7 @@ import numpy as np
 from .main import crop_image_by_scale
 
 
-class TestCropByScale(TestCase):
+class TestBboxFittingCenterByScale(TestCase):
     @classmethod
     def setUp(self):
 
