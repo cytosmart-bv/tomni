@@ -1,1 +1,1 @@
-from .main import crop_image_by_scale
+from .main import bbox_fitting_center_by_scale

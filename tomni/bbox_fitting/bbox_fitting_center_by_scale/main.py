@@ -1,6 +1,6 @@
 import numpy as np
 
-from ...bbox_fitting import bbox_fitting_center
+from .. import bbox_fitting_center
 
 
 def bbox_fitting_center_by_scale(image: np.ndarray, scale: float = 1.0) -> np.ndarray:

@@ -6,7 +6,7 @@ Within the tomni there are helpers for different use cases.
 Bounding boxes
 ----------------
 
-A bounding box is an rectangle defined by 4 number.
+A bounding box is an rectangle defined by 4 coordinates.
 
 x1: lowest x value
 
@@ -20,7 +20,7 @@ An bounding box is never rotated.
 The bounding box can be outside the image or even bigger than the image.
 
 .. automodule:: tomni
-   :members: bbox_fitting, bbox_fitting_center
+   :members: bbox_fitting, bbox_fitting_center, bbox_fitting_center_by_scale
    :show-inheritance:
 
 .. automodule:: tomni.bbox_operations

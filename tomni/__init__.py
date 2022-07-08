@@ -12,8 +12,11 @@ from . import (
     make_mask,
     transformers,
 )
-from .bbox_fitting import bbox_fitting, bbox_fitting_center
-from .img_center_crop import crop_by_dim, crop_by_scale
+from .bbox_fitting import (
+    bbox_fitting,
+    bbox_fitting_center,
+    bbox_fitting_center_by_scale,
+)
 from .img_dim import img_dim
 from .img_paste import img_paste
 from .shape_fitting import fit_rect_around_ellipse

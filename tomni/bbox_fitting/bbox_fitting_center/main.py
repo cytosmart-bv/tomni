@@ -1,8 +1,11 @@
 from __future__ import absolute_import, division
-from typing import List
-from . import bbox_fitting
+
 from math import ceil
+from typing import List
+
 import numpy as np
+
+from . import bbox_fitting
 
 
 def bbox_fitting_center(img: np.ndarray, size, padding_value: int = 0) -> np.ndarray:
