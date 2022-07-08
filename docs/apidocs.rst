@@ -6,7 +6,7 @@ Within the tomni there are helpers for different use cases.
 Bounding boxes
 ----------------
 
-A bounding box is an rectangle defined by 4 coordinates.
+A bounding box is an rectangle defined by 4 numbers.
 
 x1: lowest x value
 
