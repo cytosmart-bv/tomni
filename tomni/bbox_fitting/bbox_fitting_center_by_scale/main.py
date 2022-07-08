@@ -15,7 +15,7 @@ def bbox_fitting_center_by_scale(image: np.ndarray, scale: float = 1.0) -> np.nd
         ValueError: If scale not in (0,1].
 
     Returns:
-        np.ndarray: Cropped image.
+        np.ndarray: Scaled center bbox.
     """
     if 0 < scale <= 1.0:
         width_scaled = int(image.shape[1] * scale)
