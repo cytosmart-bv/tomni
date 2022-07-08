@@ -32,6 +32,7 @@ The name Tomni is a combination of creator (Tom) and other CytoSMART product he 
 
 * Bounding box fitting (bbox fitting)
   * Center bounding box fit
+  * Center bounding box fit by scale
   * Custom location box fit
 * Illumination correction
   * Brightfield
@@ -41,9 +42,6 @@ The name Tomni is a combination of creator (Tom) and other CytoSMART product he 
   * Approximate circle by area
   * Get roundness
   * Get circularity
-* Image center crop
-  * Crop by dimension
-  * Crop by scale
 * Json operation
   * Add circularity property
   * Scale object
