@@ -1,5 +1,8 @@
-import cv2
 import math
+
+import cv2
+
+from ...contour_operations import circularity
 from ...transformers import json2contours
 
 
@@ -15,18 +18,11 @@ def add_circularity(json_object: dict) -> None:
     if json_object["type"] == "polygon":
         cnt = json2contours(json_object)
 
-        # Calculate the area of enclosing circle
-        enclosing_circle = cv2.minEnclosingCircle(cnt)
-        radius = enclosing_circle[1]
-        area_circle = radius**2 * math.pi
-
-        # Calculate the area of contour
-        area_contour = cv2.contourArea(cnt)
-        circularity = area_contour / area_circle
+        _circularity = circularity(cnt)
 
         # Add results to current object
-        json_object["circularity"] = circularity
+        json_object["circularity"] = _circularity
     else:
         raise ValueError(
-            f"currently only the polygon objects are supported not {json_object['type']}"
+            f"Currently only the polygon objects are supported; not {json_object['type']}"
         )
