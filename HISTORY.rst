@@ -1,4 +1,7 @@
 # History
+1.12.1 (2022-10-06)
+------------------
+- Update Json-circularity with circularity calculation from contour ops.
 
 1.12.0 (2022-04-15)
 ------------------

@@ -1,9 +1,9 @@
 from unittest import TestCase
+
 from .main import add_circularity
-import math
 
 
-class TestScaleObject(TestCase):
+class TestAddCircularity(TestCase):
     def test_square(self):
         input_json_object = {
             "type": "polygon",
@@ -25,7 +25,7 @@ class TestScaleObject(TestCase):
                 {"x": 15000, "y": 0},
             ],
             "id": "unicorn",
-            "circularity": 2 / math.pi,
+            "circularity": 0.7853981633974482,
         }
 
         add_circularity(input_json_object)
