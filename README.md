@@ -1,5 +1,4 @@
-Tomni
-=====
+# Tomni
 
 [![Build Status](https://cytosmart.visualstudio.com/CytoSmartImageAnalysis/_apis/build/status/cytosmart-bv.tomni?branchName=main)](https://cytosmart.visualstudio.com/CytoSmartImageAnalysis/_build/latest?definitionId=384&branchName=main)
 [![Downloads](https://pepy.tech/badge/tomni)](https://pepy.tech/project/tomni)
@@ -12,7 +11,7 @@ The package was developed in-house to centralize the helper function for compute
 
 ## Getting Tomni
 
-``` cmd
+```cmd
 pip install tomni
 ```
 
@@ -26,39 +25,39 @@ For commercial use please contact [CytoSMART](https://cytosmart.com/contact).
 
 The name Tomni is a combination of creator (Tom) and other CytoSMART product he was working on, [the Omni](https://cytosmart.com/products/omni). Tomni name was proposed by Denissa Daroţi, a former CytoSMART intern, who won a bet with her mentor by getting a (well deserved) 9/10 for her internship.
 
-
-
 ## Features
 
-* Bounding box fitting (bbox fitting)
-  * Center bounding box fit
-  * Custom location box fit
-* Illumination correction
-  * Brightfield
-  * Fluorescence
-* Contour operations
-  * Get center
-  * Approximate circle by area
-  * Get roundness
-  * Get circularity
-* Json operation
-  * Add circularity property
-  * Scale object
-  * Translate object
-* Make a mask
-  * Ellipse
-  * Polygon
-* Shape fitting
-  * Rect around ellipse
-* Transformers of data format
-  * Contours to json
-  * Ellipse to json
-  * Json 2 contours
-  * Json 2 label
-  * Labels 2 contours
-  * Labels 2 lists of points
+- Bounding box fitting (bbox fitting)
+  - Center bounding box fit
+  - Custom location box fit
+- Illumination correction
+  - Brightfield
+  - Fluorescence
+- Contour operations
+  - Get center
+  - Approximate circle by area
+  - Get roundness
+  - Get circularity
+- Json operation
+  - Add circularity property
+  - Scale object
+  - Translate object
+- Make a mask
+  - Ellipse
+  - Polygon
+- Shape fitting
+  - Rect around ellipse
+- Transformers of data format
+  - Contours to json
+  - Ellipse to json
+  - Json 2 contours
+  - Json 2 label
+  - Json 2 bbox
+  - Labels 2 contours
+  - Labels 2 lists of points
 
 ## Credits
+
 Sorted alphabetically
 
 - Coenraad Stijne
