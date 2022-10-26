@@ -1,4 +1,8 @@
 # History
+1.13.0 (2022-10-24)
+------------------
+- Add json2bbox for polygon and ellipse
+
 1.12.1 (2022-10-06)
 ------------------
 - Update Json-circularity with circularity calculation from contour ops.
