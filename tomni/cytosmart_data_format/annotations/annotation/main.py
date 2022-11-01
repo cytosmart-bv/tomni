@@ -1,6 +1,8 @@
 from abc import ABC, abstractclassmethod, abstractproperty
 from typing import Dict, List
 
+import numpy as np
+
 
 class Annotation(ABC):
     # rename Shape
@@ -25,6 +27,10 @@ class Annotation(ABC):
 
     @abstractclassmethod
     def _parse_item(self, cdf_item: Dict) -> bool:
+        pass
+
+    @abstractclassmethod
+    def _toContour(self) -> np.ndarray:
         pass
 
     @property.getter
