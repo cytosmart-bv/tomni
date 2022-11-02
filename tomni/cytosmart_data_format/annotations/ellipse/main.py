@@ -1,5 +1,4 @@
 import numpy as np
-from cell_fea.morphology import circularity
 
 from ..annotation import Annotation
 from ..point import Point
@@ -12,44 +11,89 @@ class Ellipse(Annotation):
         self._rotation: float = rotation
 
         self._circularity = None
-        self._roundness = None
         self._area = None
         self._perimeter = None
-        # self._perimeter?
+        self._aspect_ratio = None
+
+        # self._roundness = None # Needed?
+        # or this is also eccentricity?
 
     @property.getter
     def radius(self) -> Point:
-        """x and y
-        """
         return self._radius
 
     @property.getter
     def center(self) -> Point:
-        """x and y
-        """
         return self._center
 
     @property.getter
     def rotation(self) -> float:
-        """ rotation in degree.
-        """
-        pass
         return self._rotation
 
     @property.getter
-    def get_circluratiy(self) -> str:
-        if not self._circularity:
-            # Circularity (C) = 4 * pi * Area / perimeter**2
-            # Perimeter/circumference = 2*pi*sqrt((radX**2 + radY**2) / 2)
-            # Ellipse Area = pi * radX * radY
-            perimeter = (
-                2 * np.pi * np.sqrt((self._radius.x ** 2 + self._radius.y ** 2) / 2)
-            )
-            circularity = (
-                4 * np.pi * (np.pi * self._radius.x * self._radius.y) / perimeter ** 2
-            )
-            self._circularity = circularity
-            return self._circularity
-        else:
-            return self._circularity
+    def get_circluratiy(self) -> float:
+        """Circularity described by 4 * pi * Area / Perimeter**2.
 
+        Returns:
+            float: Ellipse's circularity.
+        """
+        if not self._circularity:
+            self._calculate_circularity()
+
+        return self._circularity
+
+    @property.getter
+    def get_area(self) -> float:
+        """Area described by pi * radiusX * radiusY.
+
+        Returns:
+            float: Ellipse's area.
+        """
+        if not self._area:
+            self._calculate_area()
+
+        return self._area
+
+    @property.getter
+    def get_perimeter(self) -> float:
+        """Perimeter described by 2*pi*sqrt((radiusX**2 + radiusY**2) / 2).
+
+        Returns:
+            float: Ellipse's perimeter.
+        """
+        if not self._perimeter:
+            self._calculate_perimeter()
+
+        return self._perimeter
+
+    @property.getter
+    def get_aspect_ratio(self) -> float:
+        """Ratio between minor and major axis in this case radiusX * 2 / radiusY * 2.
+
+        Returns:
+            float: Ellipse's aspect ratio.
+        """
+        if not self._aspect_ratio:
+            self._calculate_aspect_ratio()
+
+        return self._aspect_ratio
+
+    def _calculate_circularity(self) -> None:
+        if not self._perimeter:
+            self._calculate_perimeter()
+
+        if not self._area:
+            self._calculate_area()
+
+        self._circularity = 4 * np.pi * self._area / self._perimeter ** 2
+
+    def _calculate_perimeter(self) -> None:
+        self._perimeter = (
+            2 * np.pi * np.sqrt((self._radius.x ** 2 + self._radius.y ** 2) / 2)
+        )
+
+    def _calculate_area(self) -> None:
+        self._area = np.pi * self._radius.x * self._radius.y
+
+    def _calculate_aspect_ratio(self) -> None:
+        self._aspect_ratio = (self._radius.x / self._radius.y) * 2
