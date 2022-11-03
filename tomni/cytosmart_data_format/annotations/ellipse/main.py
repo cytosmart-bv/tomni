@@ -15,9 +15,6 @@ class Ellipse(Annotation):
         self._perimeter = None
         self._aspect_ratio = None
 
-        # self._roundness = None # Needed?
-        # or this is also eccentricity?
-
     @property.getter
     def radius(self) -> Point:
         return self._radius
@@ -31,7 +28,7 @@ class Ellipse(Annotation):
         return self._rotation
 
     @property.getter
-    def get_circluratiy(self) -> float:
+    def circularity(self) -> float:
         """Circularity described by 4 * pi * Area / Perimeter**2.
 
         Returns:
@@ -43,7 +40,7 @@ class Ellipse(Annotation):
         return self._circularity
 
     @property.getter
-    def get_area(self) -> float:
+    def area(self) -> float:
         """Area described by pi * radiusX * radiusY.
 
         Returns:
@@ -55,7 +52,7 @@ class Ellipse(Annotation):
         return self._area
 
     @property.getter
-    def get_perimeter(self) -> float:
+    def perimeter(self) -> float:
         """Perimeter described by 2*pi*sqrt((radiusX**2 + radiusY**2) / 2).
 
         Returns:
@@ -67,7 +64,7 @@ class Ellipse(Annotation):
         return self._perimeter
 
     @property.getter
-    def get_aspect_ratio(self) -> float:
+    def aspect_ratio(self) -> float:
         """Ratio between minor and major axis in this case radiusX * 2 / radiusY * 2.
 
         Returns:
@@ -79,13 +76,7 @@ class Ellipse(Annotation):
         return self._aspect_ratio
 
     def _calculate_circularity(self) -> None:
-        if not self._perimeter:
-            self._calculate_perimeter()
-
-        if not self._area:
-            self._calculate_area()
-
-        self._circularity = 4 * np.pi * self._area / self._perimeter ** 2
+        self._circularity = 4 * np.pi * self.area / self.perimeter ** 2
 
     def _calculate_perimeter(self) -> None:
         self._perimeter = (
@@ -96,4 +87,9 @@ class Ellipse(Annotation):
         self._area = np.pi * self._radius.x * self._radius.y
 
     def _calculate_aspect_ratio(self) -> None:
-        self._aspect_ratio = (self._radius.x / self._radius.y) * 2
+        if self._radius.x == self._radius.y:
+            self._aspect_ratio = 1.0
+        elif self._radius.x > self._radius.y:
+            self._aspect_ratio = self._radius.y / self._radius.x
+        else:
+            self._aspect_ratio = self._radius.x / self._radius.y

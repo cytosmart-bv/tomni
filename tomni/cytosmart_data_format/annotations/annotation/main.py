@@ -29,10 +29,6 @@ class Annotation(ABC):
     def _parse_item(self, cdf_item: Dict) -> bool:
         pass
 
-    @abstractclassmethod
-    def _toContour(self) -> np.ndarray:
-        pass
-
     @property.getter
     def get_label(self) -> str:
         pass
