@@ -15,19 +15,19 @@ class Ellipse(Annotation):
         self._perimeter = None
         self._aspect_ratio = None
 
-    @property.getter
+    @property
     def radius(self) -> Point:
         return self._radius
 
-    @property.getter
+    @property
     def center(self) -> Point:
         return self._center
 
-    @property.getter
+    @property
     def rotation(self) -> float:
         return self._rotation
 
-    @property.getter
+    @property
     def circularity(self) -> float:
         """Circularity described by 4 * pi * Area / Perimeter**2.
 
@@ -39,7 +39,7 @@ class Ellipse(Annotation):
 
         return self._circularity
 
-    @property.getter
+    @property
     def area(self) -> float:
         """Area described by pi * radiusX * radiusY.
 
@@ -51,7 +51,7 @@ class Ellipse(Annotation):
 
         return self._area
 
-    @property.getter
+    @property
     def perimeter(self) -> float:
         """Perimeter described by 2*pi*sqrt((radiusX**2 + radiusY**2) / 2).
 
@@ -63,7 +63,7 @@ class Ellipse(Annotation):
 
         return self._perimeter
 
-    @property.getter
+    @property
     def aspect_ratio(self) -> float:
         """Ratio between minor and major axis in this case radiusX * 2 / radiusY * 2.
 

@@ -5,7 +5,6 @@ import numpy as np
 
 
 class Annotation(ABC):
-    # rename Shape
     def __init__(self, cdf_item: Dict) -> None:
         self._id: str
         self._label: str
@@ -14,10 +13,6 @@ class Annotation(ABC):
         if not self._parse_item(cdf_item):
             # additional require contour?
             raise ValueError
-
-        # example feature.
-        self._circularity = None
-        pass
 
     @abstractclassmethod
     def __str__(self) -> str:
@@ -29,20 +24,15 @@ class Annotation(ABC):
     def _parse_item(self, cdf_item: Dict) -> bool:
         pass
 
-    @property.getter
-    def get_label(self) -> str:
-        pass
+    @property
+    @abstractclassmethod
+    def label(self) -> str:
+        return self._label
 
-    @property.setter
-    def set_label(self) -> str:
+    @label.setter
+    @abstractclassmethod
+    def label(self, value) -> str:
         # is a label mutuable?
         # its a maybe
-        pass
-
-    @property.getter
-    @abstractproperty
-    def get_circluratiy(self) -> str:
-        """Circularity and other features. 
-        """
-        pass
+        self._label = value
 

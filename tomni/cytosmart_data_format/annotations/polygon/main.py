@@ -9,13 +9,13 @@ class Polygon(Annotation):
         self._points: List[Point]
         pass
 
-    @property.getter
+    @property
     def points(self) -> List[Point]:
         """Points to be returned.
         """
         pass
 
-    @property.getter
+    @property
     def get_feature_x(self) -> float:
         """Idea is to calculate feature once and store inside the annotation.
         """
