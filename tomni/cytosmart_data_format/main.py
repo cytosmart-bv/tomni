@@ -1,6 +1,6 @@
 from typing import Dict, List, Union
 
-from .annotations import Annotation
+from .annotations.annotation import Annotation
 
 
 class CytoSmartDataFormat:
@@ -47,7 +47,7 @@ class CytoSmartDataFormat:
     def cdf_data(self) -> List[Annotation]:
         return self._cdf_data
 
-    @property.setter
+    @cdf_data.setter
     def cdf_data(self, cdf_dicts: List[Dict]):
         self._cdf_data = self._parse_data_objects(cdf_dicts)
 
