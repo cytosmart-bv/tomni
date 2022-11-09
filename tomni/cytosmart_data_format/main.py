@@ -1,6 +1,6 @@
 from typing import Dict, List, Union
 
-from .annotations.annotation import Annotation
+from .annotations import Annotation
 
 
 class CytoSmartDataFormat:
