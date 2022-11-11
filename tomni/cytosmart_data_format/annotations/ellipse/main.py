@@ -1,3 +1,6 @@
+from dataclasses import asdict
+from typing import List
+
 import numpy as np
 
 from ..annotation import Annotation
@@ -5,15 +8,35 @@ from ..point import Point
 
 
 class Ellipse(Annotation):
-    def __init__(self, radius: Point, center: Point, rotation: float):
+    def __init__(
+        self,
+        radius: Point,
+        center: Point,
+        rotation: float,
+        id: str,
+        label: str,
+        children: List[Annotation],
+        parents: List[Annotation],
+    ):
+        super().__init__(id, label, children, parents)
+        # super().__init__()
+        # id=id, label=label, children=children, parents=parents
         self._radius: Point = radius
         self._center: Point = center
         self._rotation: float = rotation
 
-        self._circularity = None
-        self._area = None
-        self._perimeter = None
-        self._aspect_ratio = None
+        self._circularity: float = None
+        self._area: float = None
+        self._perimeter: float = None
+        self._aspect_ratio: float = None
+
+    @property
+    def label(self):
+        return super().label
+
+    @label.setter
+    def label(self, value) -> None:
+        super().label = value
 
     @property
     def radius(self) -> Point:
@@ -74,6 +97,25 @@ class Ellipse(Annotation):
             self._calculate_aspect_ratio()
 
         return self._aspect_ratio
+
+    @classmethod
+    def to_dict(self) -> dict:
+
+        dict_ellipse = {
+            "type": "ellipse",
+            "center": self.center,
+            "radius": self.radius,
+            "rotation": self.rotation,
+            "aspect_ratio": self.aspect_ratio,
+            "area": self.area,
+            "circularity": self.circularity,
+            "perimeter": self.perimeter,
+        }
+
+        # dict_11 = {**dict_, **dict_ellipse}
+        # dict_ = super().to_dict()
+        # return dict_
+        return dict_ellipse
 
     def _calculate_circularity(self) -> None:
         self._circularity = 4 * np.pi * self.area / self.perimeter ** 2

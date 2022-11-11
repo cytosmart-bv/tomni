@@ -1,38 +1,35 @@
-from abc import ABC, abstractclassmethod, abstractproperty
-from typing import Dict, List
-
-import numpy as np
+from abc import ABC, abstractmethod
+from typing import List
 
 
 class Annotation(ABC):
-    def __init__(self, cdf_item: Dict) -> None:
-        self._id: str
-        self._label: str
-        self._children: List[Annotation]  # guid of the child
-        self._parents: List[Annotation]  # guid of
-        if not self._parse_item(cdf_item):
-            # additional require contour?
-            raise ValueError
+    def __init__(self, id: str, label: str, children: List, parents: List) -> None:
+        self._id: str = id
+        self._label: str = label
+        self._children: List[Annotation] = children
+        self._parents: List[Annotation] = parents
 
-    @abstractclassmethod
-    def __str__(self) -> str:
-        """Potentially use this built-in to create a json or something else.
+    @abstractmethod
+    def to_dict(self) -> dict:
+        """Creates a dictionary in CDF of annotation.
+
+        Returns:
+            dict: Dictionary of anntation.
         """
-        pass
-
-    @abstractclassmethod
-    def _parse_item(self, cdf_item: Dict) -> bool:
-        pass
+        return {
+            "id": self.id,
+            "label": self.label,
+            "children": self._children,
+            "parents": self._parents,
+        }
 
     @property
-    @abstractclassmethod
+    @abstractmethod
     def label(self) -> str:
         return self._label
 
     @label.setter
-    @abstractclassmethod
-    def label(self, value) -> str:
-        # is a label mutuable?
-        # its a maybe
+    @abstractmethod
+    def label(self, value) -> None:
         self._label = value
 
