@@ -19,8 +19,6 @@ class Ellipse(Annotation):
         parents: List[Annotation],
     ):
         super().__init__(id, label, children, parents)
-        # super().__init__()
-        # id=id, label=label, children=children, parents=parents
         self._radius: Point = radius
         self._center: Point = center
         self._rotation: float = rotation
@@ -102,8 +100,8 @@ class Ellipse(Annotation):
 
         dict_ellipse = {
             "type": "ellipse",
-            "center": self.center,
-            "radius": self.radius,
+            "center": asdict(self.center),
+            "radius": asdict(self.radius),
             "rotation": self.rotation,
             "aspect_ratio": self.aspect_ratio,
             "area": self.area,
@@ -116,11 +114,11 @@ class Ellipse(Annotation):
         return dict_11
 
     def _calculate_circularity(self) -> None:
-        self._circularity = 4 * np.pi * self.area / self.perimeter**2
+        self._circularity = 4 * np.pi * self.area / self.perimeter ** 2
 
     def _calculate_perimeter(self) -> None:
         self._perimeter = (
-            2 * np.pi * np.sqrt((self._radius.x**2 + self._radius.y**2) / 2)
+            2 * np.pi * np.sqrt((self._radius.x ** 2 + self._radius.y ** 2) / 2)
         )
 
     def _calculate_area(self) -> None:

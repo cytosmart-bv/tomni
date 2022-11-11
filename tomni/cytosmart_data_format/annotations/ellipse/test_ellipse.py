@@ -12,29 +12,29 @@ class TestEllipse(TestCase):
         parents = []
         label = "ellipse_test"
 
-        # self.zero_ellipse = Ellipse(
-        #     radius=Point(0, 0),
-        #     center=Point(0, 0),
-        #     rotation=0,
-        #     # id=id,
-        #     # children=children,
-        #     # parents=parents,
-        #     # label=label,
-        # )
-        # self.circle = Ellipse(
-        #     radius=Point(1, 1),
-        #     center=Point(0, 0),
-        #     rotation=0,
-        #     # id=id,
-        #     # children=children,
-        #     # parents=parents,
-        #     # label=label,
-        # )
+        self.zero_ellipse = Ellipse(
+            radius=Point(0, 0),
+            center=Point(0, 0),
+            rotation=0,
+            id=id_,
+            children=children,
+            parents=parents,
+            label=label,
+        )
+        self.circle = Ellipse(
+            radius=Point(1, 1),
+            center=Point(0, 0),
+            rotation=0,
+            id=id_,
+            children=children,
+            parents=parents,
+            label=label,
+        )
         self.oval = Ellipse(
             radius=Point(1, 3),
             center=Point(0, 0),
             rotation=0,
-            id_=id_,
+            id=id_,
             children=children,
             parents=parents,
             label=label,
@@ -108,9 +108,59 @@ class TestEllipse(TestCase):
         actual = self.oval.perimeter
         self.assertEqual(expected, actual)
 
-    def test_oval_to_dict(self):
+    def test_zero_ellipse_to_dict(self):
+        expected = {
+            "area": 0.0,
+            "aspect_ratio": 1.0,
+            "center": {"x": 0, "y": 0},
+            "children": [],
+            "circularity": np.nan,
+            "id": "1234-1234-2134-1321",
+            "label": "ellipse_test",
+            "parents": [],
+            "perimeter": 0.0,
+            "radius": {"x": 0, "y": 0},
+            "rotation": 0,
+            "type": "ellipse",
+        }
+        actual = self.zero_ellipse.to_dict()
 
-        expected = {}
+        # Have to use np testing because of verifying nan values.
+        np.testing.assert_equal(expected, actual)
+
+    def test_circle_to_dict(self):
+        expected = {
+            "area": 3.141592653589793,
+            "aspect_ratio": 1.0,
+            "center": {"x": 0, "y": 0},
+            "children": [],
+            "circularity": 1.0,
+            "id": "1234-1234-2134-1321",
+            "label": "ellipse_test",
+            "parents": [],
+            "perimeter": 6.283185307179586,
+            "radius": {"x": 1, "y": 1},
+            "rotation": 0,
+            "type": "ellipse",
+        }
+        actual = self.circle.to_dict()
+        self.assertDictEqual(expected, actual)
+
+    def test_oval_to_dict(self):
+        expected = {
+            "area": 9.42477796076938,
+            "aspect_ratio": 0.3333333333333333,
+            "center": {"x": 0, "y": 0},
+            "children": [],
+            "circularity": 0.5999999999999999,
+            "id": "1234-1234-2134-1321",
+            "label": "ellipse_test",
+            "parents": [],
+            "perimeter": 14.049629462081453,
+            "radius": {"x": 1, "y": 3},
+            "rotation": 0,
+            "type": "ellipse",
+        }
         actual = self.oval.to_dict()
 
         self.assertDictEqual(expected, actual)
