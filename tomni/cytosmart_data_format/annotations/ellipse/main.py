@@ -98,7 +98,6 @@ class Ellipse(Annotation):
 
         return self._aspect_ratio
 
-    @classmethod
     def to_dict(self) -> dict:
 
         dict_ellipse = {
@@ -112,17 +111,16 @@ class Ellipse(Annotation):
             "perimeter": self.perimeter,
         }
 
-        # dict_11 = {**dict_, **dict_ellipse}
-        # dict_ = super().to_dict()
-        # return dict_
-        return dict_ellipse
+        dict_ = super().to_dict()
+        dict_11 = {**dict_, **dict_ellipse}
+        return dict_11
 
     def _calculate_circularity(self) -> None:
-        self._circularity = 4 * np.pi * self.area / self.perimeter ** 2
+        self._circularity = 4 * np.pi * self.area / self.perimeter**2
 
     def _calculate_perimeter(self) -> None:
         self._perimeter = (
-            2 * np.pi * np.sqrt((self._radius.x ** 2 + self._radius.y ** 2) / 2)
+            2 * np.pi * np.sqrt((self._radius.x**2 + self._radius.y**2) / 2)
         )
 
     def _calculate_area(self) -> None:

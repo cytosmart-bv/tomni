@@ -17,8 +17,8 @@ class Annotation(ABC):
             dict: Dictionary of anntation.
         """
         return {
-            "id": self.id,
-            "label": self.label,
+            "id": self._id,
+            "label": self._label,
             "children": self._children,
             "parents": self._parents,
         }
@@ -32,4 +32,3 @@ class Annotation(ABC):
     @abstractmethod
     def label(self, value) -> None:
         self._label = value
-
