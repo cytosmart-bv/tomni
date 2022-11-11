@@ -109,9 +109,9 @@ class Ellipse(Annotation):
             "perimeter": self.perimeter,
         }
 
-        dict_ = super().to_dict()
-        dict_11 = {**dict_, **dict_ellipse}
-        return dict_11
+        super_dict = super().to_dict()
+        dict_return_value = {**super_dict, **dict_ellipse}
+        return dict_return_value
 
     def _calculate_circularity(self) -> None:
         self._circularity = 4 * np.pi * self.area / self.perimeter ** 2
