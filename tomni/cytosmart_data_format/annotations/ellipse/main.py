@@ -18,6 +18,17 @@ class Ellipse(Annotation):
         children: List[Annotation],
         parents: List[Annotation],
     ):
+        """Initializes a Ellipse object.
+
+        Args:
+            radius (Point): Radius of ellipse. X and y radius.
+            center (Point): Coordinate of the center (x, y).
+            rotation (float): Angle of rotation in degrees.
+            id (str): UUID identifier.
+            label (str): Class label of annotation.
+            children (List[Annotation]): Tracking annotations. Refers to t+1.
+            parents (List[Annotation]): Tracking annotations. Refers to t-1.
+        """
         super().__init__(id, label, children, parents)
         self._radius: Point = radius
         self._center: Point = center
@@ -46,6 +57,8 @@ class Ellipse(Annotation):
 
     @property
     def rotation(self) -> float:
+        """Rotation in degrees.
+        """
         return self._rotation
 
     @property
