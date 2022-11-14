@@ -14,7 +14,7 @@ class Annotation(ABC):
         """Creates a dictionary in CDF of annotation.
 
         Returns:
-            dict: Dictionary of anntation.
+            dict: Dictionary of annotation.
         """
         return {
             "id": self._id,
