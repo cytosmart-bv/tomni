@@ -114,8 +114,9 @@ class Ellipse(Annotation):
         dict_ellipse = {
             "type": "ellipse",
             "center": asdict(self.center),
-            "radius": asdict(self.radius),
-            "rotation": self.rotation,
+            "radiusX": self.radius.x,
+            "radiusY": self.radius.y,
+            "angleOfRotation": self.rotation,
             "aspect_ratio": self.aspect_ratio,
             "area": self.area,
             "circularity": self.circularity,
