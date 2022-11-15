@@ -119,8 +119,9 @@ class TestEllipse(TestCase):
             "label": "ellipse_test",
             "parents": [],
             "perimeter": 0.0,
-            "radius": {"x": 0, "y": 0},
-            "rotation": 0,
+            "radiusX": 0,
+            "radiusY": 0,
+            "angleOfRotation": 0,
             "type": "ellipse",
         }
         actual = self.zero_ellipse.to_dict()
@@ -139,8 +140,9 @@ class TestEllipse(TestCase):
             "label": "ellipse_test",
             "parents": [],
             "perimeter": 6.283185307179586,
-            "radius": {"x": 1, "y": 1},
-            "rotation": 0,
+            "radiusX": 1,
+            "radiusY": 1,
+            "angleOfRotation": 0,
             "type": "ellipse",
         }
         actual = self.circle.to_dict()
@@ -157,8 +159,9 @@ class TestEllipse(TestCase):
             "label": "ellipse_test",
             "parents": [],
             "perimeter": 14.049629462081453,
-            "radius": {"x": 1, "y": 3},
-            "rotation": 0,
+            "radiusX": 1,
+            "radiusY": 3,
+            "angleOfRotation": 0,
             "type": "ellipse",
         }
         actual = self.oval.to_dict()
