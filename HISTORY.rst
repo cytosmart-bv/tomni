@@ -2,7 +2,7 @@
 2.0.0-beta?
 ------------------
 - Add ellipse annotation class.
-
+- Add polygon annotation class.
 
 1.13.0 (2022-10-24)
 ------------------

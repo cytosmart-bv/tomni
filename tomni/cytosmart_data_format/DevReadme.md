@@ -22,7 +22,7 @@ Hello people, This is a todo list for the new CytoSmart data format (CDF). File 
   - [ ] BinaryMask-class
   - [x] Ellipse-class
   - [x] Point-class
-  - [ ] Polygon-class
+  - [x] Polygon-class
 
 
 
