@@ -34,7 +34,8 @@ class Polygon(Annotation):
 
     @property
     def area(self) -> float:
-        """Area based on cv2's contour area.
+        """Quantity that expresses the extent of a polygon determined by cv2 contour operations.
+        Requires 5 or more points.
 
         Returns:
             float: Polygon's area.
@@ -46,6 +47,12 @@ class Polygon(Annotation):
 
     @property
     def aspect_ratio(self) -> float:
+        """Aspect Ratio (AR): axis_minor / axis_major
+        Requires 5 or more points.
+
+        Returns:
+            float: Aspect ratio in [0, 1].
+        """
         if not self._aspect_ratio:
             self._calculate_aspect_ratio()
 
@@ -53,6 +60,12 @@ class Polygon(Annotation):
 
     @property
     def average_diameter(self) -> float:
+        """Average Diameter (AD): (minor_axis + major_axis) / 2. 
+        Requires 5 or more points.
+
+        Returns:
+            float: Average diameter.
+        """
         if not self._average_diameter:
             self._calculate_average_diameter()
 
@@ -60,6 +73,11 @@ class Polygon(Annotation):
 
     @property
     def circularity(self) -> float:
+        """Circularity: (4 * pi * Area) / perimeter ** 2)
+
+        Returns:
+            float: Circularity in [0, 1].
+        """
         if not self._circularity:
             self._calculate_circularity()
 
@@ -67,6 +85,11 @@ class Polygon(Annotation):
 
     @property
     def convex_hull_area(self) -> float:
+        """Convex Hull Area by cv2 contour operations. 
+
+        Returns:
+            float: Polygon's convex hull area.
+        """
         if not self._convex_hull_area:
             self._calculate_convex_hull_area()
 
@@ -82,6 +105,11 @@ class Polygon(Annotation):
 
     @property
     def major_axis(self) -> float:
+        """Fits an ellipse to polygon and detemermines major axis.
+
+        Returns:
+            float: Polygon's major axis.
+        """
         if not self._major_axis:
             self._calculate_major_axis()
 
@@ -89,6 +117,11 @@ class Polygon(Annotation):
 
     @property
     def minor_axis(self) -> float:
+        """Fits an ellipse to polygon and detemermines minor axis.
+
+        Returns:
+            float: Polygon's minor axis.
+        """
         if not self._minor_axis:
             self._calculate_minor_axis()
 
@@ -96,6 +129,11 @@ class Polygon(Annotation):
 
     @property
     def perimeter(self) -> float:
+        """Total length of polygon's boundary determined by cv2 contour operations.
+
+        Returns:
+            float: Polygon's perimeter
+        """
         if not self._perimeter:
             self._calculate_perimeter()
 
@@ -108,6 +146,9 @@ class Polygon(Annotation):
     @property
     def roundness(self) -> float:
         """Roundness: Area / (radius_enclosing_circle**2 * pi) in [0, 1].
+
+        Returns:
+            float: Polygon's roundness in [0, 1].
         """
         if not self._roundness:
             self._calculate_roundness()
