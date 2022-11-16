@@ -43,12 +43,12 @@ class CytoSmartDataFormat:
         """
         pass
 
-    @property.getter
-    def get_cdf_data(self) -> List[Annotation]:
+    @property
+    def cdf_data(self) -> List[Annotation]:
         return self._cdf_data
 
-    @property.setter
-    def set_cdf_data(self, cdf_dicts: List[Dict]):
+    @cdf_data.setter
+    def cdf_data(self, cdf_dicts: List[Dict]):
         self._cdf_data = self._parse_data_objects(cdf_dicts)
 
     @classmethod

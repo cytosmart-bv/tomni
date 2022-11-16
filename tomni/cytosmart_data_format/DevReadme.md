@@ -20,7 +20,7 @@ Hello people, This is a todo list for the new CytoSmart data format (CDF). File 
 - [ ] Annotations
   - [ ] Annotation-abstract-class
   - [ ] BinaryMask-class
-  - [ ] Ellipse-class
+  - [x] Ellipse-class
   - [x] Point-class
   - [ ] Polygon-class
 

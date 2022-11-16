@@ -13,7 +13,7 @@ class BinaryMask(Annotation):
         self._binary_mask = binary_mask
         pass
 
-    @property.getter
+    @property
     def get_mask(self) -> np.ndarray:
         return self._binary_mask
 

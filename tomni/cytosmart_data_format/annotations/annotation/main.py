@@ -1,46 +1,34 @@
-from abc import ABC, abstractclassmethod, abstractproperty
-from typing import Dict, List
+from abc import ABC, abstractmethod
+from typing import List
 
 
 class Annotation(ABC):
-    # rename Shape
-    def __init__(self, cdf_item: Dict) -> None:
-        self._id: str
-        self._label: str
-        self._children: List[Annotation]  # guid of the child
-        self._parents: List[Annotation]  # guid of
-        if not self._parse_item(cdf_item):
-            # additional require contour?
-            raise ValueError
+    def __init__(self, id: str, label: str, children: List, parents: List) -> None:
+        self._id: str = id
+        self._label: str = label
+        self._children: List[Annotation] = children
+        self._parents: List[Annotation] = parents
 
-        # example feature.
-        self._circularity = None
-        pass
+    @abstractmethod
+    def to_dict(self) -> dict:
+        """Creates a dictionary in CDF of annotation.
 
-    @abstractclassmethod
-    def __str__(self) -> str:
-        """Potentially use this built-in to create a json or something else.
+        Returns:
+            dict: Dictionary of annotation.
         """
-        pass
+        return {
+            "id": self._id,
+            "label": self._label,
+            "children": self._children,
+            "parents": self._parents,
+        }
 
-    @abstractclassmethod
-    def _parse_item(self, cdf_item: Dict) -> bool:
-        pass
+    @property
+    @abstractmethod
+    def label(self) -> str:
+        return self._label
 
-    @property.getter
-    def get_label(self) -> str:
-        pass
-
-    @property.setter
-    def set_label(self) -> str:
-        # is a label mutuable?
-        # its a maybe
-        pass
-
-    @property.getter
-    @abstractproperty
-    def get_circluratiy(self) -> str:
-        """Circularity and other features. 
-        """
-        pass
-
+    @label.setter
+    @abstractmethod
+    def label(self, value) -> None:
+        self._label = value

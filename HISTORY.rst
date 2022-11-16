@@ -1,4 +1,9 @@
 # History
+2.0.0-beta?
+------------------
+- Add ellipse annotation class.
+
+
 1.13.0 (2022-10-24)
 ------------------
 - Add json2bbox for polygon and ellipse

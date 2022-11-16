@@ -1,6 +1,6 @@
 import numpy as np
 
-from ... import img_dim
+from ...img_dim import img_dim
 from ...make_mask import make_mask_contour, make_mask_ellipse
 from ..json2contours import json2contours
 
