@@ -1,4 +1,5 @@
-from typing import Dict, List, Union
+import uuid
+from typing import Dict, List
 
 import numpy as np
 
@@ -29,9 +30,9 @@ class CytoSmartDataFormat(object):
             elif d[TYPE_KEY] == "polygon":
                 annotation = Polygon(
                     label=d.get(LABEL_KEY, None),
-                    id=d[ID_KEY],
-                    children=d[CHILDREN_KEY],
-                    parents=d[PARENTS_KEY],
+                    id=d.get(ID_KEY, uuid.uuid4()),
+                    children=d.get(CHILDREN_KEY, []),
+                    parents=d.get(PARENTS_KEY, []),
                     points=[Point(x=p["x"], y=p["y"]) for p in d["points"]],
                 )
             else:
@@ -127,8 +128,9 @@ class CytoSmartDataFormat(object):
         """
         pass
 
-    def __del__(self, other):
+    def delete_annotation(self, item: Annotation):
         """Remove an annotation from self.annotations.
+        Find and delete.
         """
         pass
 
