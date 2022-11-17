@@ -13,7 +13,8 @@ class TestEllipse(TestCase):
         label = "ellipse_test"
 
         self.zero_ellipse = Ellipse(
-            radius=Point(0, 0),
+            radius_x=0,
+            radius_y=0,
             center=Point(0, 0),
             rotation=0,
             id=id_,
@@ -22,7 +23,8 @@ class TestEllipse(TestCase):
             label=label,
         )
         self.circle = Ellipse(
-            radius=Point(1, 1),
+            radius_x=1,
+            radius_y=1,
             center=Point(0, 0),
             rotation=0,
             id=id_,
@@ -31,7 +33,8 @@ class TestEllipse(TestCase):
             label=label,
         )
         self.oval = Ellipse(
-            radius=Point(1, 3),
+            radius_x=1,
+            radius_y=3,
             center=Point(0, 0),
             rotation=0,
             id=id_,
@@ -119,8 +122,8 @@ class TestEllipse(TestCase):
             "label": "ellipse_test",
             "parents": [],
             "perimeter": 0.0,
-            "radiusX": 0,
-            "radiusY": 0,
+            "radiusX": 0.0,
+            "radiusY": 0.0,
             "angleOfRotation": 0,
             "type": "ellipse",
         }
@@ -140,8 +143,8 @@ class TestEllipse(TestCase):
             "label": "ellipse_test",
             "parents": [],
             "perimeter": 6.283185307179586,
-            "radiusX": 1,
-            "radiusY": 1,
+            "radiusX": 1.0,
+            "radiusY": 1.0,
             "angleOfRotation": 0,
             "type": "ellipse",
         }
@@ -159,8 +162,8 @@ class TestEllipse(TestCase):
             "label": "ellipse_test",
             "parents": [],
             "perimeter": 14.049629462081453,
-            "radiusX": 1,
-            "radiusY": 3,
+            "radiusX": 1.0,
+            "radiusY": 3.0,
             "angleOfRotation": 0,
             "type": "ellipse",
         }
