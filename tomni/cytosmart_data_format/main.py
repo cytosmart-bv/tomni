@@ -1,15 +1,50 @@
 from typing import Dict, List, Union
 
-from .annotations import Annotation
+import numpy as np
+
+from .annotations import Annotation, Point, Polygon
 
 
-class CytoSmartDataFormat:
-    def __init__(self, cdf_dicts: List[Dict]):
-        self._cdf_data = self._parse_data_objects(cdf_dicts)
+class CytoSmartDataFormat(object):
+    def __init__(self, annotations: List[Annotation]):
+        self._annotations = annotations
 
         # another thing imaginable should be cover a whole scan where...
         # to break down into timepoints and timepoints do have cdf_data.
         # cdf_data has data types like ellipses, polygons, masks, etc.
+        pass
+
+    @classmethod
+    def from_dicts(cls, dicts: List[dict]):
+        TYPE_KEY = "type"
+        LABEL_KEY = "label"
+        CHILDREN_KEY = "children"
+        PARENTS_KEY = "parents"
+        ID_KEY = "id"
+        annotations = []
+
+        for d in dicts:
+            if d[TYPE_KEY] == "ellipse":
+                print(1)
+            elif d[TYPE_KEY] == "polygon":
+                annotation = Polygon(
+                    label=d.get(LABEL_KEY, None),
+                    id=d[ID_KEY],
+                    children=d[CHILDREN_KEY],
+                    parents=d[PARENTS_KEY],
+                    points=[Point(x=p["x"], y=p["y"]) for p in d["points"]],
+                )
+                
+            else:
+                raise ValueError(
+                    f"CDF cannot be created. Dict with id {d.get('id', None)} misses type-key with value ellipse or polygon."
+                )
+
+            annotations.append(annotation)
+
+    @classmethod
+    def from_contours(cls, contours: List[np.ndarray]):
+        """could be an option"""
         pass
 
     def __len__(self) -> int:
