@@ -11,6 +11,15 @@ from ..point import Point
 
 class Polygon(Annotation):
     def __init__(self, points: List[Point], id, label, children, parents):
+        """Initializes a Polygon object.
+
+        Args:
+            points (List[Point]): Collection of edges describing the polygon.
+            id (str): UUID identifier.
+            label (str): Class label of annotation.
+            children (List[Annotation]): Tracking annotations. Refers to t+1.
+            parents (List[Annotation]): Tracking annotations. Refers to t-1.
+        """
         super().__init__(id, label, children, parents)
         self._points: List[Point] = points
         self._contour: List[Tuple[int, int]] = self._parse_points_to_contour(points)
@@ -22,15 +31,15 @@ class Polygon(Annotation):
             )
 
         # features
-        self._area = None  # done
-        self._aspect_ratio = None  # done
+        self._area = None
+        self._aspect_ratio = None
         self._average_diameter = None
-        self._circularity = None  # done
-        self._convex_hull_area = None  # done
+        self._circularity = None
+        self._convex_hull_area = None
         self._minor_axis = None
         self._major_axis = None
-        self._perimeter = None  # done
-        self._roundness = None  # done
+        self._perimeter = None
+        self._roundness = None
 
     @property
     def area(self) -> float:
@@ -132,7 +141,7 @@ class Polygon(Annotation):
         """Total length of polygon's boundary determined by cv2 contour operations.
 
         Returns:
-            float: Polygon's perimeter
+            float: Polygon's perimeter.
         """
         if not self._perimeter:
             self._calculate_perimeter()
@@ -145,7 +154,7 @@ class Polygon(Annotation):
 
     @property
     def roundness(self) -> float:
-        """Roundness: Area / (radius_enclosing_circle**2 * pi) in [0, 1].
+        """Roundness: Area / (radius_enclosing_circle**2 * pi).
 
         Returns:
             float: Polygon's roundness in [0, 1].
