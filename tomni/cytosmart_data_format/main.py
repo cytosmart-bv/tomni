@@ -34,21 +34,32 @@ class CytoSmartDataFormat(object):
                     parents=d[PARENTS_KEY],
                     points=[Point(x=p["x"], y=p["y"]) for p in d["points"]],
                 )
-                
+
             else:
                 raise ValueError(
                     f"CDF cannot be created. Dict with id {d.get('id', None)} misses type-key with value ellipse or polygon."
                 )
-
             annotations.append(annotation)
+
+        return cls(annotations)
 
     @classmethod
     def from_contours(cls, contours: List[np.ndarray]):
         """could be an option"""
         pass
 
+    @classmethod
+    def from_masks(cls, masks: List[np.ndarray]):
+        """could be an option"""
+        pass
+
+    @classmethod
+    def from_darwin(cls, dicts: List[dict]):
+        """could be an option"""
+        pass
+
     def __len__(self) -> int:
-        return len(self._cdf_data)
+        return len(self._annotations)
 
     def __eq__(self, __o: object) -> bool:
         # if {}== {}:
@@ -61,10 +72,16 @@ class CytoSmartDataFormat(object):
         pass
 
     def __iter__(self):
-        # Something like that.
-        # Potentially look into combination of __next__ and __iter__
-        while True:
-            yield self._cdf_data
+        self.idx = 0
+        return self
+
+    def __next__(self):
+        if self.idx < self.__len__():
+            annotation = self.annotations[self.idx]
+            self.idx += 1
+            return annotation
+        else:
+            raise StopIteration
 
     def __dict__(self) -> List[Dict]:  # Alternative: to_json.
         """To convert the cdf_data into a json dict.
@@ -79,12 +96,13 @@ class CytoSmartDataFormat(object):
         pass
 
     @property
-    def cdf_data(self) -> List[Annotation]:
-        return self._cdf_data
+    def annotations(self) -> List[Annotation]:
+        return self._annotations
 
-    @cdf_data.setter
-    def cdf_data(self, cdf_dicts: List[Dict]):
-        self._cdf_data = self._parse_data_objects(cdf_dicts)
+    # Should not be needed as it will be handle by from-classmethod inits.
+    # @annotations.setter
+    # def annotations(self, cdf_dicts: List[Dict]):
+    #     self._cdf_data = self._parse_data_objects(cdf_dicts)
 
     @classmethod
     def add_cdf_data(self, cdf_dicts: Union[List[Dict], Dict]):
