@@ -34,7 +34,6 @@ class CytoSmartDataFormat(object):
                     parents=d[PARENTS_KEY],
                     points=[Point(x=p["x"], y=p["y"]) for p in d["points"]],
                 )
-
             else:
                 raise ValueError(
                     f"CDF cannot be created. Dict with id {d.get('id', None)} misses type-key with value ellipse or polygon."
@@ -55,19 +54,32 @@ class CytoSmartDataFormat(object):
 
     @classmethod
     def from_darwin(cls, dicts: List[dict]):
-        """could be an option"""
+        """must be an option"""
         pass
+
+    @property
+    def annotations(self) -> List[Annotation]:
+        return self._annotations
+
+    @annotations.setter
+    def annotations(self, other_annotations: List[Annotation]):
+        """I doubt this setter should be allowed to exist.
+        """
 
     def __len__(self) -> int:
         return len(self._annotations)
 
-    def __eq__(self, __o: object) -> bool:
-        # if {}== {}:
-        """To check equality of to cdf items"""
+    def __eq__(self, other: object) -> bool:
+        """To check equality of to CDF objects
+        Thats bit of a tricky one because you must compare all annotations IMO.
+        Ex: cdf1 = CytoDataFormat.from_something()
+        cdf2 = CytoDataFormat.from_something()
+        is cdf1 == cdf2 must be possible.
+        """
         pass
 
-    def compare_two_json_list(self):
-        """aka two cdf object
+    def __contains__(self, other: Annotation):
+        """to check if self.annotations contains other.
         """
         pass
 
@@ -83,43 +95,40 @@ class CytoSmartDataFormat(object):
         else:
             raise StopIteration
 
-    def __dict__(self) -> List[Dict]:  # Alternative: to_json.
+    def to_dict(self) -> List[Dict]:
         """To convert the cdf_data into a json dict.
         May require and encoder or a seperate function, e.g. to_json, rather than the built-in __dict__.
         # Filters, gating
         """
         pass
 
-    def _parse_data_objects(cdf_dicts: List[Dict]):
-        """To parse cdf dicts to proper data types
+    def to_darwin(self) -> List[Dict]:
+        """
+        TODO: Convert annotations to darwin format (v7).
+        """
+
+    def __add__(self, other):
+        """Ability to add to CDF objects together
+        cdf1 + cdf2.
+
+        or possiby
+        - cdf + dict
+        - cdf + darwin
+        - ...
         """
         pass
 
-    @property
-    def annotations(self) -> List[Annotation]:
-        return self._annotations
-
-    # Should not be needed as it will be handle by from-classmethod inits.
-    # @annotations.setter
-    # def annotations(self, cdf_dicts: List[Dict]):
-    #     self._cdf_data = self._parse_data_objects(cdf_dicts)
-
-    @classmethod
-    def add_cdf_data(self, cdf_dicts: Union[List[Dict], Dict]):
-        """Parse and add to cdf data if not already exists
+    def __radd__(self, other):
+        """Reverse of __add__
+        if you do:
+        dict + cdf -> error
+        radd should flip the two parts and call add.
+        so, dict + cdf becomes cdf + dict.
         """
         pass
 
-    @classmethod
-    def remove_cdf_data(self, cdf_dicts: Union[List[Dict], Dict]):
-        """Parse and add to cdf data if not already exists
-        """
-        pass
-
-    @classmethod
-    def cdf_data_contains_item(self, cdf_item: Dict) -> bool:
-        """Check for `cdf_item` in self._cdf_data.items
-        First parse cdf_item.
+    def __del__(self, other):
+        """Remove an annotation from self.annotations.
         """
         pass
 
