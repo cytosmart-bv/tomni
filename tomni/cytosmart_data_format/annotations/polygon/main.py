@@ -51,32 +51,6 @@ class Polygon(Annotation):
         return self._area
 
     @property
-    def aspect_ratio(self) -> float:
-        """Aspect Ratio (AR): axis_minor / axis_major
-        Requires 5 or more points.
-
-        Returns:
-            float: Aspect ratio in [0, 1].
-        """
-        if not self._aspect_ratio:
-            self._calculate_aspect_ratio()
-
-        return self._aspect_ratio
-
-    @property
-    def average_diameter(self) -> float:
-        """Average Diameter (AD): (minor_axis + major_axis) / 2. 
-        Requires 5 or more points.
-
-        Returns:
-            float: Average diameter.
-        """
-        if not self._average_diameter:
-            self._calculate_average_diameter()
-
-        return self._average_diameter
-
-    @property
     def circularity(self) -> float:
         """Circularity: (4 * pi * Area) / perimeter ** 2)
 
