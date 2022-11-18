@@ -3,7 +3,7 @@ from typing import Dict, List
 
 import numpy as np
 
-from .annotations import Annotation, Point, Polygon
+from .annotations import Annotation, Ellipse, Point, Polygon
 
 
 class CytoSmartDataFormat(object):
@@ -22,15 +22,25 @@ class CytoSmartDataFormat(object):
         CHILDREN_KEY = "children"
         PARENTS_KEY = "parents"
         ID_KEY = "id"
+        CENTER_KEY = "center"
         annotations = []
 
         for d in dicts:
             if d[TYPE_KEY] == "ellipse":
-                print(1)
+                annotation = Ellipse(
+                    label=d.get(LABEL_KEY, None),
+                    id=d.get(ID_KEY, str(uuid.uuid4())),
+                    children=d.get(CHILDREN_KEY, []),
+                    parents=d.get(PARENTS_KEY, []),
+                    radius_x=d["radiusX"],
+                    radius_y=d.get("radiusY", None),
+                    center=Point(x=d[CENTER_KEY]["x"], y=d[CENTER_KEY]["y"]),
+                    rotation=d["angleOfRotation"],
+                )
             elif d[TYPE_KEY] == "polygon":
                 annotation = Polygon(
                     label=d.get(LABEL_KEY, None),
-                    id=d.get(ID_KEY, uuid.uuid4()),
+                    id=d.get(ID_KEY, str(uuid.uuid4())),
                     children=d.get(CHILDREN_KEY, []),
                     parents=d.get(PARENTS_KEY, []),
                     points=[Point(x=p["x"], y=p["y"]) for p in d["points"]],
@@ -96,12 +106,8 @@ class CytoSmartDataFormat(object):
         else:
             raise StopIteration
 
-    def to_dict(self) -> List[Dict]:
-        """To convert the cdf_data into a json dict.
-        May require and encoder or a seperate function, e.g. to_json, rather than the built-in __dict__.
-        # Filters, gating
-        """
-        pass
+    def to_cdf(self) -> List[Dict]:
+        return [annotation.to_dict() for annotation in self._annotations[:6]]
 
     def to_darwin(self) -> List[Dict]:
         """
