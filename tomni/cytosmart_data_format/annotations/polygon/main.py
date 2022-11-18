@@ -83,30 +83,6 @@ class Polygon(Annotation):
         super().label = value
 
     @property
-    def major_axis(self) -> float:
-        """Fits an ellipse to polygon and detemermines major axis.
-
-        Returns:
-            float: Polygon's major axis.
-        """
-        if not self._major_axis:
-            self._calculate_major_axis()
-
-        return self._major_axis
-
-    @property
-    def minor_axis(self) -> float:
-        """Fits an ellipse to polygon and detemermines minor axis.
-
-        Returns:
-            float: Polygon's minor axis.
-        """
-        if not self._minor_axis:
-            self._calculate_minor_axis()
-
-        return self._minor_axis
-
-    @property
     def perimeter(self) -> float:
         """Total length of polygon's boundary determined by cv2 contour operations.
 
