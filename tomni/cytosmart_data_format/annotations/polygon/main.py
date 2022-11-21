@@ -110,15 +110,15 @@ class Polygon(Annotation):
 
         return self._roundness
 
-    def to_dict(self) -> dict:
+    def to_dict(self, decimals: int = 2) -> dict:
         polygon_dict = {
             "type": "polygon",
-            "area": self.area,
-            "circularity": self.circularity,
-            "convex_hull_area": self.convex_hull_area,
-            "perimeter": self.perimeter,
+            "area": round(self.area, decimals),
+            "circularity":round( self.circularity,decimals),
+            "convex_hull_area": round(self.convex_hull_area,decimals),
+            "perimeter": round(self.perimeter,decimals),
             "points": [asdict(point) for point in self._points],
-            "roundness": self.roundness,
+            "roundness": round(self.roundness,decimals),
         }
 
         super_dict = super().to_dict()

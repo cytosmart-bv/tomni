@@ -106,8 +106,16 @@ class CytoSmartDataFormat(object):
         else:
             raise StopIteration
 
-    def to_cdf(self) -> List[Dict]:
-        return [annotation.to_dict() for annotation in self._annotations]
+    def to_dict(self, decimals: int = 2) -> List[Dict]:
+        """Transform CDF object to a collection of our format.
+
+        Args:
+            decimals (int, optional): The number of decimals to use when rounding. Defaults to 2.
+
+        Returns:
+            List[Dict]: Collection of CDF dicts.
+        """        
+        return [annotation.to_dict(decimals=decimals) for annotation in self._annotations]
 
     def to_darwin(self) -> List[Dict]:
         """

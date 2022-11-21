@@ -10,12 +10,14 @@ class Annotation(ABC):
         self._parents: List[Annotation] = parents
 
     @abstractmethod
-    def to_dict(self) -> dict:
+    def to_dict(self, decimals: int = 2) -> dict:
         """Creates a dictionary in CDF of annotation.
+        Args:
+            decimals (int, optional): The number of decimals to use when rounding. Defaults to 2.
 
         Returns:
-            dict: Dictionary of annotation.
-        """
+            dict: CDF dict.
+        """        
         return {
             "id": self._id,
             "label": self._label,

@@ -2,7 +2,6 @@
 
 2.0.0-b1
 ------------------
-
 - Add polygon annotation class.
 
 2.0.0-b0
