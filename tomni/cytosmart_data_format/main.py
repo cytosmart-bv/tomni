@@ -8,12 +8,12 @@ from .annotations import Annotation, Ellipse, Point, Polygon
 
 class CytoSmartDataFormat(object):
     def __init__(self, annotations: List[Annotation]):
-        self._annotations = annotations
+        """Initializes a CytoSmartDataFormat object.
 
-        # another thing imaginable should be cover a whole scan where...
-        # to break down into timepoints and timepoints do have cdf_data.
-        # cdf_data has data types like ellipses, polygons, masks, etc.
-        pass
+        Args:
+            annotations (List[Annotation]): Collection of annotations, e.g. polygon or ellipse.
+        """        
+        self._annotations = annotations
 
     @classmethod
     def from_dicts(cls, dicts: List[dict]):
