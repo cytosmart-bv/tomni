@@ -3,7 +3,7 @@
 
 __author__ = """Tom Nijhof & Jelle van Kerkvoorde"""
 __email__ = "tom.nijhof@cytosmart.com"
-__version__ = "2.0.0b2"
+__version__ = "2.1.0b0"
 
 from . import (
     bbox_operations,
