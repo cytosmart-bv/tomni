@@ -1,5 +1,12 @@
 # History
 
+2.0.0-b2
+------------------
+- CDF-Main: Implement `from_dict`.
+- CDF-Main: Implement `to_dict`.
+- CDF-Main: Implement `__len__`.
+- CDF-Main: Implement `__iter__` and `__next__`.
+
 2.0.0-b1
 ------------------
 - Add polygon annotation class.
