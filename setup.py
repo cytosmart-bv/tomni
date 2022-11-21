@@ -45,6 +45,6 @@ setup(
     test_suite="tests",
     tests_require=test_requirements,
     url="https://github.com/cytosmart-bv/tomni",
-    version="1.13.0",
+    version="2.0.0b1",
     zip_safe=False,
 )
