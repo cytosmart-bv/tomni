@@ -107,7 +107,7 @@ class CytoSmartDataFormat(object):
             raise StopIteration
 
     def to_cdf(self) -> List[Dict]:
-        return [annotation.to_dict() for annotation in self._annotations[:6]]
+        return [annotation.to_dict() for annotation in self._annotations]
 
     def to_darwin(self) -> List[Dict]:
         """
