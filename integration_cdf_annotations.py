@@ -4,7 +4,8 @@ from tomni.cytosmart_data_format.annotations import Ellipse, Point, Polygon
 #%%
 # Ellipse annotation
 elli = Ellipse(
-    radius=Point(1, 3),
+    radius_x=1,
+    radius_y=3,
     center=Point(0, 0),
     rotation=0,
     id="Hello Jan",
