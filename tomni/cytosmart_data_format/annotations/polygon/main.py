@@ -121,7 +121,7 @@ class Polygon(Annotation):
             "roundness": round(self.roundness,decimals),
         }
 
-        super_dict = super().to_dict()
+        super_dict = super().to_dict(decimals=decimals)
         dict_return_value = {**super_dict, **polygon_dict}
         return dict_return_value
 

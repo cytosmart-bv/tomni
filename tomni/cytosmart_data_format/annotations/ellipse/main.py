@@ -140,7 +140,7 @@ class Ellipse(Annotation):
             "perimeter": round(self.perimeter, decimals),
         }
 
-        super_dict = super().to_dict()
+        super_dict = super().to_dict(decimals=2)
         dict_return_value = {**super_dict, **dict_ellipse}
         return dict_return_value
 
