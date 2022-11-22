@@ -3,7 +3,7 @@
 2.0.0-b0 (2022-11-22)
 ------------------
 - CDF-Main: Implement `from_dict`.
-- CDF-Main: Implement `to_dict`.
+- CDF-Main: Implement `to_dict`. Includes rounding.
 - CDF-Main: Implement `__len__`.
 - CDF-Main: Implement `__iter__` and `__next__`.
 
