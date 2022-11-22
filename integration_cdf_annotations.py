@@ -35,6 +35,6 @@ star_shaped_polygon = Polygon(
     label="star",
 )
 
-star_shaped_polygon.to_dict()
+print(star_shaped_polygon.to_dict())
 
 # %%

@@ -169,13 +169,13 @@ class TestPolygon(TestCase):
         self.assertEqual(expected, actual)
 
     def test_triangular_circularity(self):
-        expected = None
+        expected = 0.5999907952581642
         actual = self.triangle_polygon.circularity
 
         self.assertEqual(expected, actual)
 
     def test_triangular_convex_hull_area(self):
-        expected = None
+        expected = 8.0
         actual = self.triangle_polygon.convex_hull_area
 
         self.assertEqual(expected, actual)
@@ -187,7 +187,7 @@ class TestPolygon(TestCase):
         self.assertEqual(expected, actual)
 
     def test_triangular_roundness(self):
-        expected = None
+        expected = 0.4074040947818932
         actual = self.triangle_polygon.roundness
 
         self.assertEqual(expected, actual)
@@ -256,7 +256,11 @@ class TestPolygon(TestCase):
             "children": [],
             "parents": [],
             "type": "polygon",
+            "area": 8.0,
+            "circularity": 0.5999907952581642,
+            "convex_hull_area": 8.0,
             "points": [asdict(point) for point in self.triangle_points],
+            "roundness": 0.4074040947818932,
         }
         actual = self.triangle_polygon.to_dict()
 
