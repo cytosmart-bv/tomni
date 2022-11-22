@@ -30,6 +30,9 @@ The name Tomni is a combination of creator (Tom) and other CytoSMART product he 
 - Bounding box fitting (bbox fitting)
   - Center bounding box fit
   - Custom location box fit
+- Image helpers
+  - Get image dimensions
+  - Convert color of an image
 - Illumination correction
   - Brightfield
   - Fluorescence
