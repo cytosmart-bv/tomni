@@ -134,7 +134,7 @@ class TestEllipse(TestCase):
 
     def test_circle_to_dict(self):
         expected = {
-            "area": 3.141592653589793,
+            "area": 3.14,
             "aspect_ratio": 1.0,
             "center": {"x": 0, "y": 0},
             "children": [],
@@ -142,9 +142,9 @@ class TestEllipse(TestCase):
             "id": "1234-1234-2134-1321",
             "label": "ellipse_test",
             "parents": [],
-            "perimeter": 6.283185307179586,
-            "radiusX": 1.0,
-            "radiusY": 1.0,
+            "perimeter": 6.28,
+            "radiusX": 1,
+            "radiusY": 1,
             "angleOfRotation": 0,
             "type": "ellipse",
         }
@@ -153,17 +153,17 @@ class TestEllipse(TestCase):
 
     def test_oval_to_dict(self):
         expected = {
-            "area": 9.42477796076938,
-            "aspect_ratio": 0.3333333333333333,
+            "area": 9.42,
+            "aspect_ratio": 0.33,
             "center": {"x": 0, "y": 0},
             "children": [],
-            "circularity": 0.5999999999999999,
+            "circularity": 0.6,
             "id": "1234-1234-2134-1321",
             "label": "ellipse_test",
             "parents": [],
-            "perimeter": 14.049629462081453,
-            "radiusX": 1.0,
-            "radiusY": 3.0,
+            "perimeter": 14.05,
+            "radiusX": 1,
+            "radiusY": 3,
             "angleOfRotation": 0,
             "type": "ellipse",
         }
