@@ -20,14 +20,16 @@ class Polygon(Annotation):
             children (List[Annotation]): Tracking annotations. Refers to t+1.
             parents (List[Annotation]): Tracking annotations. Refers to t-1.
         """
+        MIN_NR_POINTS = 3
+
         super().__init__(id, label, children, parents)
         self._points: List[Point] = points
         self._contour: List[Tuple[int, int]] = self._parse_points_to_contour(points)
 
-        self._has_enough_points = len(points) >= 5
+        self._has_enough_points = len(points) >= MIN_NR_POINTS
         if not self._has_enough_points:
             warnings.warn(
-                "Polygon has less than 5 points. Some features may not be available."
+                f"Polygon has less than {MIN_NR_POINTS} points. Some features may not be available."
             )
 
         # features
