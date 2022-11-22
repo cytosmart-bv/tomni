@@ -4,49 +4,49 @@
 # https://docs.microsoft.com/azure/devops/pipelines/languages/python
 
 trigger:
-- main
+  - main
 
 jobs:
-- job: RunInContainer
+  - job: RunInContainer
 
-  pool:
-    vmImage: 'ubuntu-20.04'
+    pool:
+      vmImage: "ubuntu-20.04"
 
-  container:
-    image: cytosmarttestreg.azurecr.io/omni/base:24470
-    endpoint: DockerRegTest2
+    container:
+      image: cytosmarttestreg.azurecr.io/omni/base:36397
+      endpoint: DockerRegTest2
 
-  steps:
-  - script: |
-      pip install --user -r requirements.txt
-    displayName: 'Install dependencies'
+    steps:
+      - script: |
+          pip install --user -r requirements.txt
+        displayName: "Install dependencies"
 
-  - script: |
-      pip install --user pytest pytest-azurepipelines pytest-cov
-      python -m pytest tomni/ --junitxml=testresults.xml --cov=. --cov-report=xml --cov-report=html -v
-    displayName: 'pytest'
+      - script: |
+          pip install --user pytest pytest-azurepipelines pytest-cov
+          python -m pytest tomni/ --junitxml=testresults.xml --cov=. --cov-report=xml --cov-report=html -v
+        displayName: "pytest"
 
-  - task: PublishCodeCoverageResults@1
-    displayName: 'Publish code coverage from $(System.DefaultWorkingDirectory)/coverage.xml'
-    inputs:
-      codeCoverageTool: Cobertura
-      summaryFileLocation: '$(System.DefaultWorkingDirectory)/coverage.xml'
-      reportDirectory: '$(System.DefaultWorkingDirectory)/htmlcov'
-      additionalCodeCoverageFiles: '$(System.DefaultWorkingDirectory)/htmlcov/**/*.*'
-      failIfCoverageEmpty: true
-    condition: succeededOrFailed()
+      - task: PublishCodeCoverageResults@1
+        displayName: "Publish code coverage from $(System.DefaultWorkingDirectory)/coverage.xml"
+        inputs:
+          codeCoverageTool: Cobertura
+          summaryFileLocation: "$(System.DefaultWorkingDirectory)/coverage.xml"
+          reportDirectory: "$(System.DefaultWorkingDirectory)/htmlcov"
+          additionalCodeCoverageFiles: "$(System.DefaultWorkingDirectory)/htmlcov/**/*.*"
+          failIfCoverageEmpty: true
+        condition: succeededOrFailed()
 
-  - task: Bash@3
-    displayName: build package
-    inputs:
-      targetType: 'inline'
-      script: |
-        python -m pip install --user --upgrade setuptools wheel
-        python setup.py sdist bdist_wheel
+      - task: Bash@3
+        displayName: build package
+        inputs:
+          targetType: "inline"
+          script: |
+            python -m pip install --user --upgrade setuptools wheel
+            python setup.py sdist bdist_wheel
 
-  - task: PublishBuildArtifacts@1
-    displayName: publish package
-    inputs:
-      PathtoPublish: 'dist'
-      ArtifactName: 'dist_$(build.buildID)'
-      publishLocation: 'Container'
+      - task: PublishBuildArtifacts@1
+        displayName: publish package
+        inputs:
+          PathtoPublish: "dist"
+          ArtifactName: "dist_$(build.buildID)"
+          publishLocation: "Container"
