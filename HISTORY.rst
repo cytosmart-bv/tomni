@@ -1,8 +1,13 @@
 # History
-2.0.0-beta?
+
+2.0.0-b1
+------------------
+
+- Add polygon annotation class.
+
+2.0.0-b0
 ------------------
 - Add ellipse annotation class.
-
 
 1.13.0 (2022-10-24)
 ------------------
