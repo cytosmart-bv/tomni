@@ -9,6 +9,7 @@ from .bbox_fitting import bbox_fitting, bbox_fitting_center
 from .img_paste import img_paste
 from .shape_fitting import fit_rect_around_ellipse
 from .img_dim import img_dim
+from .convert_color import convert_color
 
 from . import illumination_correction
 from . import make_mask
