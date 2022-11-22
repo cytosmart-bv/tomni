@@ -257,10 +257,11 @@ class TestPolygon(TestCase):
             "parents": [],
             "type": "polygon",
             "area": 8.0,
-            "circularity": 0.5999907952581642,
+            "circularity": 0.6,
             "convex_hull_area": 8.0,
+            "perimeter": 12.94,
             "points": [asdict(point) for point in self.triangle_points],
-            "roundness": 0.4074040947818932,
+            "roundness": 0.41,
         }
         actual = self.triangle_polygon.to_dict()
 
