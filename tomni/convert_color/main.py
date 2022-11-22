@@ -4,7 +4,8 @@ import cv2
 
 
 def convert_color(img: np.ndarray, newType: Union[str, int]) -> np.ndarray:
-    """_summary_
+    """Automatically coverts the number of channels to 1, 3, or 4 channels.
+    The function works with gray, BGR  or BGRA images.
 
     Args:
         img (np.ndarray uint8): The image that needs to be converted. This image is gray, BGR or BGRA
