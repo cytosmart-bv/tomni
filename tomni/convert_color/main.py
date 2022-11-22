@@ -3,8 +3,10 @@ import numpy as np
 import cv2
 
 
-def convert_color(img: np.ndarray, newType: Union[str, int]) -> np.ndarray:
-    """_summary_
+def convert_color(img: np.ndarray, new_type: Union[str, int]) -> np.ndarray:
+    """
+    Convert a the color of an image to a wanted type, without needed to know the current type.
+    It will assume only gray, BGR, and BGRA exists (these are the common openCV color types)
 
     Args:
         img (np.ndarray uint8): The image that needs to be converted. This image is gray, BGR or BGRA
@@ -20,21 +22,21 @@ def convert_color(img: np.ndarray, newType: Union[str, int]) -> np.ndarray:
     """
     img = img.astype(np.uint8)
     # Not getting into that debate
-    if type(newType) is str:
-        if newType.upper() in ["GRAY", "GREY"]:
-            newType = 1
+    if type(new_type) is str:
+        if new_type.upper() in ["GRAY", "GREY"]:
+            new_type = 1
         # Also not getting into that debate
-        elif newType.upper() in ["BGR", "COLOR", "COLOUR"]:
-            newType = 3
-        elif newType.upper() in ["BGRA", "TRANSPARENT"]:
-            newType = 4
+        elif new_type.upper() in ["BGR", "COLOR", "COLOUR"]:
+            new_type = 3
+        elif new_type.upper() in ["BGRA", "TRANSPARENT"]:
+            new_type = 4
         else:
-            newType = -1
+            new_type = -1
 
-    if newType not in [1, 3, 4]:
+    if new_type not in [1, 3, 4]:
         raise ValueError(
             "The image type {} is not supported. Currently supported: GRAY (1), BGR (3) and BGRA (4)".format(
-                newType
+                new_type
             )
         )
 
@@ -62,20 +64,20 @@ def convert_color(img: np.ndarray, newType: Union[str, int]) -> np.ndarray:
         )
 
     # That was easy
-    if currentType == newType:
+    if currentType == new_type:
         return img
 
-    if currentType == 1 and newType == 3:
+    if currentType == 1 and new_type == 3:
         return cv2.cvtColor(img, cv2.COLOR_GRAY2BGR)
-    if currentType == 1 and newType == 4:
+    if currentType == 1 and new_type == 4:
         return cv2.cvtColor(img, cv2.COLOR_GRAY2BGRA)
 
-    if currentType == 3 and newType == 1:
+    if currentType == 3 and new_type == 1:
         return cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
-    if currentType == 3 and newType == 4:
+    if currentType == 3 and new_type == 4:
         return cv2.cvtColor(img, cv2.COLOR_BGR2BGRA)
 
-    if currentType == 4 and newType == 1:
+    if currentType == 4 and new_type == 1:
         return cv2.cvtColor(img, cv2.COLOR_BGRA2GRAY)
-    if currentType == 4 and newType == 3:
+    if currentType == 4 and new_type == 3:
         return cv2.cvtColor(img, cv2.COLOR_BGRA2BGR)
