@@ -118,22 +118,22 @@ class Testconvert_color(TestCase):
         inputArr = np.zeros((30, 40, 7), dtype=np.uint8)
         inputArr[3, 4] = 40
 
-        self.assertRaises(TypeError, convert_color, inputArr, 3)
+        self.assertRaises(ValueError, convert_color, inputArr, 3)
 
     def test_unkownInputShape(self):
         inputArr = np.zeros((30, 40, 3, 2), dtype=np.uint8)
         inputArr[3, 4] = 40
 
-        self.assertRaises(TypeError, convert_color, inputArr, 3)
+        self.assertRaises(ValueError, convert_color, inputArr, 3)
 
     def test_unkownOutputColorStr(self):
         inputArr = np.zeros((30, 40, 3), dtype=np.uint8)
         inputArr[3, 4] = 40
 
-        self.assertRaises(TypeError, convert_color, inputArr, "Unicorn")
+        self.assertRaises(ValueError, convert_color, inputArr, "Unicorn")
 
     def test_unkownOutputColorInt(self):
         inputArr = np.zeros((30, 40, 3), dtype=np.uint8)
         inputArr[3, 4] = 40
 
-        self.assertRaises(TypeError, convert_color, inputArr, 42)
+        self.assertRaises(ValueError, convert_color, inputArr, 42)
