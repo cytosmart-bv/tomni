@@ -113,13 +113,19 @@ class Polygon(Annotation):
     def to_dict(self, decimals: int = 2) -> dict:
         polygon_dict = {
             "type": "polygon",
-            "area": round(self.area, decimals),
-            "circularity":round( self.circularity,decimals),
-            "convex_hull_area": round(self.convex_hull_area,decimals),
-            "perimeter": round(self.perimeter,decimals),
             "points": [asdict(point) for point in self._points],
-            "roundness": round(self.roundness,decimals),
         }
+
+        if self._has_enough_points:
+            # Feature property is None if polygon has not enough points which results the round() to fail on a NoneType.
+            polygon_features = {
+                "area": round(self.area, decimals),
+                "circularity": round(self.circularity, decimals),
+                "convex_hull_area": round(self.convex_hull_area, decimals),
+                "perimeter": round(self.perimeter, decimals),
+                "roundness": round(self.roundness, decimals),
+            }
+            polygon_dict = {**polygon_features, **polygon_dict}
 
         super_dict = super().to_dict(decimals=decimals)
         dict_return_value = {**super_dict, **polygon_dict}
