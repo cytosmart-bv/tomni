@@ -12,7 +12,7 @@ class CytoSmartDataFormat(object):
 
         Args:
             annotations (List[Annotation]): Collection of annotations, e.g. polygon or ellipse.
-        """        
+        """
         self._annotations = annotations
 
     @classmethod
@@ -55,8 +55,25 @@ class CytoSmartDataFormat(object):
 
     @classmethod
     def from_contours(cls, contours: List[np.ndarray]):
-        """could be an option"""
-        pass
+        annotations = []
+        for contour in contours:
+            contour = np.vstack(contour)
+
+            points = []
+            for i in range(contour.shape[0]):
+                points.append(Point(x=contour[i][0], y=contour[i][1]))
+
+            annotations.append(
+                Polygon(
+                    label="",
+                    id=str(uuid.uuid4()),
+                    children=[],
+                    parents=[],
+                    points=points,
+                )
+            )
+
+        return cls(annotations)
 
     @classmethod
     def from_masks(cls, masks: List[np.ndarray]):
@@ -114,8 +131,10 @@ class CytoSmartDataFormat(object):
 
         Returns:
             List[Dict]: Collection of CDF dicts.
-        """        
-        return [annotation.to_dict(decimals=decimals) for annotation in self._annotations]
+        """
+        return [
+            annotation.to_dict(decimals=decimals) for annotation in self._annotations
+        ]
 
     def to_darwin(self) -> List[Dict]:
         """
