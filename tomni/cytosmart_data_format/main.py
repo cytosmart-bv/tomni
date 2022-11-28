@@ -57,11 +57,12 @@ class CytoSmartDataFormat(object):
     def from_contours(cls, contours: List[np.ndarray]):
         annotations = []
         for contour in contours:
+            # change shape from [N, 1, 2] to [N, 2]
             contour = np.vstack(contour)
 
-            points = []
+            points: Point = []
             for i in range(contour.shape[0]):
-                points.append(Point(x=contour[i][0], y=contour[i][1]))
+                points.append(Point(x=int(contour[i][0]), y=int(contour[i][1])))
 
             annotations.append(
                 Polygon(
