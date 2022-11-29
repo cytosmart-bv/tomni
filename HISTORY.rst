@@ -2,8 +2,9 @@
 
 2.0.0-b0 (2022-11-29)
 ------------------
+- Add util function: `parse_points_to_contour`.
 - CDF-Main: Implement `from_contours`.
-- CDF-Main: Implement `to_contours`. Includes rounding.
+- CDF-Main: Implement `to_contours`.
 - CDF-Main: Implement `from_dict`.
 - CDF-Main: Implement `to_dict`. Includes rounding.
 - CDF-Main: Implement `__len__`.
