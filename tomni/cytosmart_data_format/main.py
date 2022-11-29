@@ -4,6 +4,7 @@ from typing import Dict, List
 import numpy as np
 
 from .annotations import Annotation, Ellipse, Point, Polygon
+from .utils import parse_points_to_contour
 
 
 class CytoSmartDataFormat(object):
@@ -136,6 +137,27 @@ class CytoSmartDataFormat(object):
         return [
             annotation.to_dict(decimals=decimals) for annotation in self._annotations
         ]
+
+    def to_contours(self) -> List[np.ndarray]:
+        """Transform CDF object to a collection of cv2 contours.
+
+        Raises:
+            ValueError: Raises error when annotations are not of type `Polygon`.
+
+        Returns:
+            List[np.ndarray]: Collection of contours as [[[x_0, y_0],..., [x_n, y_n]], ... ,[[x_0, y_0],..., [x_m, y_m]]]
+        """
+        if not all(
+            [isinstance(annotation, Polygon) for annotation in self._annotations]
+        ):
+            raise ValueError("`to_contours is only supported on polygon-annotations.`")
+
+        contours = [
+            parse_points_to_contour(annotation.points)
+            for annotation in self._annotations
+        ]
+
+        return contours
 
     def to_darwin(self) -> List[Dict]:
         """

@@ -36,4 +36,6 @@ with open("temp.json", "w") as f:
     json.dump(dicts_, f)
 
 # %%
+conts = cdf.to_contours()
+print(conts)
 
