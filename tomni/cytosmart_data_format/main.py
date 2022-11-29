@@ -56,6 +56,12 @@ class CytoSmartDataFormat(object):
 
     @classmethod
     def from_contours(cls, contours: List[np.ndarray]):
+        """Initializes a CytoSmartDataFormat object from cv2 contours.
+        Contours' shape must be [N, 1, 2] with dtype of np.int32.
+
+        Args:
+            contours (List[np.ndarray]): Collection of cv2 contours.
+        """
         annotations = []
         for contour in contours:
             # change shape from [N, 1, 2] to [N, 2]

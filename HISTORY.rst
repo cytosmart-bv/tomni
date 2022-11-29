@@ -1,7 +1,9 @@
 # History
 
-2.0.0-b0 (2022-11-22)
+2.0.0-b0 (2022-11-29)
 ------------------
+- CDF-Main: Implement `from_contours`.
+- CDF-Main: Implement `to_contours`. Includes rounding.
 - CDF-Main: Implement `from_dict`.
 - CDF-Main: Implement `to_dict`. Includes rounding.
 - CDF-Main: Implement `__len__`.
