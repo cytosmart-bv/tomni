@@ -200,11 +200,11 @@ class TestPolygon(TestCase):
             "parents": [],
             "type": "polygon",
             "area": 14.0,
-            "circularity": 0.9432711611657616,
+            "circularity": 0.94,
             "convex_hull_area": 14.0,
-            "perimeter": 13.656854152679443,
+            "perimeter": 13.66,
             "points": [asdict(point) for point in self.circular_points],
-            "roundness": 0.8911880248803259,
+            "roundness": 0.89,
         }
         actual = self.circular_polygon.to_dict()
 
@@ -218,11 +218,11 @@ class TestPolygon(TestCase):
             "parents": [],
             "type": "polygon",
             "area": 16.0,
-            "circularity": 0.7853981633974483,
+            "circularity": 0.79,
             "convex_hull_area": 16.0,
             "perimeter": 16.0,
             "points": [asdict(point) for point in self.rectangle_points],
-            "roundness": 0.6365748269154868,
+            "roundness": 0.64,
         }
         actual = self.rectangle_polygon.to_dict()
 
@@ -239,11 +239,11 @@ class TestPolygon(TestCase):
             "parents": [],
             "type": "polygon",
             "area": 7.0,
-            "circularity": 0.640254577329347,
+            "circularity": 0.64,
             "convex_hull_area": 8.0,
-            "perimeter": 11.721349239349365,
+            "perimeter": 11.72,
             "points": [asdict(point) for point in self.star_shaped_points],
-            "roundness": 0.5569866579216156,
+            "roundness": 0.56,
         }
         actual = self.star_shaped_polygon.to_dict()
 
@@ -257,11 +257,11 @@ class TestPolygon(TestCase):
             "parents": [],
             "type": "polygon",
             "area": 8.0,
-            "circularity": 0.5999907952581642,
+            "circularity": 0.6,
             "convex_hull_area": 8.0,
-            "perimeter": 12.9442720413208,
+            "perimeter": 12.94,
             "points": [asdict(point) for point in self.triangle_points],
-            "roundness": 0.4074040947818932,
+            "roundness": 0.41,
         }
         actual = self.triangle_polygon.to_dict()
 

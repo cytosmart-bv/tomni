@@ -1,12 +1,12 @@
 # History
 
-2.0.0-b1
+2.0.0-b0 (2022-11-22)
 ------------------
-
+- CDF-Main: Implement `from_dict`.
+- CDF-Main: Implement `to_dict`. Includes rounding.
+- CDF-Main: Implement `__len__`.
+- CDF-Main: Implement `__iter__` and `__next__`.
 - Add polygon annotation class.
-
-2.0.0-b0
-------------------
 - Add ellipse annotation class.
 
 1.13.0 (2022-10-24)

@@ -126,7 +126,7 @@ class Ellipse(Annotation):
 
         return self._aspect_ratio
 
-    def to_dict(self) -> dict:
+    def to_dict(self, decimals: int = 2) -> dict:
 
         dict_ellipse = {
             "type": "ellipse",
@@ -134,13 +134,13 @@ class Ellipse(Annotation):
             "radiusX": self.radius_x,
             "radiusY": self.radius_y,
             "angleOfRotation": self.rotation,
-            "aspect_ratio": self.aspect_ratio,
-            "area": self.area,
-            "circularity": self.circularity,
-            "perimeter": self.perimeter,
+            "aspect_ratio": round(self.aspect_ratio, decimals),
+            "area": round(self.area, decimals),
+            "circularity": round(self.circularity, decimals),
+            "perimeter": round(self.perimeter, decimals),
         }
 
-        super_dict = super().to_dict()
+        super_dict = super().to_dict(decimals=2)
         dict_return_value = {**super_dict, **dict_ellipse}
         return dict_return_value
 
