@@ -10,7 +10,7 @@ json_fp = filedialog.askopenfilename(title="Select CDF JSONs.")
 
 with open(json_fp, "rb") as f:
     dicts = json.load(f)
-
+    print(f"Found {len(dicts)} dictionaries in json file.")
 #%%
 cdf = CytoSmartDataFormat.from_dicts(dicts=dicts)
 
