@@ -196,6 +196,28 @@ class CytoSmartDataFormat(object):
         """
         pass
 
+    def filter(
+        self,
+        feature: str,
+        min_val: float,
+        max_val: float,
+        unit: str = "absolute",
+        inplace: bool = False,
+    ):
+        # ABSOLUTE UNITS only.
+        filtered_annotations = []
+
+        for annotation in self._annotations:
+            feature_value = getattr(annotation, feature)
+            if min_val <= feature_value <= max_val:
+                filtered_annotations.append(annotation)
+
+        if inplace:
+            self._annotations = filtered_annotations
+            return self
+
+        return filtered_annotations
+
     @classmethod
     def get_circularity_summary(self):
         """loops the cdf items to get avg, std, min, max.

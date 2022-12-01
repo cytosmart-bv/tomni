@@ -39,3 +39,23 @@ with open("temp.json", "w") as f:
 conts = cdf.to_contours()
 print(conts)
 
+
+#%%
+cdf.filter(feature="roundness", min_val=0.5, max_val=1.0, inplace=True)
+
+
+# %%
+# Filter with inplace=True: CDF object is updated internally. Returns CDF object to allow chaining.
+updated_cdf = cdf.filter(
+    feature="roundness", min_val=0.5, max_val=1.0, inplace=True
+).filter(feature="area", min_val=0, max_val=1000, inplace=True)
+# The return does not have to be used. This is merely to show difference between inplace.
+print(type(updated_cdf))
+
+
+#%%
+# Filter: inplace=False returns a new list of annotations.
+annotations = cdf.filter(feature="roundness", min_val=0.5, max_val=1.0, inplace=False)
+print(type(annotations))
+
+# %%
