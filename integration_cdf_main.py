@@ -41,15 +41,15 @@ print(conts)
 
 
 #%%
-cdf.filter(feature="roundness", min_val=0.5, max_val=1.0, inplace=True)
-
+annotations = cdf.filter(feature="roundness", min_val=0.5, max_val=1.0)
+print(annotations)
 
 # %%
 # Filter with inplace=True: CDF object is updated internally. Returns CDF object to allow chaining.
 updated_cdf = cdf.filter(
+# The return does not have to be used. This is merely to show difference between inplace.
     feature="roundness", min_val=0.5, max_val=1.0, inplace=True
 ).filter(feature="area", min_val=0, max_val=1000, inplace=True)
-# The return does not have to be used. This is merely to show difference between inplace.
 print(type(updated_cdf))
 
 

@@ -197,14 +197,19 @@ class CytoSmartDataFormat(object):
         pass
 
     def filter(
-        self,
-        feature: str,
-        min_val: float,
-        max_val: float,
-        unit: str = "absolute",
-        inplace: bool = False,
+        self, feature: str, min_val: float, max_val: float, inplace: bool = False,
     ):
-        # ABSOLUTE UNITS only.
+        """Filter annotations by feature.
+
+        Args:
+            feature (str): Feature name, i.e. `roundness` or `area`.
+            min_val (float): Minimum value to threshold.
+            max_val (float): Maximum value to threshold
+            inplace (bool, optional): If True, filter in-place. Modifies the object internally. If False, return collection of annotations. Defaults to False.
+
+        Returns:
+            CytoSmartDataFormat or List[Annotation]: Collection of filtered annotions or if `inplace=True` object with filterd annotations.
+        """
         filtered_annotations = []
 
         for annotation in self._annotations:
