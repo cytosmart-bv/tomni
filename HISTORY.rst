@@ -2,6 +2,7 @@
 
 2.0.0-b0 (2022-11-29)
 ------------------
+- CDF-Main: Implement `filter` to allow filtering of annotations by feature values (aka gating).
 - CDF-Main: Implement `from_contours`.
 - CDF-Main: Implement `to_contours`. Includes rounding.
 - CDF-Main: Implement `from_dict`.
