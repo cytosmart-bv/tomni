@@ -34,7 +34,6 @@ def json2bbox(scf_object: dict) -> tuple:
                 int(round(max(y_values))),
             )
         elif scf_object["type"] in ["circle", "ellipse"]:
-            # Assumes that angleOfRotation. This will be changed in the future.
             x1, y1, x2, y2 = fit_rect_around_ellipse(
                 scf_object["center"]["x"],
                 scf_object["center"]["y"],
