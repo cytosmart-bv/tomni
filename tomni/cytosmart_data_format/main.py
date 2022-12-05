@@ -12,7 +12,7 @@ class CytoSmartDataFormat(object):
 
         Args:
             annotations (List[Annotation]): Collection of annotations, e.g. polygon or ellipse.
-        """        
+        """
         self._annotations = annotations
 
     @classmethod
@@ -74,8 +74,7 @@ class CytoSmartDataFormat(object):
 
     @annotations.setter
     def annotations(self, other_annotations: List[Annotation]):
-        """I doubt this setter should be allowed to exist.
-        """
+        """I doubt this setter should be allowed to exist."""
 
     def __len__(self) -> int:
         return len(self._annotations)
@@ -90,8 +89,7 @@ class CytoSmartDataFormat(object):
         pass
 
     def __contains__(self, other: Annotation):
-        """to check if self.annotations contains other.
-        """
+        """to check if self.annotations contains other."""
         pass
 
     def __iter__(self):
@@ -114,8 +112,10 @@ class CytoSmartDataFormat(object):
 
         Returns:
             List[Dict]: Collection of CDF dicts.
-        """        
-        return [annotation.to_dict(decimals=decimals) for annotation in self._annotations]
+        """
+        return [
+            annotation.to_dict(decimals=decimals) for annotation in self._annotations
+        ]
 
     def to_darwin(self) -> List[Dict]:
         """
@@ -131,7 +131,19 @@ class CytoSmartDataFormat(object):
         - cdf + darwin
         - ...
         """
-        pass
+        assert type(self) == CytoSmartDataFormat
+
+        if type(other) == CytoSmartDataFormat:
+            new_annotations = self.annotations + other.annotations
+            return CytoSmartDataFormat(new_annotations)
+
+        elif type(other) == dict:
+            other_cdf = CytoSmartDataFormat.from_dicts([other])
+            new_annotations = self.annotations + other_cdf.annotations
+            return CytoSmartDataFormat(new_annotations)
+
+        else:
+            ValueError(f"{type(self)} , {type(other)}")
 
     def __radd__(self, other):
         """Reverse of __add__
@@ -140,7 +152,15 @@ class CytoSmartDataFormat(object):
         radd should flip the two parts and call add.
         so, dict + cdf becomes cdf + dict.
         """
-        pass
+        assert type(self) == CytoSmartDataFormat
+
+        if type(other) == dict:
+            other_cdf = CytoSmartDataFormat.from_dicts([other])
+            new_annotations = self.annotations + other_cdf.annotations
+            return CytoSmartDataFormat(new_annotations)
+
+        else:
+            ValueError(f"{type(self)} , {type(other)}")
 
     def delete_annotation(self, item: Annotation):
         """Remove an annotation from self.annotations.
@@ -150,8 +170,7 @@ class CytoSmartDataFormat(object):
 
     @classmethod
     def get_circularity_summary(self):
-        """loops the cdf items to get avg, std, min, max.
-        """
+        """loops the cdf items to get avg, std, min, max."""
 
     def get_feature_summaries(self, features: List[str]) -> Dict:
         """Pass a list of features to calculated.
