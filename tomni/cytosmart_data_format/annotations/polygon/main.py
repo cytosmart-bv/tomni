@@ -1,10 +1,11 @@
 import warnings
 from dataclasses import asdict
-from typing import List, Tuple
+from typing import List
 
 import cv2
 import numpy as np
 
+from ...utils import parse_points_to_contour
 from ..annotation import Annotation
 from ..point import Point
 
@@ -24,7 +25,7 @@ class Polygon(Annotation):
 
         super().__init__(id, label, children, parents)
         self._points: List[Point] = points
-        self._contour: List[Tuple[int, int]] = self._parse_points_to_contour(points)
+        self._contour: List[np.ndarray] = parse_points_to_contour(points)
 
         self._has_enough_points = len(points) >= MIN_NR_POINTS
         if not self._has_enough_points:
@@ -169,8 +170,3 @@ class Polygon(Annotation):
         _, radius = cv2.minEnclosingCircle(self._contour)
         enclosing_circle_area = radius ** 2 * np.pi
         self._roundness = self._area / enclosing_circle_area
-
-    def _parse_points_to_contour(self, points) -> List[Tuple[int, int]]:
-        contour_points = [[[point.x, point.y]] for point in points]
-        contour = np.array(contour_points, dtype=np.int32)
-        return contour

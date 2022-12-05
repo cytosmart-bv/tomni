@@ -4,6 +4,7 @@ from typing import Dict, List
 import numpy as np
 
 from .annotations import Annotation, Ellipse, Point, Polygon
+from .utils import parse_points_to_contour
 
 
 class CytoSmartDataFormat(object):
@@ -12,7 +13,7 @@ class CytoSmartDataFormat(object):
 
         Args:
             annotations (List[Annotation]): Collection of annotations, e.g. polygon or ellipse.
-        """        
+        """
         self._annotations = annotations
 
     @classmethod
@@ -55,8 +56,32 @@ class CytoSmartDataFormat(object):
 
     @classmethod
     def from_contours(cls, contours: List[np.ndarray]):
-        """could be an option"""
-        pass
+        """Initializes a CytoSmartDataFormat object from cv2 contours.
+        Contours' shape must be [N, 1, 2] with dtype of np.int32.
+
+        Args:
+            contours (List[np.ndarray]): Collection of cv2 contours.
+        """
+        annotations = []
+        for contour in contours:
+            # change shape from [N, 1, 2] to [N, 2]
+            contour = np.vstack(contour)
+
+            points: Point = []
+            for i in range(contour.shape[0]):
+                points.append(Point(x=int(contour[i][0]), y=int(contour[i][1])))
+
+            annotations.append(
+                Polygon(
+                    label="",
+                    id=str(uuid.uuid4()),
+                    children=[],
+                    parents=[],
+                    points=points,
+                )
+            )
+
+        return cls(annotations)
 
     @classmethod
     def from_masks(cls, masks: List[np.ndarray]):
@@ -114,8 +139,31 @@ class CytoSmartDataFormat(object):
 
         Returns:
             List[Dict]: Collection of CDF dicts.
-        """        
-        return [annotation.to_dict(decimals=decimals) for annotation in self._annotations]
+        """
+        return [
+            annotation.to_dict(decimals=decimals) for annotation in self._annotations
+        ]
+
+    def to_contours(self) -> List[np.ndarray]:
+        """Transform CDF object to a collection of cv2 contours.
+
+        Raises:
+            ValueError: Raises error when annotations are not of type `Polygon`.
+
+        Returns:
+            List[np.ndarray]: Collection of contours as [[[x_0, y_0],..., [x_n, y_n]], ... ,[[x_0, y_0],..., [x_m, y_m]]]
+        """
+        if not all(
+            [isinstance(annotation, Polygon) for annotation in self._annotations]
+        ):
+            raise ValueError("`to_contours is only supported on polygon-annotations.`")
+
+        contours = [
+            parse_points_to_contour(annotation.points)
+            for annotation in self._annotations
+        ]
+
+        return contours
 
     def to_darwin(self) -> List[Dict]:
         """
