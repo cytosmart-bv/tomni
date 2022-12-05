@@ -1,3 +1,6 @@
+from ...shape_fitting.fit_rect_ellipse import fit_rect_around_ellipse
+
+
 def json2bbox(scf_object: dict) -> tuple:
     """
     Converts the scf_object (polygon, ellipse or circle) into a bounding box coordinates (x_min, y_min, x_max, y_max)
@@ -30,17 +33,16 @@ def json2bbox(scf_object: dict) -> tuple:
                 int(round(max(x_values))),
                 int(round(max(y_values))),
             )
-        elif scf_object["type"] in ["ellipse", "circle"]:
+        elif scf_object["type"] in ["circle", "ellipse"]:
             # Assumes that angleOfRotation. This will be changed in the future.
-            assert scf_object["angleOfRotation"] == 0
-            x_center, y_center = scf_object["center"]["x"], scf_object["center"]["y"]
-            x_radius, y_radius = scf_object["radiusX"], scf_object["radiusY"]
-            return (
-                int(round(x_center - x_radius)),
-                int(round(y_center - y_radius)),
-                int(round(x_center + x_radius)),
-                int(round(y_center + y_radius)),
+            x1, y1, x2, y2 = fit_rect_around_ellipse(
+                scf_object["center"]["x"],
+                scf_object["center"]["y"],
+                scf_object["radiusX"],
+                scf_object["radiusY"],
+                scf_object["angleOfRotation"],
             )
+            return x1, y1, x2, y2
         else:
             raise ValueError(f"{scf_object['type']} is not a supported type")
 
