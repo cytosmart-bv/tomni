@@ -9,6 +9,8 @@
 - CDF-Main: Implement `to_dict`. Includes rounding.
 - CDF-Main: Implement `__len__`.
 - CDF-Main: Implement `__iter__` and `__next__`.
+- CDF-Main: Implement `__add__` and `__radd__`.
+- CDF-Main: Implement `append`
 - Add polygon annotation class.
 - Add ellipse annotation class.
 
