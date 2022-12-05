@@ -125,10 +125,11 @@ class CytoSmartDataFormat(object):
     def __add__(self, other):
         """Ability to add to CDF objects together
         cdf1 + cdf2.
+        cdf + dict
 
         or possiby
-        - cdf + dict
-        - cdf + darwin
+        -
+        TODO cdf + darwin
         - ...
         """
         assert type(self) == CytoSmartDataFormat
@@ -152,15 +153,7 @@ class CytoSmartDataFormat(object):
         radd should flip the two parts and call add.
         so, dict + cdf becomes cdf + dict.
         """
-        assert type(self) == CytoSmartDataFormat
-
-        if type(other) == dict:
-            other_cdf = CytoSmartDataFormat.from_dicts([other])
-            new_annotations = self.annotations + other_cdf.annotations
-            return CytoSmartDataFormat(new_annotations)
-
-        else:
-            ValueError(f"{type(self)} , {type(other)}")
+        return self.__add__(other)
 
     def delete_annotation(self, item: Annotation):
         """Remove an annotation from self.annotations.
