@@ -122,25 +122,35 @@ class CytoSmartDataFormat(object):
         TODO: Convert annotations to darwin format (v7).
         """
 
+    def append(self, other: Annotation):
+        assert isinstance(other, Annotation), f"other "
+
+        self._annotations.append(other)
+
     def __add__(self, other):
         """Ability to add to CDF objects together
         cdf1 + cdf2.
         cdf + dict
 
-        or possiby
-        -
-        TODO cdf + darwin
-        - ...
         """
         assert type(self) == CytoSmartDataFormat
 
         if type(other) == CytoSmartDataFormat:
-            new_annotations = self.annotations + other.annotations
+            new_annotations = self._annotations + other._annotations
+            return CytoSmartDataFormat(new_annotations)
+
+        elif isinstance(other, Annotation):
+            new_annotations = self._annotations + [other]
             return CytoSmartDataFormat(new_annotations)
 
         elif type(other) == dict:
             other_cdf = CytoSmartDataFormat.from_dicts([other])
-            new_annotations = self.annotations + other_cdf.annotations
+            new_annotations = self._annotations + other_cdf._annotations
+            return CytoSmartDataFormat(new_annotations)
+
+        elif type(other) == list:
+            other_cdf = CytoSmartDataFormat.from_dicts(other)
+            new_annotations = self._annotations + other_cdf._annotations
             return CytoSmartDataFormat(new_annotations)
 
         else:
