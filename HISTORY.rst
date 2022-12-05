@@ -1,4 +1,8 @@
 # History
+1.15.0 (2022-12-05)
+------------------
+- Add json2bbox for ellipse with angle of rotation
+
 1.14.0 (2022-11-11)
 ------------------
 - Add convert to color
