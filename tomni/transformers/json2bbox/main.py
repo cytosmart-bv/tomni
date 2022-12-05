@@ -13,7 +13,7 @@ def json2bbox(scf_object: dict) -> tuple:
 
     bbox = scf_object2bbox(scf_object) #(0, 0 , 20, 30)
 
-    Warning: The coversion from ellipse to bbox assumes angleOfRotation of 0
+    NB: The angle of rotation for an ellipse is taken into account
 
     Args:
         scf_object (dict): single standard CytoSMART format annotations. allowed types polygon, ellipse or circle
