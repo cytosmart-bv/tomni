@@ -12,8 +12,10 @@ with open(json_fp, "rb") as f:
     print(f"Found {len(dicts)} dictionaries in json file.")
 cdf = CytoSmartDataFormat.from_dicts(dicts=dicts)
 
+
 #%%
 print(f"__len__: {len(cdf)}")
+print(f"__len__: {len(cdf+cdf)}")
 
 #%%
 # cdf creates a generator.
