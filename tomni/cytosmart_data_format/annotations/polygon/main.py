@@ -11,7 +11,14 @@ from ..point import Point
 
 
 class Polygon(Annotation):
-    def __init__(self, points: List[Point], id, label, children, parents):
+    def __init__(
+        self,
+        points: List[Point],
+        id: str,
+        label: str = "",
+        children: List[Annotation] = [],
+        parents: List[Annotation] = [],
+    ):
         """Initializes a Polygon object.
 
         Args:
@@ -67,7 +74,7 @@ class Polygon(Annotation):
 
     @property
     def convex_hull_area(self) -> float:
-        """Convex Hull Area by cv2 contour operations. 
+        """Convex Hull Area by cv2 contour operations.
 
         Returns:
             float: Polygon's convex hull area.
@@ -148,7 +155,7 @@ class Polygon(Annotation):
         if not self._perimeter:
             self._calculate_perimeter()
 
-        self._circularity = (4 * np.pi * self._area) / (self._perimeter ** 2)
+        self._circularity = (4 * np.pi * self._area) / (self._perimeter**2)
 
     def _calculate_convex_hull_area(self) -> None:
         if not self._has_enough_points:
@@ -168,5 +175,23 @@ class Polygon(Annotation):
             self._calculate_area()
 
         _, radius = cv2.minEnclosingCircle(self._contour)
-        enclosing_circle_area = radius ** 2 * np.pi
+        enclosing_circle_area = radius**2 * np.pi
         self._roundness = self._area / enclosing_circle_area
+
+    @staticmethod
+    def __compare_list_points(l1: List[Annotation], l2: List[Annotation]):
+        if len(l1) != len(l2):
+            return False
+
+        for i in range(len(l1)):
+            if l1[i] != l2[i]:
+                return False
+
+        return True
+
+    def __eq__(self, other):
+        if not isinstance(other, Polygon):
+            # don't attempt to compare against unrelated types
+            return False
+
+        return self.__compare_list_points(self.points, other.points)
