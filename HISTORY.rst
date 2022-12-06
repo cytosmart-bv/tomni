@@ -4,13 +4,17 @@
 ------------------
 - CDF-Main: Implement `filter` to allow filtering of annotations by feature values (aka gating).
 - CDF-Main: Implement `from_contours`.
-- CDF-Main: Implement `to_contours`. Includes rounding.
+- CDF-Main: Implement `to_contours`.
 - CDF-Main: Implement `from_dict`.
 - CDF-Main: Implement `to_dict`. Includes rounding.
 - CDF-Main: Implement `__len__`.
 - CDF-Main: Implement `__iter__` and `__next__`.
 - Add polygon annotation class.
 - Add ellipse annotation class.
+
+1.14.0 (2022-11-11)
+------------------
+- Add convert to color
 
 1.13.0 (2022-10-24)
 ------------------

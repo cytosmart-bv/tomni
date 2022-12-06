@@ -20,3 +20,4 @@ from .cytosmart_data_format.annotations.polygon import Polygon
 from .img_dim import img_dim
 from .img_paste import img_paste
 from .shape_fitting import fit_rect_around_ellipse
+from .convert_color import convert_color
