@@ -10,6 +10,8 @@
 - CDF-Main: Implement `__len__`.
 - CDF-Main: Implement `__iter__` and `__next__`.
 - Add polygon annotation class.
+- CDF-polygon: Implement `__eq__`
+- CDF-polygon: Remove useless point
 - Add ellipse annotation class.
 
 1.14.0 (2022-11-11)
