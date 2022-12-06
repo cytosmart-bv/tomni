@@ -12,6 +12,10 @@
 - Add polygon annotation class.
 - Add ellipse annotation class.
 
+1.14.0 (2022-11-11)
+------------------
+- Add convert to color
+
 1.13.0 (2022-10-24)
 ------------------
 - Add json2bbox for polygon and ellipse
