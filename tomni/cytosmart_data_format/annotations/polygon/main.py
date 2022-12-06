@@ -111,6 +111,9 @@ class Polygon(Annotation):
 
     @points.setter
     def points(self, value: List[Point]) -> None:
+        """
+        Simplify every list of points to only have points that add information
+        """
         filtered_points = []
 
         # Remove point that do no add new information
