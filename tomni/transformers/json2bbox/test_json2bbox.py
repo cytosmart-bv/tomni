@@ -1,6 +1,7 @@
 from unittest import TestCase
 import numpy as np
 from .main import json2bbox
+from ...shape_fitting.fit_rect_ellipse import fit_rect_around_ellipse
 
 
 class TestJson2bbox(TestCase):
@@ -38,9 +39,79 @@ class TestJson2bbox(TestCase):
             "id": "unicorn",
         }
 
-        result = json2bbox(inputContours)
+        result = fit_rect_around_ellipse(
+            inputContours["center"]["x"],
+            inputContours["center"]["y"],
+            inputContours["radiusX"],
+            inputContours["radiusY"],
+            inputContours["angleOfRotation"],
+        )
 
         np.testing.assert_equal(result, expectedResult)
+
+    def test_happy_flow_ellipse_with_angle(self):
+        expectedResult = (0, 0, 12, 10)
+
+        inputContours = {
+            "type": "ellipse",
+            "center": {"x": 6.0, "y": 5.0},
+            "radiusX": 6.0,
+            "radiusY": 4.0,
+            "angleOfRotation": 30,
+            "id": "unicorn",
+        }
+
+        result = fit_rect_around_ellipse(
+            inputContours["center"]["x"],
+            inputContours["center"]["y"],
+            inputContours["radiusX"],
+            inputContours["radiusY"],
+            inputContours["angleOfRotation"],
+        )
+        np.testing.assert_almost_equal(result, expectedResult)
+
+    def test_happy_flow_ellipse_90(self):
+        expectedResult = (2, -1, 10, 11)
+
+        inputContours = {
+            "type": "ellipse",
+            "center": {"x": 6.0, "y": 5.0},
+            "radiusX": 6.0,
+            "radiusY": 4.0,
+            "angleOfRotation": 90,
+            "id": "unicorn",
+        }
+
+        result = fit_rect_around_ellipse(
+            inputContours["center"]["x"],
+            inputContours["center"]["y"],
+            inputContours["radiusX"],
+            inputContours["radiusY"],
+            inputContours["angleOfRotation"],
+        )
+        np.testing.assert_almost_equal(result, expectedResult)
+
+    def test_happy_flow_ellipse_180(self):
+        expectedResult = (0, 1, 12, 9)
+
+        inputContours = {
+            "type": "ellipse",
+            "center": {"x": 6.0, "y": 5.0},
+            "radiusX": 6.0,
+            "radiusY": 4.0,
+            "angleOfRotation": 180,
+            "id": "unicorn",
+        }
+
+        result = fit_rect_around_ellipse(
+            inputContours["center"]["x"],
+            inputContours["center"]["y"],
+            inputContours["radiusX"],
+            inputContours["radiusY"],
+            inputContours["angleOfRotation"],
+        )
+
+        np.testing.assert_almost_equal(result, expectedResult)
 
     def test_value_error_unsupported_type(self):
         inputContours = {
