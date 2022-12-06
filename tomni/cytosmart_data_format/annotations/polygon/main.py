@@ -1,3 +1,4 @@
+from math import sqrt
 import warnings
 from dataclasses import asdict
 from typing import List
@@ -31,7 +32,7 @@ class Polygon(Annotation):
         MIN_NR_POINTS = 3
 
         super().__init__(id, label, children, parents)
-        self._points: List[Point] = points
+        self.points: List[Point] = points
         self._contour: List[np.ndarray] = parse_points_to_contour(points)
 
         self._has_enough_points = len(points) >= MIN_NR_POINTS
@@ -108,6 +109,35 @@ class Polygon(Annotation):
     def points(self) -> List[Point]:
         return self._points
 
+    @points.setter
+    def points(self, value: List[Point]) -> None:
+        filtered_points = []
+
+        # Remove point that do no add new information
+        for i in range(len(value)):
+            prev_p = value[i - 1]
+            cur_p = value[i]
+            next_p = value[i + 1] if (i + 1) < len(value) else value[0]
+
+            """
+            If the distance between the previous and next point is the same
+            as between the previous-current + current-next
+            The point is on a straight line and needs to be removed
+            if ||a-c|| == ||a-b|| + ||b-c||
+            """
+            dis_prev_next = sqrt(
+                (prev_p.x - next_p.x) ** 2 + (prev_p.y - next_p.y) ** 2
+            )
+            dis_prev_cur = sqrt((prev_p.x - cur_p.x) ** 2 + (prev_p.y - cur_p.y) ** 2)
+            dis_cur_next = sqrt((cur_p.x - next_p.x) ** 2 + (cur_p.y - next_p.y) ** 2)
+
+            if dis_prev_next == (dis_prev_cur + dis_cur_next):
+                continue
+
+            filtered_points.append(cur_p)
+
+        self._points = filtered_points
+
     @property
     def roundness(self) -> float:
         """Roundness: Area / (radius_enclosing_circle**2 * pi).
@@ -123,7 +153,7 @@ class Polygon(Annotation):
     def to_dict(self, decimals: int = 2) -> dict:
         polygon_dict = {
             "type": "polygon",
-            "points": [asdict(point) for point in self._points],
+            "points": [asdict(point) for point in self.points],
         }
 
         if self._has_enough_points:
@@ -183,8 +213,17 @@ class Polygon(Annotation):
         if len(l1) != len(l2):
             return False
 
+        start_l2 = 0
         for i in range(len(l1)):
-            if l1[i] != l2[i]:
+            if l1[0] == l2[i]:
+                start_l2 = i
+                break
+
+        sliced_l2 = l2[start_l2:] + l2[:start_l2]
+        print(sliced_l2)
+
+        for i in range(len(l1)):
+            if l1[i] != sliced_l2[i]:
                 return False
 
         return True
@@ -194,4 +233,8 @@ class Polygon(Annotation):
             # don't attempt to compare against unrelated types
             return False
 
-        return self.__compare_list_points(self.points, other.points)
+        the_same = self.__compare_list_points(self.points, other.points)
+        reverse_points = other.points
+        reverse_points.reverse()
+        the_same_mirror = self.__compare_list_points(self.points, reverse_points)
+        return the_same | the_same_mirror
