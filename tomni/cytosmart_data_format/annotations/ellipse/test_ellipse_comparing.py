@@ -20,30 +20,30 @@ class TestEllipseCompare(TestCase):
 
     def test_different_radius_x(self):
         ellip1 = Ellipse(
-            radius_x=1, radius_y=3, center=Point(10, 40), rotation=0, id="ellipse1"
+            radius_x=1, radius_y=3, center=Point(10, 40), rotation=45, id="ellipse1"
         )
         ellip2 = Ellipse(
-            radius_x=2, radius_y=3, center=Point(10, 40), rotation=0, id="ellipse2"
+            radius_x=2, radius_y=3, center=Point(10, 40), rotation=45, id="ellipse2"
         )
 
         self.assertFalse(ellip1 == ellip2)
 
     def test_different_radius_y(self):
         ellip1 = Ellipse(
-            radius_x=1, radius_y=3, center=Point(10, 40), rotation=0, id="ellipse1"
+            radius_x=1, radius_y=3, center=Point(10, 40), rotation=100, id="ellipse1"
         )
         ellip2 = Ellipse(
-            radius_x=1, radius_y=2, center=Point(10, 40), rotation=0, id="ellipse2"
+            radius_x=1, radius_y=2, center=Point(10, 40), rotation=100, id="ellipse2"
         )
 
         self.assertFalse(ellip1 == ellip2)
 
     def test_different_center(self):
         ellip1 = Ellipse(
-            radius_x=1, radius_y=3, center=Point(10, 40), rotation=0, id="ellipse1"
+            radius_x=1, radius_y=3, center=Point(10, 40), rotation=-100, id="ellipse1"
         )
         ellip2 = Ellipse(
-            radius_x=1, radius_y=3, center=Point(11, 40), rotation=0, id="ellipse2"
+            radius_x=1, radius_y=3, center=Point(11, 40), rotation=-100, id="ellipse2"
         )
 
         self.assertFalse(ellip1 == ellip2)
