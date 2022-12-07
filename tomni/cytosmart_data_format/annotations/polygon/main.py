@@ -240,4 +240,4 @@ class Polygon(Annotation):
         reverse_points = other.points
         reverse_points.reverse()
         the_same_mirror = self.__compare_list_points(self.points, reverse_points)
-        return the_same | the_same_mirror
+        return are_points_equal| are_points_equal_mirrored
