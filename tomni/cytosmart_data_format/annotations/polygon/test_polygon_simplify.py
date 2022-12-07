@@ -83,3 +83,44 @@ class TestPolygonSimplify(TestCase):
         result = poly.points
 
         self.assertListEqual(expected, result)
+
+    def test_triangle_2(self):
+        poly = Polygon(
+            [
+                Point(1, 5),
+                Point(2, 3),
+                Point(3, 1),
+                Point(5, 5),
+            ],
+            id=2,
+            label="square",
+        )
+        expected = [
+            Point(1, 5),
+            Point(3, 1),
+            Point(5, 5),
+        ]
+        result = poly.points
+
+        self.assertListEqual(expected, result)
+
+    def test_triangle_3(self):
+        poly = Polygon(
+            [
+                Point(1, 5),
+                Point(2, 3.000001),
+                Point(3, 1),
+                Point(5, 5),
+            ],
+            id=2,
+            label="square",
+        )
+        expected = [
+            Point(1, 5),
+            Point(2, 3.000001),
+            Point(3, 1),
+            Point(5, 5),
+        ]
+        result = poly.points
+
+        self.assertListEqual(expected, result)
