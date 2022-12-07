@@ -239,5 +239,5 @@ class Polygon(Annotation):
         are_points_equal= self.__compare_list_points(self.points, other.points)
         reverse_points = other.points
         reverse_points.reverse()
-        the_same_mirror = self.__compare_list_points(self.points, reverse_points)
+        are_points_equal_mirrored= self.__compare_list_points(self.points, reverse_points)
         return are_points_equal| are_points_equal_mirrored
