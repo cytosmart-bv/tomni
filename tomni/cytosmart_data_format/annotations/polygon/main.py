@@ -123,18 +123,16 @@ class Polygon(Annotation):
             next_p = value[i + 1] if (i + 1) < len(value) else value[0]
 
             """
-            If the distance between the previous and next point is the same
-            as between the previous-current + current-next
-            The point is on a straight line and needs to be removed
-            if ||a-c|| == ||a-b|| + ||b-c||
+            If ratio heigh width for prev-cur and cur-next is the same.
+            The point is on a straight line
+            Comparing is done with division for optimization
             """
-            dis_prev_next = sqrt(
-                (prev_p.x - next_p.x) ** 2 + (prev_p.y - next_p.y) ** 2
-            )
-            dis_prev_cur = sqrt((prev_p.x - cur_p.x) ** 2 + (prev_p.y - cur_p.y) ** 2)
-            dis_cur_next = sqrt((cur_p.x - next_p.x) ** 2 + (cur_p.y - next_p.y) ** 2)
+            prev_cur_width = prev_p.x - cur_p.x
+            prev_cur_height = prev_p.y - cur_p.y
+            cur_next_width = cur_p.x - next_p.x
+            cur_next_height = cur_p.y - next_p.y
 
-            if dis_prev_next == (dis_prev_cur + dis_cur_next):
+            if prev_cur_width * cur_next_height == prev_cur_height * cur_next_width:
                 continue
 
             filtered_points.append(cur_p)
@@ -236,8 +234,10 @@ class Polygon(Annotation):
             # don't attempt to compare against unrelated types
             return False
 
-        are_points_equal= self.__compare_list_points(self.points, other.points)
+        are_points_equal = self.__compare_list_points(self.points, other.points)
         reverse_points = other.points
         reverse_points.reverse()
-        are_points_equal_mirrored= self.__compare_list_points(self.points, reverse_points)
-        return are_points_equal| are_points_equal_mirrored
+        are_points_equal_mirrored = self.__compare_list_points(
+            self.points, reverse_points
+        )
+        return are_points_equal | are_points_equal_mirrored
