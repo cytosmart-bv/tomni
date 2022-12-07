@@ -13,6 +13,8 @@
 - CDF-polygon: Implement `__eq__`
 - CDF-polygon: Remove useless point
 - Add ellipse annotation class.
+- CDF-ellipse: Implement `__eq__`
+- CDF-ellipse: Set all rotations between 0 and 90, flip radii if needed
 
 1.14.0 (2022-11-11)
 ------------------
