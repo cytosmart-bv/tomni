@@ -236,7 +236,7 @@ class Polygon(Annotation):
             # don't attempt to compare against unrelated types
             return False
 
-        the_same = self.__compare_list_points(self.points, other.points)
+        are_points_equal= self.__compare_list_points(self.points, other.points)
         reverse_points = other.points
         reverse_points.reverse()
         the_same_mirror = self.__compare_list_points(self.points, reverse_points)
