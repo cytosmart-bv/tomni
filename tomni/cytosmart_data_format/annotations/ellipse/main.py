@@ -14,9 +14,9 @@ class Ellipse(Annotation):
         center: Point,
         rotation: float,
         id: str,
-        label: str,
-        children: List[Annotation],
-        parents: List[Annotation],
+        label: str = "",
+        children: List[Annotation] = [],
+        parents: List[Annotation] = [],
         radius_y: float = None,
     ):
         """Initializes a Ellipse object.
@@ -27,6 +27,9 @@ class Ellipse(Annotation):
                 Defaults to None. If None, radius_y will inherit the value of radius_x.
             center (Point): Coordinate of the center (x, y).
             rotation (float): Angle of rotation in degrees.
+                Rotations will be set between 0 and 90
+                If a rotation is the high or low multiplies of 180 will be added or subtracted
+                If a rotation is between 90 and 180 the radii will be flipped and 90 will be subtracted
             id (str): UUID identifier.
             label (str): Class label of annotation.
             children (List[Annotation]): Tracking annotations. Refers to t+1.
@@ -34,12 +37,12 @@ class Ellipse(Annotation):
         """
         super().__init__(id, label, children, parents)
         self._center: Point = center
-        self._rotation: float = rotation
-        self._radius_x: float = radius_x
+        self.radius_x: float = radius_x
         if radius_y:
-            self._radius_y: float = radius_y
+            self.radius_y: float = radius_y
         else:
-            self._radius_y: float = radius_x
+            self.radius_y: float = radius_x
+        self.rotation: float = rotation
 
         self._circularity: float = None
         self._area: float = None
@@ -56,27 +59,41 @@ class Ellipse(Annotation):
 
     @property
     def radius_x(self) -> float:
-        """Radius of ellipse in X direction.
-        """
+        """Radius of ellipse in X direction."""
         return self._radius_x
+
+    @radius_x.setter
+    def radius_x(self, new_radius_x):
+        self._radius_x = new_radius_x
 
     @property
     def radius_y(self) -> float:
-        """Radius of ellipse in X direction.
-        """
+        """Radius of ellipse in X direction."""
         return self._radius_y
+
+    @radius_y.setter
+    def radius_y(self, new_radius_y):
+        self._radius_y = new_radius_y
 
     @property
     def center(self) -> Point:
-        """Center of ellipse.
-        """
+        """Center of ellipse."""
         return self._center
 
     @property
     def rotation(self) -> float:
-        """Rotation in degrees.
-        """
+        """Rotation in degrees."""
         return self._rotation
+
+    @rotation.setter
+    def rotation(self, new_rotation) -> float:
+        # Everything above 180 is a repetition of below
+        new_rotation = new_rotation % 180
+        if new_rotation >= 90:
+            self.radius_x, self.radius_y = self.radius_y, self.radius_x
+            self._rotation = new_rotation % 90
+        else:
+            self._rotation = new_rotation
 
     @property
     def circularity(self) -> float:
@@ -145,11 +162,11 @@ class Ellipse(Annotation):
         return dict_return_value
 
     def _calculate_circularity(self) -> None:
-        self._circularity = 4 * np.pi * self.area / self.perimeter ** 2
+        self._circularity = 4 * np.pi * self.area / self.perimeter**2
 
     def _calculate_perimeter(self) -> None:
         self._perimeter = (
-            2 * np.pi * np.sqrt((self._radius_x ** 2 + self._radius_y ** 2) / 2)
+            2 * np.pi * np.sqrt((self._radius_x**2 + self._radius_y**2) / 2)
         )
 
     def _calculate_area(self) -> None:
@@ -162,3 +179,18 @@ class Ellipse(Annotation):
             self._aspect_ratio = self._radius_y / self._radius_x
         else:
             self._aspect_ratio = self._radius_x / self._radius_y
+
+    def __eq__(self, other):
+        if self.radius_x != other.radius_x:
+            return False
+
+        if self.radius_y != other.radius_y:
+            return False
+
+        if self.rotation != other.rotation:
+            return False
+
+        if self.center != other.center:
+            return False
+
+        return True
