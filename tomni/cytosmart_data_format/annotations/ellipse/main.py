@@ -27,6 +27,9 @@ class Ellipse(Annotation):
                 Defaults to None. If None, radius_y will inherit the value of radius_x.
             center (Point): Coordinate of the center (x, y).
             rotation (float): Angle of rotation in degrees.
+                Rotations will be set between 0 and 90
+                If a rotation is the high or low multiplies of 180 will be added or subtracted
+                If a rotation is between 90 and 180 the radii will be flipped and 90 will be subtracted
             id (str): UUID identifier.
             label (str): Class label of annotation.
             children (List[Annotation]): Tracking annotations. Refers to t+1.
