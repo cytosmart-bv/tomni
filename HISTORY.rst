@@ -11,6 +11,12 @@
 - CDF-Main: Implement `__iter__` and `__next__`.
 - Add polygon annotation class.
 - Add ellipse annotation class.
+- CDF-ellipse: Implement `__eq__`
+- CDF-ellipse: Set all rotations between 0 and 90, flip radii if needed
+
+1.15.0 (2022-12-05)
+------------------
+- Add json2bbox for ellipse with angle of rotation
 
 1.14.0 (2022-11-11)
 ------------------
