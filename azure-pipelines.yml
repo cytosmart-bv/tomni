@@ -10,10 +10,10 @@ jobs:
   - job: RunInContainer
 
     pool:
-    vmImage: 'ubuntu-latest'
+      vmImage: 'ubuntu-latest'
 
     container:
-    image: cytosmarttestreg.azurecr.io/omni/base:36398
+      image: cytosmarttestreg.azurecr.io/omni/base:latest
       endpoint: DockerRegTest2
 
     steps:
