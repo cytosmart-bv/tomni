@@ -2,7 +2,7 @@
 
 2.0.0-b0 (2022-11-29)
 ------------------
-- Add util function: `parse_points_to_contour`.
+- CDF-Main: Implement `filter` to allow filtering of annotations by feature values (aka gating).
 - CDF-Main: Implement `from_contours`.
 - CDF-Main: Implement `to_contours`.
 - CDF-Main: Implement `from_dict`.
@@ -15,6 +15,10 @@
 - Add ellipse annotation class.
 - CDF-ellipse: Implement `__eq__`
 - CDF-ellipse: Set all rotations between 0 and 90, flip radii if needed
+
+1.15.0 (2022-12-05)
+------------------
+- Add json2bbox for ellipse with angle of rotation
 
 1.14.0 (2022-11-11)
 ------------------
