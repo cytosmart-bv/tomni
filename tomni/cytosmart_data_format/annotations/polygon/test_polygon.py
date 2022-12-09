@@ -290,3 +290,7 @@ class TestPolygon(TestCase):
         print(expected)
         print(actual)
         self.assertDictEqual(expected, actual)
+
+    def test_raises(self):
+        with self.assertRaises(SyntaxError):
+            self.triangle_polygon.points = self.circular_points

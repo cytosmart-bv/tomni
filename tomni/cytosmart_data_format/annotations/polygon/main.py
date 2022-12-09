@@ -1,12 +1,11 @@
-from math import sqrt
 import warnings
 from dataclasses import asdict
-from typing import List
+from typing import List, Type
 
 import cv2
 import numpy as np
 
-from ...utils import parse_points_to_contour
+from ...utils import parse_points_to_contour, are_lines_equal, simplify_line
 from ..annotation import Annotation
 from ..point import Point
 
@@ -32,7 +31,7 @@ class Polygon(Annotation):
         MIN_NR_POINTS = 3
 
         super().__init__(id, label, children, parents)
-        self.points: List[Point] = points
+        self._points: List[Point] = simplify_line(points)
         self._contour: List[np.ndarray] = parse_points_to_contour(points)
 
         self._has_enough_points = len(points) >= MIN_NR_POINTS
@@ -110,34 +109,8 @@ class Polygon(Annotation):
         return self._points
 
     @points.setter
-    def points(self, value: List[Point]) -> None:
-        """
-        Simplify every list of points to only have points that add information
-        """
-        filtered_points = []
-
-        # Remove point that do no add new information
-        for i in range(len(value)):
-            prev_p = value[i - 1]
-            cur_p = value[i]
-            next_p = value[i + 1] if (i + 1) < len(value) else value[0]
-
-            """
-            If ratio heigh width for prev-cur and cur-next is the same.
-            The point is on a straight line
-            Comparing is done with division for optimization
-            """
-            prev_cur_width = prev_p.x - cur_p.x
-            prev_cur_height = prev_p.y - cur_p.y
-            cur_next_width = cur_p.x - next_p.x
-            cur_next_height = cur_p.y - next_p.y
-
-            if prev_cur_width * cur_next_height == prev_cur_height * cur_next_width:
-                continue
-
-            filtered_points.append(cur_p)
-
-        self._points = filtered_points
+    def points(self, *arg, **kwargs) -> None:
+        raise SyntaxError("Points are Immutable")
 
     @property
     def roundness(self) -> float:
@@ -209,35 +182,15 @@ class Polygon(Annotation):
         enclosing_circle_area = radius**2 * np.pi
         self._roundness = self._area / enclosing_circle_area
 
-    @staticmethod
-    def __compare_list_points(l1: List[Annotation], l2: List[Annotation]):
-        if len(l1) != len(l2):
-            return False
-
-        start_l2 = 0
-        for i in range(len(l1)):
-            if l1[0] == l2[i]:
-                start_l2 = i
-                break
-
-        sliced_l2 = l2[start_l2:] + l2[:start_l2]
-        print(sliced_l2)
-
-        for i in range(len(l1)):
-            if l1[i] != sliced_l2[i]:
-                return False
-
-        return True
-
     def __eq__(self, other):
         if not isinstance(other, Polygon):
             # don't attempt to compare against unrelated types
             return False
 
-        are_points_equal = self.__compare_list_points(self.points, other.points)
+        are_points_equal = are_lines_equal(self.points, other.points, is_enclosed=True)
         reverse_points = other.points
         reverse_points.reverse()
-        are_points_equal_mirrored = self.__compare_list_points(
-            self.points, reverse_points
+        are_points_equal_mirrored = are_lines_equal(
+            self.points, reverse_points, is_enclosed=True
         )
         return are_points_equal | are_points_equal_mirrored
