@@ -4,7 +4,7 @@ from typing import Dict, List
 import numpy as np
 
 from .annotations import Annotation, Ellipse, Point, Polygon
-from .utils import parse_points_to_contour
+from .utils import compress_polygon_points, parse_points_to_contour
 
 
 class CytoSmartDataFormat(object):
@@ -17,7 +17,25 @@ class CytoSmartDataFormat(object):
         self._annotations = annotations
 
     @classmethod
-    def from_dicts(cls, dicts: List[dict]):
+    def from_dicts(cls, dicts: List[dict], compress: bool = False, **kwargs):
+        """Initializes a CDF object from a collection of CDF dictionaries.
+
+        Args:
+            dicts (List[dict]): List of CytoSmartDataFormat dictionaries.
+            compress (bool, optional): Whether to apply lossy compression. If compress, additional parameters are used (see keyword args). 
+                This is only applicable to polygon annotations. Other annotation types are skipped. Defaults to False.
+        
+        Keyword Args:
+            mode (str): Compression mode. `rdp` or `recursive`.
+            epsilon: If mode `rdp`, epsilon in the Ramer-Douglas-Peucker algorithm (RDP). Defaults to 0.9.
+            n_iter: If mode `recursive`, nr. of iterations to recursively half points. Defaults to 3.
+            
+        Raises:
+            ValueError: An error is raised when the dictionary contains neither polygon or ellipse type annotations.
+
+        Returns:
+            CytoSmartDataFormat: A CytoSmartDataFormat object initialized from passed dictionaries.
+        """
         TYPE_KEY = "type"
         LABEL_KEY = "label"
         CHILDREN_KEY = "children"
@@ -39,12 +57,21 @@ class CytoSmartDataFormat(object):
                     rotation=d["angleOfRotation"],
                 )
             elif d[TYPE_KEY] == "polygon":
+                points = [Point(x=p["x"], y=p["y"]) for p in d["points"]]
+                if compress:
+                    points = compress_polygon_points(
+                        points=points,
+                        mode=kwargs.get("mode", None),
+                        n_iter=kwargs.get("n_iter", 3),
+                        epsilon=kwargs.get("epsilon", 0.9),
+                    )
+
                 annotation = Polygon(
                     label=d.get(LABEL_KEY, None),
                     id=d.get(ID_KEY, str(uuid.uuid4())),
                     children=d.get(CHILDREN_KEY, []),
                     parents=d.get(PARENTS_KEY, []),
-                    points=[Point(x=p["x"], y=p["y"]) for p in d["points"]],
+                    points=points,
                 )
             else:
                 raise ValueError(
@@ -55,12 +82,20 @@ class CytoSmartDataFormat(object):
         return cls(annotations)
 
     @classmethod
-    def from_contours(cls, contours: List[np.ndarray]):
+    def from_contours(
+        cls, contours: List[np.ndarray], compress: bool = False, **kwargs
+    ):
         """Initializes a CytoSmartDataFormat object from cv2 contours.
         Contours' shape must be [N, 1, 2] with dtype of np.int32.
 
         Args:
             contours (List[np.ndarray]): Collection of cv2 contours.
+            compress (bool, optional): Whether to apply lossy compression. If compress, additional parameters are used (see keyword args). Defaults to False.
+
+        Keyword Args:
+            mode (str): Compression mode. `rdp` or `recursive`.
+            epsilon: If mode `rdp`, epsilon in the Ramer-Douglas-Peucker algorithm (RDP). Defaults to 0.9.
+            n_iter: If mode `recursive`, nr. of iterations to recursively half points. Defaults to 3.
         """
         annotations = []
         for contour in contours:
@@ -70,6 +105,14 @@ class CytoSmartDataFormat(object):
             points: Point = []
             for i in range(contour.shape[0]):
                 points.append(Point(x=int(contour[i][0]), y=int(contour[i][1])))
+
+            if compress:
+                points = compress_polygon_points(
+                    points=points,
+                    mode=kwargs.get("mode", None),
+                    n_iter=kwargs.get("n_iter", None),
+                    epsilon=kwargs.get("epsilon", None),
+                )
 
             annotations.append(
                 Polygon(

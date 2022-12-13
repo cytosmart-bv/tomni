@@ -30,7 +30,7 @@ class Polygon(Annotation):
         self._has_enough_points = len(points) >= MIN_NR_POINTS
         if not self._has_enough_points:
             warnings.warn(
-                f"Polygon has less than {MIN_NR_POINTS} points. Some features may not be available."
+                f"Polygon with id: {self._id} has less than {MIN_NR_POINTS} points. Some features may not be available."
             )
 
         # features

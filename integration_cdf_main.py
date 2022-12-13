@@ -14,6 +14,16 @@ with open(json_fp, "rb") as f:
 #%%
 cdf = CytoSmartDataFormat.from_dicts(dicts=dicts)
 
+#%%
+cdf = CytoSmartDataFormat.from_dicts(
+    dicts=dicts, compress=True, mode="rdp", epsilon=0.8
+)
+
+#%%
+cdf = CytoSmartDataFormat.from_dicts(
+    dicts=dicts, compress=True, mode="recursive", n_iter=3
+)
+
 
 #%%
 contours = [json2contours(d) for d in dicts]
@@ -47,8 +57,11 @@ print(annotations)
 # %%
 # Filter with inplace=True: CDF object is updated internally. Returns CDF object to allow chaining.
 updated_cdf = cdf.filter(
-# The return does not have to be used. This is merely to show difference between inplace.
-    feature="roundness", min_val=0.5, max_val=1.0, inplace=True
+    # The return does not have to be used. This is merely to show difference between inplace.
+    feature="roundness",
+    min_val=0.5,
+    max_val=1.0,
+    inplace=True,
 ).filter(feature="area", min_val=0, max_val=1000, inplace=True)
 print(type(updated_cdf))
 
