@@ -121,7 +121,7 @@ class TestUtils(TestCase):
 
     def test_parse_points_to_contour_star(self):
         expected = np.array(
-            [[[1, 3]], [[2, 3]], [[3, 5]], [[5, 3]], [[3, 1]], [[2, 2]]]
+            [[[1, 3]], [[2, 3]], [[3, 5]], [[5, 3]], [[3, 1]], [[2, 2]]], dtype=np.int32
         )
 
         actual = parse_points_to_contour(self.star_shaped_points)
