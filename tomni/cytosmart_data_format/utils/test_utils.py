@@ -3,7 +3,6 @@ from unittest import TestCase
 import numpy as np
 
 from tomni.cytosmart_data_format.annotations.point.main import Point
-from tomni.cytosmart_data_format.annotations.polygon.main import Polygon
 
 from .main import parse_points_to_contour, rdp_compression, recursive_compression
 
@@ -119,3 +118,13 @@ class TestUtils(TestCase):
         actual = recursive_compression(self.circular_points, self.n_iter)
 
         self.assertEqual(expected, actual)
+
+    def test_parse_points_to_contour_star(self):
+        expected = np.array(
+            [[[1, 3]], [[2, 3]], [[3, 5]], [[5, 3]], [[3, 1]], [[2, 2]]]
+        )
+
+        actual = parse_points_to_contour(self.star_shaped_points)
+
+        np.testing.assert_array_equal(expected, actual)
+        self.assertEqual(expected.dtype, actual.dtype)
