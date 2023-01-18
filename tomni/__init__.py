@@ -12,12 +12,12 @@ from . import (
     make_mask,
     transformers,
 )
+from .annotation_manager import AnnotationManager
+from .annotation_manager.annotations.ellipse import Ellipse
+from .annotation_manager.annotations.point import Point
+from .annotation_manager.annotations.polygon import Polygon
 from .bbox_fitting import bbox_fitting, bbox_fitting_center
-from .cytosmart_data_format import CytoSmartDataFormat
-from .cytosmart_data_format.annotations.ellipse import Ellipse
-from .cytosmart_data_format.annotations.point import Point
-from .cytosmart_data_format.annotations.polygon import Polygon
+from .convert_color import convert_color
 from .img_dim import img_dim
 from .img_paste import img_paste
 from .shape_fitting import fit_rect_around_ellipse
-from .convert_color import convert_color
