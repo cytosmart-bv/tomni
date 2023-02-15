@@ -6,9 +6,9 @@ __email__ = "tom.nijhof@cytosmart.com"
 __version__ = "2.0.0b0"
 
 from .annotation_manager import AnnotationManager
-from .annotation_manager.annotations.ellipse import Ellipse
-from .annotation_manager.annotations.point import Point
-from .annotation_manager.annotations.polygon import Polygon
+from .annotation_manager.annotations import Ellipse
+from .annotation_manager.annotations import Point
+from .annotation_manager.annotations import Polygon
 from .bbox_fitting import bbox_fitting, bbox_fitting_center
 from .bbox_operations import check_overlap_bbox
 from .convert_color import convert_color
