@@ -5,19 +5,21 @@ __author__ = """Tom Nijhof & Jelle van Kerkvoorde"""
 __email__ = "tom.nijhof@cytosmart.com"
 __version__ = "2.0.0b0"
 
-from . import (
-    bbox_operations,
-    illumination_correction,
-    json_operations,
-    make_mask,
-    transformers,
-)
 from .annotation_manager import AnnotationManager
 from .annotation_manager.annotations.ellipse import Ellipse
 from .annotation_manager.annotations.point import Point
 from .annotation_manager.annotations.polygon import Polygon
 from .bbox_fitting import bbox_fitting, bbox_fitting_center
+from .bbox_operations import check_overlap_bbox
 from .convert_color import convert_color
+from .illumination_correction import (
+    absolute_difference,
+    fluo_tophat,
+    relative_difference,
+)
 from .img_dim import img_dim
 from .img_paste import img_paste
+from .json_operations import *
+from .make_mask import *
 from .shape_fitting import fit_rect_around_ellipse
+from .transformers import *
