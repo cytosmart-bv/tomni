@@ -120,6 +120,7 @@ class Polygon(Annotation):
                 kwargs.get("n_points_limit", 100),
                 kwargs.get("n_iter", 3),
                 kwargs.get("epsilon", 0.9),
+                kwargs.get("do_rdp_compresion", True),
             )
 
         polygon_dict = {

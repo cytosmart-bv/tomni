@@ -2,6 +2,8 @@
 
 2.0.0-b0 (2022-11-29)
 ------------------
+- CDF-Main: Option to compress polygons in `to_dict().
+- Utils: Implement functions to compress with RDP or recursive methods.
 - CDF-Main: Implement `filter` to allow filtering of annotations by feature values (aka gating).
 - CDF-Main: Implement `from_contours`.
 - CDF-Main: Implement `to_contours`.

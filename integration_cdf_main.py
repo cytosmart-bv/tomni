@@ -31,9 +31,12 @@ print(f"Count: {count}")
 
 
 #%%
-dicts_ = cdf.to_dict()
-with open("temp.json", "w") as f:
+dicts_ = cdf.to_dict(
+    do_compress=True, n_iter=3, n_points_limit=100, do_rdp_compresion=True
+)
+with open(json_fp.replace(".json", "_dict.json"), "w") as f:
     json.dump(dicts_, f)
+
 
 # %%
 conts = cdf.to_contours()
@@ -47,8 +50,11 @@ print(annotations)
 # %%
 # Filter with inplace=True: CDF object is updated internally. Returns CDF object to allow chaining.
 updated_cdf = cdf.filter(
-# The return does not have to be used. This is merely to show difference between inplace.
-    feature="roundness", min_val=0.5, max_val=1.0, inplace=True
+    # The return does not have to be used. This is merely to show difference between inplace.
+    feature="roundness",
+    min_val=0.5,
+    max_val=1.0,
+    inplace=True,
 ).filter(feature="area", min_val=0, max_val=1000, inplace=True)
 print(type(updated_cdf))
 
