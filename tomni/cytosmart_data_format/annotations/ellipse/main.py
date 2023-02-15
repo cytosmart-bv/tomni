@@ -143,7 +143,7 @@ class Ellipse(Annotation):
 
         return self._aspect_ratio
 
-    def to_dict(self, decimals: int = 2) -> dict:
+    def to_dict(self, decimals: int = 2, **kwargs) -> dict:
 
         dict_ellipse = {
             "type": "ellipse",

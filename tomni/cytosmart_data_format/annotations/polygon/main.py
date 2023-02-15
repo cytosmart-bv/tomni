@@ -1,11 +1,10 @@
 import warnings
 from dataclasses import asdict
 from typing import List
-
 import cv2
 import numpy as np
 
-from ...utils import parse_points_to_contour
+from ...utils import parse_points_to_contour, compress_polygon_points
 from ..annotation import Annotation
 from ..point import Point
 
@@ -67,7 +66,7 @@ class Polygon(Annotation):
 
     @property
     def convex_hull_area(self) -> float:
-        """Convex Hull Area by cv2 contour operations. 
+        """Convex Hull Area by cv2 contour operations.
 
         Returns:
             float: Polygon's convex hull area.
@@ -113,10 +112,19 @@ class Polygon(Annotation):
 
         return self._roundness
 
-    def to_dict(self, decimals: int = 2) -> dict:
+    def to_dict(self, decimals: int = 2, **kwargs) -> dict:
+        points = self._points.copy()
+        if kwargs.get("do_compress", False):
+            points = compress_polygon_points(
+                points,
+                kwargs.get("n_points_limit", 100),
+                kwargs.get("n_iter", 3),
+                kwargs.get("epsilon", 0.9),
+            )
+
         polygon_dict = {
             "type": "polygon",
-            "points": [asdict(point) for point in self._points],
+            "points": [asdict(point) for point in points],
         }
 
         if self._has_enough_points:
@@ -148,7 +156,7 @@ class Polygon(Annotation):
         if not self._perimeter:
             self._calculate_perimeter()
 
-        self._circularity = (4 * np.pi * self._area) / (self._perimeter ** 2)
+        self._circularity = (4 * np.pi * self._area) / (self._perimeter**2)
 
     def _calculate_convex_hull_area(self) -> None:
         if not self._has_enough_points:
@@ -168,5 +176,5 @@ class Polygon(Annotation):
             self._calculate_area()
 
         _, radius = cv2.minEnclosingCircle(self._contour)
-        enclosing_circle_area = radius ** 2 * np.pi
+        enclosing_circle_area = radius**2 * np.pi
         self._roundness = self._area / enclosing_circle_area

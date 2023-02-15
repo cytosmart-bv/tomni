@@ -99,8 +99,7 @@ class CytoSmartDataFormat(object):
 
     @annotations.setter
     def annotations(self, other_annotations: List[Annotation]):
-        """I doubt this setter should be allowed to exist.
-        """
+        """I doubt this setter should be allowed to exist."""
 
     def __len__(self) -> int:
         return len(self._annotations)
@@ -115,8 +114,7 @@ class CytoSmartDataFormat(object):
         pass
 
     def __contains__(self, other: Annotation):
-        """to check if self.annotations contains other.
-        """
+        """to check if self.annotations contains other."""
         pass
 
     def __iter__(self):
@@ -131,7 +129,7 @@ class CytoSmartDataFormat(object):
         else:
             raise StopIteration
 
-    def to_dict(self, decimals: int = 2) -> List[Dict]:
+    def to_dict(self, decimals: int = 2, **kwargs) -> List[Dict]:
         """Transform CDF object to a collection of our format.
 
         Args:
@@ -141,7 +139,8 @@ class CytoSmartDataFormat(object):
             List[Dict]: Collection of CDF dicts.
         """
         return [
-            annotation.to_dict(decimals=decimals) for annotation in self._annotations
+            annotation.to_dict(decimals=decimals, **kwargs)
+            for annotation in self._annotations
         ]
 
     def to_contours(self) -> List[np.ndarray]:
@@ -197,7 +196,11 @@ class CytoSmartDataFormat(object):
         pass
 
     def filter(
-        self, feature: str, min_val: float, max_val: float, inplace: bool = False,
+        self,
+        feature: str,
+        min_val: float,
+        max_val: float,
+        inplace: bool = False,
     ):
         """Filter annotations by feature.
 
@@ -225,8 +228,7 @@ class CytoSmartDataFormat(object):
 
     @classmethod
     def get_circularity_summary(self):
-        """loops the cdf items to get avg, std, min, max.
-        """
+        """loops the cdf items to get avg, std, min, max."""
 
     def get_feature_summaries(self, features: List[str]) -> Dict:
         """Pass a list of features to calculated.
