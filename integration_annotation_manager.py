@@ -13,6 +13,7 @@ with open(json_fp, "rb") as f:
     print(f"Found {len(dicts)} dictionaries in json file.")
 #%%
 manager = AnnotationManager.from_dicts(dicts=dicts)
+print(f"__len__: {len(manager)}")
 
 
 #%%
