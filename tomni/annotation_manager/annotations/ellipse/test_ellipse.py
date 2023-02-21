@@ -2,7 +2,7 @@ from unittest import TestCase
 
 import numpy as np
 
-from tomni.cytosmart_data_format import Ellipse, Point
+from tomni.annotation_manager import Ellipse, Point
 
 
 class TestEllipse(TestCase):

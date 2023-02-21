@@ -13,6 +13,7 @@
 - Add ellipse annotation class.
 - CDF-ellipse: Implement `__eq__`
 - CDF-ellipse: Set all rotations between 0 and 90, flip radii if needed
+- Renamed `CytoSmartDataFormat` to `AnnotationManager`
 
 1.15.0 (2022-12-05)
 ------------------

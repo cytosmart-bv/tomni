@@ -1,6 +1,6 @@
 from unittest import TestCase
 
-from tomni.cytosmart_data_format import Ellipse, Point
+from tomni.annotation_manager import Ellipse, Point
 
 
 class TestEllipseCompare(TestCase):

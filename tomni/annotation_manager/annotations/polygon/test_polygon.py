@@ -1,7 +1,7 @@
 from dataclasses import asdict
 from unittest import TestCase
 
-from tomni.cytosmart_data_format import Point, Polygon
+from tomni.annotation_manager import Point, Polygon
 
 
 class TestPolygon(TestCase):
