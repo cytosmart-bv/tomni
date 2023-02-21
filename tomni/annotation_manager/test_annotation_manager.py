@@ -2,17 +2,16 @@ from dataclasses import asdict
 from unittest import TestCase
 
 import numpy as np
+from tomni.annotation_manager import AnnotationManager
+from tomni.annotation_manager.annotations.point.main import Point
+from tomni.annotation_manager.annotations.polygon.main import Polygon
 
-from tomni.cytosmart_data_format import CytoSmartDataFormat
-from tomni.cytosmart_data_format.annotations.point.main import Point
-from tomni.cytosmart_data_format.annotations.polygon.main import Polygon
-
-from .main import CytoSmartDataFormat
+from .main import AnnotationManager
 
 
-class TestCytoSmartDataFormat(TestCase):
+class TestAnnotationManager(TestCase):
     def setUp(self) -> None:
-        self.cdf = CytoSmartDataFormat(
+        self.cdf = AnnotationManager(
             [
                 Polygon(
                     points=[
@@ -136,12 +135,12 @@ class TestCytoSmartDataFormat(TestCase):
             "roundness": 0.64,
         }
         self.list_of_dict = [self.ellipse_dict, self.polygon_dict]
-        self.cdf1 = CytoSmartDataFormat.from_dicts([self.ellipse_dict])
-        self.cdf2 = CytoSmartDataFormat.from_dicts([self.polygon_dict])
-        self.cdf_combined = CytoSmartDataFormat.from_dicts(
+        self.cdf1 = AnnotationManager.from_dicts([self.ellipse_dict])
+        self.cdf2 = AnnotationManager.from_dicts([self.polygon_dict])
+        self.cdf_combined = AnnotationManager.from_dicts(
             [self.ellipse_dict, self.polygon_dict]
         )
-        self.cdf_combined2 = CytoSmartDataFormat.from_dicts(
+        self.cdf_combined2 = AnnotationManager.from_dicts(
             [self.ellipse_dict] + self.list_of_dict
         )
 
@@ -161,7 +160,7 @@ class TestCytoSmartDataFormat(TestCase):
         )
         expected_n_items = 2
 
-        self.assertIsInstance(actual, CytoSmartDataFormat)
+        self.assertIsInstance(actual, AnnotationManager)
         self.assertEqual(len(self.cdf), expected_n_items)
         self.assertEqual(len(self.cdf), expected_n_items)
 
@@ -171,7 +170,7 @@ class TestCytoSmartDataFormat(TestCase):
         ).filter(feature="perimeter", min_val=11, max_val=12, inplace=True)
         expected_n_items = 1
 
-        self.assertIsInstance(actual, CytoSmartDataFormat)
+        self.assertIsInstance(actual, AnnotationManager)
         self.assertEqual(len(self.cdf), expected_n_items)
 
     def test_cdf_add(self):

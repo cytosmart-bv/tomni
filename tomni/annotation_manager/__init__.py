@@ -1,2 +1,2 @@
 from .annotations import Annotation, BinaryMask, Ellipse, Point, Polygon
-from .main import CytoSmartDataFormat
+from .main import AnnotationManager

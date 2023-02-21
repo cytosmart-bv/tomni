@@ -1,4 +1,4 @@
-Tomni CytoSmartDataFormat Update
+Tomni AnnotationManager Update
 =====
 
 Hello people, This is a todo list for the new CytoSmart data format (CDF). File can be removed once development is done. The intention of the CDF is two fold. First, to offer a data class that handles annotations, data manipulation, creates generators/lists, and provides summaries/features for algorithms. Second, to provide a data class standard that other teams can use, e.g. the cloud, where we have clear defined scope of what it can and cannot do, and well it's documented. 
@@ -6,7 +6,7 @@ Hello people, This is a todo list for the new CytoSmart data format (CDF). File 
 
 ## ToDo List:
 
-- [ ] CytoSmartDataFormat-Class
+- [ ] AnnotationManager-Class
     - [ ] Length
     - [ ] Generator/Iterator
     - [ ] ToDict

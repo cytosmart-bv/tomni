@@ -7,9 +7,9 @@ from .annotations import Annotation, Ellipse, Point, Polygon
 from .utils import parse_points_to_contour
 
 
-class CytoSmartDataFormat(object):
+class AnnotationManager(object):
     def __init__(self, annotations: List[Annotation]):
-        """Initializes a CytoSmartDataFormat object.
+        """Initializes a AnnotationManager object.
 
         Args:
             annotations (List[Annotation]): Collection of annotations, e.g. polygon or ellipse.
@@ -56,7 +56,7 @@ class CytoSmartDataFormat(object):
 
     @classmethod
     def from_contours(cls, contours: List[np.ndarray]):
-        """Initializes a CytoSmartDataFormat object from cv2 contours.
+        """Initializes a AnnotationManager object from cv2 contours.
         Contours' shape must be [N, 1, 2] with dtype of np.int32.
 
         Args:
@@ -107,8 +107,8 @@ class CytoSmartDataFormat(object):
     def __eq__(self, other: object) -> bool:
         """To check equality of to CDF objects
         Thats bit of a tricky one because you must compare all annotations IMO.
-        Ex: cdf1 = CytoDataFormat.from_something()
-        cdf2 = CytoDataFormat.from_something()
+        Ex: cdf1 = AnnotationManager.from_something()
+        cdf2 = AnnotationManager.from_something()
         is cdf1 == cdf2 must be possible.
         """
         pass
@@ -179,25 +179,25 @@ class CytoSmartDataFormat(object):
         cdf + dict
 
         """
-        assert type(self) == CytoSmartDataFormat
+        assert type(self) == AnnotationManager
 
-        if type(other) == CytoSmartDataFormat:
+        if type(other) == AnnotationManager:
             new_annotations = self._annotations + other._annotations
-            return CytoSmartDataFormat(new_annotations)
+            return AnnotationManager(new_annotations)
 
         elif isinstance(other, Annotation):
             new_annotations = self._annotations + [other]
-            return CytoSmartDataFormat(new_annotations)
+            return AnnotationManager(new_annotations)
 
         elif type(other) == dict:
-            other_cdf = CytoSmartDataFormat.from_dicts([other])
+            other_cdf = AnnotationManager.from_dicts([other])
             new_annotations = self._annotations + other_cdf._annotations
-            return CytoSmartDataFormat(new_annotations)
+            return AnnotationManager(new_annotations)
 
         elif type(other) == list:
-            other_cdf = CytoSmartDataFormat.from_dicts(other)
+            other_cdf = AnnotationManager.from_dicts(other)
             new_annotations = self._annotations + other_cdf._annotations
-            return CytoSmartDataFormat(new_annotations)
+            return AnnotationManager(new_annotations)
 
         else:
             ValueError(f"{type(self)} , {type(other)}")
@@ -229,7 +229,7 @@ class CytoSmartDataFormat(object):
             inplace (bool, optional): If True, filter in-place. Modifies the object internally. If False, return collection of annotations. Defaults to False.
 
         Returns:
-            CytoSmartDataFormat or List[Annotation]: Collection of filtered annotions or if `inplace=True` object with filterd annotations.
+            AnnotationManager or List[Annotation]: Collection of filtered annotions or if `inplace=True` object with filterd annotations.
         """
         filtered_annotations = []
 
