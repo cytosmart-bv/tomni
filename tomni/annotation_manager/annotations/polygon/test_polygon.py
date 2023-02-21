@@ -30,6 +30,16 @@ class TestPolygon(TestCase):
             parents=parents,
             label=label,
         )
+        self.circular_points_simplified = [
+            Point(1, 2),
+            Point(1, 4),
+            Point(2, 5),
+            Point(4, 5),
+            Point(5, 4),
+            Point(5, 2),
+            Point(4, 1),
+            Point(2, 1),
+        ]
 
         self.star_shaped_points = [
             Point(1, 3),
@@ -46,6 +56,13 @@ class TestPolygon(TestCase):
             parents=parents,
             label=label,
         )
+        self.star_shaped_points_simplified = [
+            Point(1, 3),
+            Point(2, 3),
+            Point(3, 5),
+            Point(5, 3),
+            Point(3, 1),
+        ]
 
         self.rectangle_points = [
             Point(1, 5),
@@ -62,6 +79,12 @@ class TestPolygon(TestCase):
             parents=parents,
             label=label,
         )
+        self.rectangle_points_simplified = [
+            Point(1, 5),
+            Point(5, 5),
+            Point(5, 1),
+            Point(1, 1),
+        ]
 
         self.triangle_points = [
             Point(1, 5),
@@ -203,7 +226,7 @@ class TestPolygon(TestCase):
             "circularity": 0.94,
             "convex_hull_area": 14.0,
             "perimeter": 13.66,
-            "points": [asdict(point) for point in self.circular_points],
+            "points": [asdict(point) for point in self.circular_points_simplified],
             "roundness": 0.89,
         }
         actual = self.circular_polygon.to_dict()
@@ -221,7 +244,7 @@ class TestPolygon(TestCase):
             "circularity": 0.79,
             "convex_hull_area": 16.0,
             "perimeter": 16.0,
-            "points": [asdict(point) for point in self.rectangle_points],
+            "points": [asdict(point) for point in self.rectangle_points_simplified],
             "roundness": 0.64,
         }
         actual = self.rectangle_polygon.to_dict()
@@ -242,7 +265,7 @@ class TestPolygon(TestCase):
             "circularity": 0.64,
             "convex_hull_area": 8.0,
             "perimeter": 11.72,
-            "points": [asdict(point) for point in self.star_shaped_points],
+            "points": [asdict(point) for point in self.star_shaped_points_simplified],
             "roundness": 0.56,
         }
         actual = self.star_shaped_polygon.to_dict()
@@ -264,5 +287,10 @@ class TestPolygon(TestCase):
             "roundness": 0.41,
         }
         actual = self.triangle_polygon.to_dict()
-
+        print(expected)
+        print(actual)
         self.assertDictEqual(expected, actual)
+
+    def test_raises(self):
+        with self.assertRaises(SyntaxError):
+            self.triangle_polygon.points = self.circular_points
