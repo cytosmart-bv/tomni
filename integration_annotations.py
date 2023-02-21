@@ -1,5 +1,5 @@
 #%%
-from tomni.cytosmart_data_format.annotations import Ellipse, Point, Polygon
+from tomni.annotation_manager.annotations import Ellipse, Point, Polygon
 
 #%%
 # Ellipse annotation

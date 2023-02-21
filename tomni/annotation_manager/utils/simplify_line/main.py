@@ -1,5 +1,5 @@
 from typing import List
-from tomni.cytosmart_data_format.annotations import Point
+from tomni.annotation_manager.annotations import Point
 
 
 def simplify_line(line: List[Point], is_enclosed=True):
