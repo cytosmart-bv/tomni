@@ -131,8 +131,8 @@ class AnnotationManager(object):
         else:
             raise StopIteration
 
-    def to_dict(self, decimals: int = 2) -> List[Dict]:
-        """Transform CDF object to a collection of our format.
+    def to_dict(self, decimals: int = 2, mask: List[dict] = None) -> List[Dict]:
+        """Transform AM object to a collection of our format.
 
         Args:
             decimals (int, optional): The number of decimals to use when rounding. Defaults to 2.
@@ -140,6 +140,9 @@ class AnnotationManager(object):
         Returns:
             List[Dict]: Collection of CDF dicts.
         """
+        if mask:
+            pass
+        
         return [
             annotation.to_dict(decimals=decimals) for annotation in self._annotations
         ]
