@@ -3,7 +3,7 @@ import gc
 import cv2
 import numpy as np
 
-from tomni.annotation_manager.annotations import Annotation, Ellipse, Point, Polygon
+from tomni.annotation_manager.annotations import Annotation, Ellipse, Polygon
 
 
 def get_mask_from_ellipse(ellipse: Ellipse) -> np.ndarray:
@@ -28,11 +28,6 @@ def get_mask_from_ellipse(ellipse: Ellipse) -> np.ndarray:
             color=1,
             thickness=-1,
         )
-
-    elif ellipse.center.x == ellipse.radius_x:
-        print(2)
-        # calculate intersection with axis
-
     else:
         raise ValueError("cry a little and move on")
 
@@ -50,7 +45,7 @@ def get_mask_from_polygon(polygon: Polygon) -> np.ndarray:
 
 
 def is_annotation_in_mask(
-    annotation: Annotation, mask: np.ndarray, overlap: 1.0
+    annotation: Annotation, mask: np.ndarray, min_overlap: 0.9
 ) -> bool:
     """
     Check if a annotation is within a binary mask.
@@ -58,7 +53,7 @@ def is_annotation_in_mask(
     Args:
         annotation (list of lists): List of lists containing the vertices of the annotation.
         mask (numpy.ndarray): Binary array of the same shape as the annotation indicating the mask.
-        overlap (float, optional): Minimum overlap in percent required between the annotation and the mask. Defaults to 0.5.
+        min_overlap (float, optional): Minimum overlap in percent required between the annotation and the mask. Defaults to 0.5.
 
     Returns:
         bool: True if the annotation is within the masked area with at least the specified overlap, False otherwise.
@@ -94,5 +89,5 @@ def is_annotation_in_mask(
     gc.collect()
 
     # Check if the polygon is within the masked area with at least the specified overlap
-    return overlap_ratio >= overlap
+    return overlap_ratio >= min_overlap
 
