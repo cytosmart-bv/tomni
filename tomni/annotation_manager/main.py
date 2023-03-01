@@ -5,6 +5,11 @@ import numpy as np
 
 from .annotations import Annotation, Ellipse, Point, Polygon
 from .utils import parse_points_to_contour
+from .utils.is_annotation_in_mask import (
+    get_mask_from_ellipse,
+    get_mask_from_polygon,
+    is_annotation_in_mask,
+)
 
 
 class AnnotationManager(object):
@@ -131,7 +136,9 @@ class AnnotationManager(object):
         else:
             raise StopIteration
 
-    def to_dict(self, decimals: int = 2, mask: List[dict] = None) -> List[Dict]:
+    def to_dict(
+        self, decimals: int = 2, mask_dicts: List[dict] = None, min_overlap: float = 0.9
+    ) -> List[Dict]:
         """Transform AM object to a collection of our format.
 
         Args:
@@ -140,9 +147,24 @@ class AnnotationManager(object):
         Returns:
             List[Dict]: Collection of CDF dicts.
         """
-        if mask:
-            pass
-        
+        if mask_dicts:
+            filtered_annotations = self._annotations.copy()
+            am_masks = AnnotationManager.from_dicts(mask_dicts)
+            for am_mask in am_masks:
+                if type(am_mask) is Polygon:
+                    mask = get_mask_from_polygon(am_mask)
+                elif type(am_mask) is Ellipse:
+                    mask = get_mask_from_ellipse(am_mask)
+
+                filtered_annotations = [
+                    annotation for annotation in filtered_annotations if is_annotation_in_mask(annotation, mask, min_overlap)
+                ]
+            
+            return [
+                annotation.to_dict(decimals=decimals) for annotation in filtered_annotations
+            ]
+
+
         return [
             annotation.to_dict(decimals=decimals) for annotation in self._annotations
         ]
