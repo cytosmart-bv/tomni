@@ -4,8 +4,6 @@ import numpy as np
 
 from tomni.annotation_manager.annotations import Point
 
-# from ..annotations import Point
-
 
 def parse_points_to_contour(points: List[Point]) -> np.ndarray:
     contour_points = [[[point.x, point.y]] for point in points]

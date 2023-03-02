@@ -4,12 +4,7 @@ from typing import Dict, List
 import numpy as np
 
 from .annotations import Annotation, Ellipse, Point, Polygon
-from .utils import parse_points_to_contour
-from .utils.is_annotation_in_mask import (
-    get_mask_from_ellipse,
-    get_mask_from_polygon,
-    is_annotation_in_mask,
-)
+from .utils import is_annotation_in_mask, parse_points_to_contour
 
 
 class AnnotationManager(object):
@@ -149,13 +144,8 @@ class AnnotationManager(object):
         """
         if mask_dicts:
             filtered_annotations = self._annotations.copy()
-            am_masks = AnnotationManager.from_dicts(mask_dicts)
-            for am_mask in am_masks:
-                if type(am_mask) is Polygon:
-                    mask = get_mask_from_polygon(am_mask)
-                elif type(am_mask) is Ellipse:
-                    mask = get_mask_from_ellipse(am_mask)
-
+            masks = AnnotationManager.from_dicts(mask_dicts).to_binary_mask()
+            for mask in masks:
                 filtered_annotations = [
                     annotation
                     for annotation in filtered_annotations
@@ -191,6 +181,12 @@ class AnnotationManager(object):
         ]
 
         return contours
+    
+    def to_binary_mask(self) -> List[np.ndarray]:
+        return [
+                annotation.to_binary_mask()
+                for annotation in self._annotations
+            ]
 
     def to_darwin(self) -> List[Dict]:
         """

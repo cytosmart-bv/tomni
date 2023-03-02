@@ -1,6 +1,7 @@
 from dataclasses import asdict
 from typing import List
 
+import cv2
 import numpy as np
 
 from ..annotation import Annotation
@@ -161,12 +162,39 @@ class Ellipse(Annotation):
         dict_return_value = {**super_dict, **dict_ellipse}
         return dict_return_value
 
+    def to_binary_mask(self) -> np.ndarray:
+        if (
+            self.rotation == 0
+            and self.radius_x <= self.center.x
+            and self.radius_y <= self.center.y
+        ):
+            # assume the mask fits into image!?
+            # calculate im size
+            # fill im with masked area
+            width = (2 * self.radius_x) + (self.center.x - self.radius_x) + 1
+            height = (2 * self.radius_y) + (self.center.y - self.radius_y) + 1
+            mask = np.zeros((width, height), dtype=np.uint8)
+            cv2.ellipse(
+                mask,
+                center=(self.center.x, self.center.y),
+                axes=(self.radius_x, self.radius_y),
+                angle=self.rotation,
+                startAngle=0,
+                endAngle=360,
+                color=1,
+                thickness=-1,
+            )
+        else:
+            raise ValueError("cry a little and move on")
+
+        return mask
+
     def _calculate_circularity(self) -> None:
-        self._circularity = 4 * np.pi * self.area / self.perimeter**2
+        self._circularity = 4 * np.pi * self.area / self.perimeter ** 2
 
     def _calculate_perimeter(self) -> None:
         self._perimeter = (
-            2 * np.pi * np.sqrt((self._radius_x**2 + self._radius_y**2) / 2)
+            2 * np.pi * np.sqrt((self._radius_x ** 2 + self._radius_y ** 2) / 2)
         )
 
     def _calculate_area(self) -> None:

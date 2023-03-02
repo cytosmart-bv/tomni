@@ -6,16 +6,11 @@ import cv2
 import numpy as np
 
 from tomni.annotation_manager.annotations import Annotation, Point
-
 from tomni.annotation_manager.utils import (
     are_lines_equal,
     parse_points_to_contour,
     simplify_line,
 )
-
-# from ...utils import are_lines_equal, parse_points_to_contour, simplify_line
-# from ..annotation import Annotation
-# from ..point import Point
 
 
 class Polygon(Annotation):
@@ -39,8 +34,8 @@ class Polygon(Annotation):
         MIN_NR_POINTS = 3
 
         super().__init__(id, label, children, parents)
-        self._points: List[Point] = simplify_line(points)
-        self._contour: List[np.ndarray] = parse_points_to_contour(points)
+        # self._points: List[Point] = simplify_line(points)
+        # self._contour: List[np.ndarray] = parse_points_to_contour(points)
 
         self._has_enough_points = len(points) >= MIN_NR_POINTS
         if not self._has_enough_points:
@@ -152,6 +147,17 @@ class Polygon(Annotation):
         super_dict = super().to_dict(decimals=decimals)
         dict_return_value = {**super_dict, **polygon_dict}
         return dict_return_value
+
+    def to_binary_mask(self) -> np.ndarray:
+        width = max(self._points, key=lambda point: point.x).x + 1
+        height = max(self._points, key=lambda point: point.y).y + 1
+        mask = np.zeros((width, height), dtype=np.uint8)
+
+        points = np.array(
+            [[point.x, point.y] for point in self._points], dtype=np.int32
+        )
+        cv2.fillPoly(mask, [points], color=1)
+        return mask
 
     def _calculate_area(self) -> None:
         if self._has_enough_points:
