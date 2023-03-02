@@ -150,15 +150,22 @@ class Polygon(Annotation):
         return dict_return_value
 
     def is_in_mask(self, mask: np.ndarray, min_overlap: float = 0.9):
+        """Check if an polygon is within a binary mask.
+
+        Args:
+            mask (np.ndarray): Binary mask in [0, 1].
+            min_overlap (float, optional): Minimum overlap required between the polygon and the mask, expressed as a value between 0 and 1. Defaults to 0.9.
+
+        Returns:
+            bool: True if the polygon is within the mask and meets the required overlap, False otherwise.
+        """
         if len(self.points) < 1:
             return False
-        
+
         poly_mask = np.zeros_like(mask)
         # Convert the polygon to a numpy array of shape (N, 2)
         points = np.array([[point.x, point.y] for point in self.points], dtype=np.int32)
-        poly_mask = cv2.fillPoly(
-                poly_mask, [points], color=1
-            )
+        poly_mask = cv2.fillPoly(poly_mask, [points], color=1)
 
         # Calculate the intersection of the annotation and the mask
         intersection = np.logical_and(mask, poly_mask)

@@ -162,7 +162,7 @@ class AnnotationManager(object):
         ]
 
     def to_contours(self) -> List[np.ndarray]:
-        """Transform CDF object to a collection of cv2 contours.
+        """Transform AM object to a collection of cv2 contours.
 
         Raises:
             ValueError: Raises error when annotations are not of type `Polygon`.
@@ -181,12 +181,15 @@ class AnnotationManager(object):
         ]
 
         return contours
-    
+
     def to_binary_mask(self) -> List[np.ndarray]:
-        return [
-                annotation.to_binary_mask()
-                for annotation in self._annotations
-            ]
+        """Transform AM object to binary masks. 
+        Annotations can only be polygon or ellipse.
+
+        Returns:
+            List[np.ndarray]: Collection of binary masks.
+        """
+        return [annotation.to_binary_mask() for annotation in self._annotations]
 
     def to_darwin(self) -> List[Dict]:
         """

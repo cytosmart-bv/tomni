@@ -188,6 +188,15 @@ class Ellipse(Annotation):
         return mask
 
     def is_in_mask(self, mask: np.ndarray, min_overlap: float = 0.9) -> bool:
+        """Check if an ellipse is within a binary mask.
+
+        Args:
+            mask (np.ndarray): Binary mask in [0, 1].
+            min_overlap (float, optional): Minimum overlap required between the ellipse and the mask, expressed as a value between 0 and 1. Defaults to 0.9.
+
+        Returns:
+            bool: True if the ellipse is within the mask and meets the required overlap, False otherwise.
+        """
         ellipse_mask = np.zeros_like(mask)
 
         cv2.ellipse(
