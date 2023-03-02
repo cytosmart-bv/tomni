@@ -61,13 +61,13 @@ def is_annotation_in_mask(
     # Create a binary mask image from the annotation
     annotation_mask = np.zeros_like(mask)
 
-    if type(annotation) is Polygon:
+    if isinstance(annotation, Polygon):
         # Convert the polygon to a numpy array of shape (N, 2)
         points = np.array(
             [[point.x, point.y] for point in annotation.points], dtype=np.int32
         )
         annotation_mask = cv2.fillPoly(annotation_mask, [points], color=1)
-    elif type(annotation) is Ellipse:
+    elif isinstance(annotation, Ellipse):
         cv2.ellipse(
             annotation_mask,
             center=(annotation.center.x, annotation.center.y),

@@ -2,7 +2,9 @@ from typing import List
 
 import numpy as np
 
-from ..annotations import Point
+from tomni.annotation_manager.annotations import Point
+
+# from ..annotations import Point
 
 
 def parse_points_to_contour(points: List[Point]) -> np.ndarray:

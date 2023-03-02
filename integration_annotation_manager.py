@@ -11,6 +11,7 @@ json_fp = filedialog.askopenfilename(title="Select CDF JSONs.")
 with open(json_fp, "rb") as f:
     dicts = json.load(f)
     print(f"Found {len(dicts)} dictionaries in json file.")
+
 #%%
 manager = AnnotationManager.from_dicts(dicts=dicts)
 
@@ -34,6 +35,23 @@ print(f"Count: {count}")
 dicts_ = manager.to_dict()
 with open("temp.json", "w") as f:
     json.dump(dicts_, f)
+
+#%% to_dict with masked rois.
+# define masks
+size = int(2072 / 2)
+rad = int(2072 / 3)
+masks = [
+    {
+        "type": "ellipse",
+        "center": {"x": size, "y": size},
+        "radiusX": rad,
+        "radiusY": rad,
+        "angleOfRotation": 0,
+        "name": "A1",
+    }
+]
+
+_dicts = manager.to_dict(mask_dicts=masks)
 
 # %%
 conts = manager.to_contours()

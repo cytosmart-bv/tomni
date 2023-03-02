@@ -1,13 +1,21 @@
 import warnings
 from dataclasses import asdict
-from typing import List, Type
+from typing import List
 
 import cv2
 import numpy as np
 
-from ...utils import parse_points_to_contour, are_lines_equal, simplify_line
-from ..annotation import Annotation
-from ..point import Point
+from tomni.annotation_manager.annotations import Annotation, Point
+
+from tomni.annotation_manager.utils import (
+    are_lines_equal,
+    parse_points_to_contour,
+    simplify_line,
+)
+
+# from ...utils import are_lines_equal, parse_points_to_contour, simplify_line
+# from ..annotation import Annotation
+# from ..point import Point
 
 
 class Polygon(Annotation):
@@ -159,7 +167,7 @@ class Polygon(Annotation):
         if not self._perimeter:
             self._calculate_perimeter()
 
-        self._circularity = (4 * np.pi * self._area) / (self._perimeter**2)
+        self._circularity = (4 * np.pi * self._area) / (self._perimeter ** 2)
 
     def _calculate_convex_hull_area(self) -> None:
         if not self._has_enough_points:
@@ -179,7 +187,7 @@ class Polygon(Annotation):
             self._calculate_area()
 
         _, radius = cv2.minEnclosingCircle(self._contour)
-        enclosing_circle_area = radius**2 * np.pi
+        enclosing_circle_area = radius ** 2 * np.pi
         self._roundness = self._area / enclosing_circle_area
 
     def __eq__(self, other):

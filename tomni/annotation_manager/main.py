@@ -157,13 +157,15 @@ class AnnotationManager(object):
                     mask = get_mask_from_ellipse(am_mask)
 
                 filtered_annotations = [
-                    annotation for annotation in filtered_annotations if is_annotation_in_mask(annotation, mask, min_overlap)
+                    annotation
+                    for annotation in filtered_annotations
+                    if is_annotation_in_mask(annotation, mask, min_overlap)
                 ]
-            
-            return [
-                annotation.to_dict(decimals=decimals) for annotation in filtered_annotations
-            ]
 
+            return [
+                annotation.to_dict(decimals=decimals)
+                for annotation in filtered_annotations
+            ]
 
         return [
             annotation.to_dict(decimals=decimals) for annotation in self._annotations
