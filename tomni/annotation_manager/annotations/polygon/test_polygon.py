@@ -1,6 +1,9 @@
 from dataclasses import asdict
 from unittest import TestCase
 
+import cv2
+import numpy as np
+
 from tomni.annotation_manager import Point, Polygon
 
 
@@ -290,6 +293,132 @@ class TestPolygon(TestCase):
         print(expected)
         print(actual)
         self.assertDictEqual(expected, actual)
+
+    def test_to_dict_with_ellipse_mask(self):
+        center = int(2072 / 2)
+        rad = int(2072 / 3)
+        mask = np.zeros((2072, 2072), dtype=np.uint8)
+
+        cv2.ellipse(
+            mask,
+            center=(center, center),
+            axes=(rad, rad),
+            angle=0,
+            startAngle=0,
+            endAngle=360,
+            color=1,
+            thickness=-1,
+        )
+
+        polygon1 = Polygon(
+            points=[
+                Point(center, center),
+                Point(center + 200, center + 200),
+                Point(center, center + 200),
+            ],
+            id="",
+            label="",
+            children=[],
+            parents=[],
+        )
+        polygon2 = Polygon(
+            points=[
+                Point(center, center),
+                Point(center - 300, center - 200),
+                Point(center, center + 200),
+            ],
+            id="",
+            label="",
+            children=[],
+            parents=[],
+        )
+        polygon3 = Polygon(
+            points=[
+                Point(center, center),
+                Point(center + 500, center + 500),
+                Point(center + 200, center),
+            ],
+            id="",
+            label="",
+            children=[],
+            parents=[],
+        )
+
+        polygons_inside = [polygon1, polygon2, polygon3]
+        polygons_outside = [
+            self.star_shaped_polygon,
+            self.rectangle_polygon,
+            self.triangle_polygon,
+        ]
+
+        for polygon in polygons_inside:
+            self.assertTrue(polygon.is_in_mask(mask, 0.9))
+
+        for polygon in polygons_outside:
+            self.assertFalse(polygon.is_in_mask(mask, 0.9))
+
+    def test_to_dict_with_polygon_mask(self):
+        center = 2072 / 2
+        size = 2072
+        quadrant = size / 4
+        points = np.array(
+            [
+                [quadrant, quadrant],
+                [quadrant, quadrant * 3],
+                [quadrant * 3, quadrant * 3],
+                [quadrant * 3, quadrant],
+            ],
+            dtype=np.int32,
+        )
+        mask = np.zeros((size, size), dtype=np.uint8)
+        cv2.fillPoly(mask, [points], color=1)
+
+        polygon1 = Polygon(
+            points=[
+                Point(center, center),
+                Point(center + 200, center + 200),
+                Point(center, center + 200),
+            ],
+            id="",
+            label="",
+            children=[],
+            parents=[],
+        )
+        polygon2 = Polygon(
+            points=[
+                Point(center, center),
+                Point(center - 300, center - 200),
+                Point(center, center + 200),
+            ],
+            id="",
+            label="",
+            children=[],
+            parents=[],
+        )
+        polygon3 = Polygon(
+            points=[
+                Point(center, center),
+                Point(center + 500, center + 500),
+                Point(center + 200, center),
+            ],
+            id="",
+            label="",
+            children=[],
+            parents=[],
+        )
+
+        polygons_inside = [polygon1, polygon2, polygon3]
+        polygons_outside = [
+            self.star_shaped_polygon,
+            self.rectangle_polygon,
+            self.triangle_polygon,
+        ]
+
+        for polygon in polygons_inside:
+            self.assertTrue(polygon.is_in_mask(mask, 0.9))
+
+        for polygon in polygons_outside:
+            self.assertFalse(polygon.is_in_mask(mask, 0.9))
 
     def test_raises(self):
         with self.assertRaises(SyntaxError):

@@ -41,7 +41,7 @@ with open("temp.json", "w") as f:
     json.dump(dicts_, f)
 
 #%% to_dict with masked rois.
-# define masks for a lux image
+# define masks for a lux image, ideally you use a lux json but whatever floats your boat.
 
 size = int(2072 / 2)
 rad = int(2072 / 3)
@@ -63,20 +63,11 @@ if os.path.exists(img_path):
     img = cv2.imread(img_path, cv2.IMREAD_COLOR)
     for _dict in _dicts:
         CB.over_draw_json(
-            img,
-            _dict,
-            stroke_width=3,
-            color=(
-                0,
-                255,
-                0
-            ),
+            img, _dict, stroke_width=3, color=(0, 255, 0),
         )
 
     CB.over_draw_json(img, masks[0], stroke_width=3, color=(255, 0, 0))
-
     cv2.imwrite("to_dict_with_mask.png", img)
-
 
 
 # %%

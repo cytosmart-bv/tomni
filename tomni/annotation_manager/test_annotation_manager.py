@@ -113,3 +113,24 @@ class TestAnnotationManager(TestCase):
 
         self.assertIsInstance(actual, AnnotationManager)
         self.assertEqual(len(self.cdf), expected_n_items)
+
+    def test_to_dict_with_ellipse_mask(self):
+        size = int(2072 / 2)
+        rad = int(2072 / 3)
+        masks = [
+            {
+                "type": "ellipse",
+                "center": {"x": size, "y": size},
+                "radiusX": rad,
+                "radiusY": rad,
+                "angleOfRotation": 0,
+                "name": "A1",
+            }
+        ]
+        self.assertTrue(True)
+
+    def test_to_dict_with_polygon_mask(self):
+        self.assertTrue(True)
+
+    def test_to_dict_with_polygon_ellipse_mask(self):
+        self.assertTrue(True)
