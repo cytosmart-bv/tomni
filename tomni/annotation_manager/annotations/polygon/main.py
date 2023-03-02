@@ -150,10 +150,15 @@ class Polygon(Annotation):
         return dict_return_value
 
     def is_in_mask(self, mask: np.ndarray, min_overlap: float = 0.9):
+        if len(self.points) < 1:
+            return False
+        
         poly_mask = np.zeros_like(mask)
         # Convert the polygon to a numpy array of shape (N, 2)
         points = np.array([[point.x, point.y] for point in self.points], dtype=np.int32)
-        poly_mask = cv2.fillPoly(poly_mask, [points], color=1)
+        poly_mask = cv2.fillPoly(
+                poly_mask, [points], color=1
+            )
 
         # Calculate the intersection of the annotation and the mask
         intersection = np.logical_and(mask, poly_mask)

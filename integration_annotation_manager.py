@@ -37,7 +37,8 @@ with open("temp.json", "w") as f:
     json.dump(dicts_, f)
 
 #%% to_dict with masked rois.
-# define masks
+# define masks for a lux image
+
 size = int(2072 / 2)
 rad = int(2072 / 3)
 masks = [

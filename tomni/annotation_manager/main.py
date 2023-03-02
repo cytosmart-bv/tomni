@@ -4,7 +4,7 @@ from typing import Dict, List
 import numpy as np
 
 from .annotations import Annotation, Ellipse, Point, Polygon
-from .utils import is_annotation_in_mask, parse_points_to_contour
+from .utils import parse_points_to_contour
 
 
 class AnnotationManager(object):
