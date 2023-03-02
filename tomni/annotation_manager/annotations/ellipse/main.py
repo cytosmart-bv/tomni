@@ -169,9 +169,6 @@ class Ellipse(Annotation):
             and self.radius_x <= self.center.x
             and self.radius_y <= self.center.y
         ):
-            # assume the mask fits into image!?
-            # calculate im size
-            # fill im with masked area
             width = (2 * self.radius_x) + (self.center.x - self.radius_x) + 1
             height = (2 * self.radius_y) + (self.center.y - self.radius_y) + 1
             mask = np.zeros((width, height), dtype=np.uint8)

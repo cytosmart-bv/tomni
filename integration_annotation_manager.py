@@ -56,7 +56,7 @@ masks = [
     }
 ]
 
-_dicts = manager.to_dict(mask_dicts=masks)
+_dicts = manager.to_dict(mask_dicts=masks, min_overlap=0.1)
 print(_dicts)
 img_path = json_fp.replace("json", "jpg")
 if os.path.exists(img_path):
