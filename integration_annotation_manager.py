@@ -52,6 +52,7 @@ masks = [
 ]
 
 _dicts = manager.to_dict(mask_dicts=masks)
+print(_dicts)
 
 # %%
 conts = manager.to_contours()

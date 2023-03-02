@@ -1,3 +1,4 @@
+import gc
 from dataclasses import asdict
 from typing import List
 
@@ -188,6 +189,32 @@ class Ellipse(Annotation):
             raise ValueError("cry a little and move on")
 
         return mask
+
+    def is_in_mask(self, mask: np.ndarray, min_overlap: float = 0.9) -> bool:
+        ellipse_mask = np.zeros_like(mask)
+
+        cv2.ellipse(
+            ellipse_mask,
+            center=(self.center.x, self.center.y),
+            axes=(self.radius_x, self.radius_y),
+            angle=self.rotation,
+            startAngle=0,
+            endAngle=360,
+            color=1,
+            thickness=-1,
+        )
+
+        # Calculate the intersection of the annotation and the mask
+        intersection = np.logical_and(mask, ellipse_mask)
+        # Calculate the overlap ratio between the polygon and the mask
+        overlap_ratio = intersection.sum() / ellipse_mask.sum()
+
+        del ellipse_mask
+        del intersection
+        gc.collect()
+
+        # Check if the polygon is within the masked area with at least the specified overlap
+        return overlap_ratio >= min_overlap
 
     def _calculate_circularity(self) -> None:
         self._circularity = 4 * np.pi * self.area / self.perimeter ** 2

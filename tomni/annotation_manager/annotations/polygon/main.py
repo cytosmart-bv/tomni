@@ -1,3 +1,4 @@
+import gc
 import warnings
 from dataclasses import asdict
 from typing import List
@@ -34,8 +35,8 @@ class Polygon(Annotation):
         MIN_NR_POINTS = 3
 
         super().__init__(id, label, children, parents)
-        # self._points: List[Point] = simplify_line(points)
-        # self._contour: List[np.ndarray] = parse_points_to_contour(points)
+        self._points: List[Point] = simplify_line(points)
+        self._contour: List[np.ndarray] = parse_points_to_contour(points)
 
         self._has_enough_points = len(points) >= MIN_NR_POINTS
         if not self._has_enough_points:
@@ -147,6 +148,24 @@ class Polygon(Annotation):
         super_dict = super().to_dict(decimals=decimals)
         dict_return_value = {**super_dict, **polygon_dict}
         return dict_return_value
+
+    def is_in_mask(self, mask: np.ndarray, min_overlap: float = 0.9):
+        poly_mask = np.zeros_like(mask)
+        # Convert the polygon to a numpy array of shape (N, 2)
+        points = np.array([[point.x, point.y] for point in self.points], dtype=np.int32)
+        poly_mask = cv2.fillPoly(poly_mask, [points], color=1)
+
+        # Calculate the intersection of the annotation and the mask
+        intersection = np.logical_and(mask, poly_mask)
+        # Calculate the overlap ratio between the polygon and the mask
+        overlap_ratio = intersection.sum() / poly_mask.sum()
+
+        del poly_mask
+        del intersection
+        gc.collect()
+
+        # Check if the polygon is within the masked area with at least the specified overlap
+        return overlap_ratio >= min_overlap
 
     def to_binary_mask(self) -> np.ndarray:
         width = max(self._points, key=lambda point: point.x).x + 1

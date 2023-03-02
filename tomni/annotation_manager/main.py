@@ -149,7 +149,7 @@ class AnnotationManager(object):
                 filtered_annotations = [
                     annotation
                     for annotation in filtered_annotations
-                    if is_annotation_in_mask(annotation, mask, min_overlap)
+                    if annotation.is_in_mask(mask, min_overlap)
                 ]
 
             return [
