@@ -164,6 +164,14 @@ class Ellipse(Annotation):
         return dict_return_value
 
     def to_binary_mask(self, shape: Tuple[int, int]) -> np.ndarray:
+        """Transform an ellipse to a binary mask. 
+
+        Args:
+            shape (Tuple[int, int]): Shape of the new ellipse's binary mask.
+
+        Returns:
+            np.ndarray: A binary mask in [0, 1].
+        """
         mask = np.zeros(shape, dtype=np.uint8)
         return cv2.ellipse(
             mask,

@@ -183,7 +183,7 @@ class AnnotationManager(object):
 
         return contours
 
-    def to_binary_mask(self, shape: Tuple[int, int]) -> List[np.ndarray]:
+    def to_binary_mask(self, shape: Tuple[int, int]) -> np.ndarray:
         """Transform AM object to a binary mask. 
         Annotations can only be polygon or ellipse.
 
@@ -191,7 +191,7 @@ class AnnotationManager(object):
             shape (Tuple[int, int]): Shape of the new binary mask.
 
         Returns:
-            List[np.ndarray]: A binary mask in [0, 1].
+            np.ndarray: A binary mask in [0, 1].
         """
         mask = np.zeros(shape, dtype=np.uint8)
         for annotation in self.annotations:

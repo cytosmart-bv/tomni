@@ -180,6 +180,14 @@ class Polygon(Annotation):
         return overlap_ratio >= min_overlap
 
     def to_binary_mask(self, shape: Tuple[int, int]) -> np.ndarray:
+        """Transform a polygon to a binary mask. 
+
+        Args:
+            shape (Tuple[int, int]): Shape of the new polygon's binary mask.
+
+        Returns:
+            np.ndarray: A binary mask in [0, 1].
+        """
         mask = np.zeros(shape, dtype=np.uint8)
         if len(self._points) > 0:
             points = np.array(
