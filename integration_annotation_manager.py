@@ -55,7 +55,6 @@ mask = {
 }
 bin_mask = AnnotationManager.from_dicts(dicts=[mask]).to_binary_mask(shape=(2072, 2072))
 
-
 _dicts = manager.to_dict(mask=bin_mask, min_overlap=0.9)
 print(_dicts)
 img_path = json_fp.replace("json", "jpg")
@@ -102,5 +101,3 @@ annotations = manager.filter(
     feature="roundness", min_val=0.5, max_val=1.0, inplace=False
 )
 print(type(annotations))
-
-# %%
