@@ -1,6 +1,6 @@
 import gc
 from dataclasses import asdict
-from typing import List
+from typing import List, Tuple
 
 import cv2
 import numpy as np
@@ -163,29 +163,18 @@ class Ellipse(Annotation):
         dict_return_value = {**super_dict, **dict_ellipse}
         return dict_return_value
 
-    def to_binary_mask(self) -> np.ndarray:
-        if (
-            self.rotation == 0
-            and self.radius_x <= self.center.x
-            and self.radius_y <= self.center.y
-        ):
-            width = (2 * self.radius_x) + (self.center.x - self.radius_x) + 1
-            height = (2 * self.radius_y) + (self.center.y - self.radius_y) + 1
-            mask = np.zeros((width, height), dtype=np.uint8)
-            cv2.ellipse(
-                mask,
-                center=(self.center.x, self.center.y),
-                axes=(self.radius_x, self.radius_y),
-                angle=self.rotation,
-                startAngle=0,
-                endAngle=360,
-                color=1,
-                thickness=-1,
-            )
-        else:
-            raise ValueError("cry a little and move on")
-
-        return mask
+    def to_binary_mask(self, shape: Tuple[int, int]) -> np.ndarray:
+        mask = np.zeros(shape, dtype=np.uint8)
+        return cv2.ellipse(
+            mask,
+            center=(self.center.x, self.center.y),
+            axes=(self.radius_x, self.radius_y),
+            angle=self.rotation,
+            startAngle=0,
+            endAngle=360,
+            color=1,
+            thickness=-1,
+        )
 
     def is_in_mask(self, mask: np.ndarray, min_overlap: float = 0.9) -> bool:
         """Check if an ellipse is within a binary mask.

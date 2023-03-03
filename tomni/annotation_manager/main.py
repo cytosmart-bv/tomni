@@ -1,6 +1,7 @@
 import uuid
-from typing import Dict, List
+from typing import Dict, List, Tuple
 
+import cv2
 import numpy as np
 
 from .annotations import Annotation, Ellipse, Point, Polygon
@@ -132,7 +133,7 @@ class AnnotationManager(object):
             raise StopIteration
 
     def to_dict(
-        self, decimals: int = 2, mask_dicts: List[dict] = None, min_overlap: float = 0.9
+        self, decimals: int = 2, mask: np.ndarray = None, min_overlap: float = 0.9
     ) -> List[Dict]:
         """Transform AM object to a collection of our format.
 
@@ -142,7 +143,7 @@ class AnnotationManager(object):
         Returns:
             List[Dict]: Collection of CDF dicts.
         """
-        if mask_dicts:
+        if mask:
             filtered_annotations = self._annotations.copy()
             masks = AnnotationManager.from_dicts(mask_dicts).to_binary_mask()
             for mask in masks:
@@ -182,14 +183,21 @@ class AnnotationManager(object):
 
         return contours
 
-    def to_binary_mask(self) -> List[np.ndarray]:
-        """Transform AM object to binary masks. 
+    def to_binary_mask(self, shape: Tuple[int, int]) -> List[np.ndarray]:
+        """Transform AM object to a binary mask. 
         Annotations can only be polygon or ellipse.
 
+        Args:
+            shape (Tuple[int, int]): Shape of the new binary mask.
+
         Returns:
-            List[np.ndarray]: Collection of binary masks.
+            List[np.ndarray]: A binary mask in [0, 1].
         """
-        return [annotation.to_binary_mask() for annotation in self._annotations]
+        mask = np.zeros(shape, dtype=np.uint8)
+        for annotation in self.annotations:
+            mask = cv2.add(mask, annotation.to_binary_mask(shape))
+  
+        return mask
 
     def to_darwin(self) -> List[Dict]:
         """

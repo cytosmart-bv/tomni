@@ -69,6 +69,11 @@ if os.path.exists(img_path):
     CB.over_draw_json(img, masks[0], stroke_width=3, color=(255, 0, 0))
     cv2.imwrite("to_dict_with_mask.png", img)
 
+#%%
+# Replace with the dimensions of your image.
+bin_mask = manager.to_binary_mask(shape=(2072, 2072))
+cv2.imwrite("binary_mask.png", bin_mask * 255)
+
 
 # %%
 conts = manager.to_contours()

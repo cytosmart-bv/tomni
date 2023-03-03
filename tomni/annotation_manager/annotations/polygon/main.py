@@ -1,7 +1,7 @@
 import gc
 import warnings
 from dataclasses import asdict
-from typing import List
+from typing import List, Tuple
 
 import cv2
 import numpy as np
@@ -179,15 +179,14 @@ class Polygon(Annotation):
         # Check if the polygon is within the masked area with at least the specified overlap
         return overlap_ratio >= min_overlap
 
-    def to_binary_mask(self) -> np.ndarray:
-        width = max(self._points, key=lambda point: point.x).x + 1
-        height = max(self._points, key=lambda point: point.y).y + 1
-        mask = np.zeros((width, height), dtype=np.uint8)
+    def to_binary_mask(self, shape: Tuple[int, int]) -> np.ndarray:
+        mask = np.zeros(shape, dtype=np.uint8)
+        if len(self._points) > 0:
+            points = np.array(
+                [[point.x, point.y] for point in self._points], dtype=np.int32
+            )
+            cv2.fillPoly(mask, [points], color=1)
 
-        points = np.array(
-            [[point.x, point.y] for point in self._points], dtype=np.int32
-        )
-        cv2.fillPoly(mask, [points], color=1)
         return mask
 
     def _calculate_area(self) -> None:
@@ -239,3 +238,4 @@ class Polygon(Annotation):
             self.points, reverse_points, is_enclosed=True
         )
         return are_points_equal | are_points_equal_mirrored
+
