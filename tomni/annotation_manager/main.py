@@ -143,20 +143,18 @@ class AnnotationManager(object):
         Returns:
             List[Dict]: Collection of CDF dicts.
         """
-        if mask:
+        if mask is not None:
             filtered_annotations = self._annotations.copy()
-            masks = AnnotationManager.from_dicts(mask_dicts).to_binary_mask()
-            for mask in masks:
-                filtered_annotations = [
+            filtered_annotations = [
                     annotation
                     for annotation in filtered_annotations
                     if annotation.is_in_mask(mask, min_overlap)
                 ]
 
             return [
-                annotation.to_dict(decimals=decimals)
-                for annotation in filtered_annotations
-            ]
+                    annotation.to_dict(decimals=decimals)
+                    for annotation in filtered_annotations
+                ]
 
         return [
             annotation.to_dict(decimals=decimals) for annotation in self._annotations
@@ -184,7 +182,7 @@ class AnnotationManager(object):
         return contours
 
     def to_binary_mask(self, shape: Tuple[int, int]) -> np.ndarray:
-        """Transform AM object to a binary mask. 
+        """Transform an AM object to a binary mask. 
         Annotations can only be polygon or ellipse.
 
         Args:
@@ -196,7 +194,7 @@ class AnnotationManager(object):
         mask = np.zeros(shape, dtype=np.uint8)
         for annotation in self.annotations:
             mask = cv2.add(mask, annotation.to_binary_mask(shape))
-  
+
         return mask
 
     def to_darwin(self) -> List[Dict]:

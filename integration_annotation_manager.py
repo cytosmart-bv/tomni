@@ -45,18 +45,18 @@ with open("temp.json", "w") as f:
 
 size = int(2072 / 2)
 rad = int(2072 / 3)
-masks = [
-    {
-        "type": "ellipse",
-        "center": {"x": size, "y": size},
-        "radiusX": rad,
-        "radiusY": rad,
-        "angleOfRotation": 0,
-        "name": "A1",
-    }
-]
+mask = {
+    "type": "ellipse",
+    "center": {"x": size, "y": size},
+    "radiusX": rad,
+    "radiusY": rad,
+    "angleOfRotation": 0,
+    "name": "A1",
+}
+bin_mask = AnnotationManager.from_dicts(dicts=[mask]).to_binary_mask(shape=(2072, 2072))
 
-_dicts = manager.to_dict(mask_dicts=masks, min_overlap=0.1)
+
+_dicts = manager.to_dict(mask=bin_mask, min_overlap=0.9)
 print(_dicts)
 img_path = json_fp.replace("json", "jpg")
 if os.path.exists(img_path):
@@ -66,7 +66,7 @@ if os.path.exists(img_path):
             img, _dict, stroke_width=3, color=(0, 255, 0),
         )
 
-    CB.over_draw_json(img, masks[0], stroke_width=3, color=(255, 0, 0))
+    CB.over_draw_json(img, mask, stroke_width=3, color=(255, 0, 0))
     cv2.imwrite("to_dict_with_mask.png", img)
 
 #%%
