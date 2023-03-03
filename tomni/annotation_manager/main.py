@@ -141,20 +141,20 @@ class AnnotationManager(object):
             decimals (int, optional): The number of decimals to use when rounding. Defaults to 2.
 
         Returns:
-            List[Dict]: Collection of CDF dicts.
+            List[Dict]: Collection of dicts.
         """
         if mask is not None:
             filtered_annotations = self._annotations.copy()
             filtered_annotations = [
-                    annotation
-                    for annotation in filtered_annotations
-                    if annotation.is_in_mask(mask, min_overlap)
-                ]
+                annotation
+                for annotation in filtered_annotations
+                if annotation.is_in_mask(mask, min_overlap)
+            ]
 
             return [
-                    annotation.to_dict(decimals=decimals)
-                    for annotation in filtered_annotations
-                ]
+                annotation.to_dict(decimals=decimals)
+                for annotation in filtered_annotations
+            ]
 
         return [
             annotation.to_dict(decimals=decimals) for annotation in self._annotations

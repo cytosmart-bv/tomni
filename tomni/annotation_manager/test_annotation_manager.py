@@ -115,29 +115,13 @@ class TestAnnotationManager(TestCase):
         self.assertIsInstance(actual, AnnotationManager)
         self.assertEqual(len(self.manager), expected_n_items)
 
-    def test_to_dict_with_ellipse_mask(self):
-        size = int(2072 / 2)
-        rad = int(2072 / 3)
-        masks = [
-            {
-                "type": "ellipse",
-                "center": {"x": size, "y": size},
-                "radiusX": rad,
-                "radiusY": rad,
-                "angleOfRotation": 0,
-                "name": "A1",
-            }
-        ]
-        self.assertTrue(True)
-
     def test_from_json_to_bin_mask_back_to_json(self):
         # TODO
         # requires am.from_mask to be implemented.
         self.assertTrue(True)
 
     def test_to_dict_with_polygon_mask(self):
-        mask = np.zeros((3000, 3000), dtype=np.uint8)
-        cv2.fillPoly(mask, [np.int32([[0, 0], [0, 3000], [3000, 3000], [3000, 0]])], 1)
+        mask = np.ones((3000, 3000), dtype=np.uint8)
 
         expected = [
             {
