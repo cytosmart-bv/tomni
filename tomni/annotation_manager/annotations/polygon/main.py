@@ -150,7 +150,7 @@ class Polygon(Annotation):
         return dict_return_value
 
     def is_in_mask(self, mask: np.ndarray, min_overlap: float = 0.9):
-        """Check if an polygon is within a binary mask.
+        """Check if a polygon is within a binary mask.
 
         Args:
             mask (np.ndarray): Binary mask in [0, 1].
