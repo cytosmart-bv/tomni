@@ -4,7 +4,7 @@ from typing import Dict, List, Tuple
 import cv2
 import numpy as np
 
-from tomni.transformers import labels2contours, labels2listsOfPoints, positi
+from tomni.transformers import labels2listsOfPoints, positions2contour
 
 from .annotations import Annotation, Ellipse, Point, Polygon
 from .utils import parse_points_to_contour

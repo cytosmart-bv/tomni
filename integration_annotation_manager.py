@@ -26,10 +26,12 @@ manager = AnnotationManager.from_contours(contours=contours)
 
 
 #%%
+shape = (2072, 2072)
 bin_mask_fp = filedialog.askopenfilename(title="Select binary mask.")
 mask = cv2.imread(bin_mask_fp, cv2.IMREAD_GRAYSCALE)
 manager = AnnotationManager.from_binary_mask(mask=mask)
-cv2.imwrite("from_bin_mask.png", manager.to_binary_mask((2072, 2072)))
+cv2.imwrite("from_bin_mask.png", manager.to_binary_mask(shape))
+cv2.imwrite("labeled_mask.png", manager.to_labeled_mask(shape))
 
 #%%
 labeled_mask_fp = filedialog.askopenfilename(title="Select binary mask.")
