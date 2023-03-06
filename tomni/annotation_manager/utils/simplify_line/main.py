@@ -1,10 +1,15 @@
 from typing import List
+
 from tomni.annotation_manager.annotations import Point
 
 
 def simplify_line(line: List[Point], is_enclosed=True):
     if is_enclosed == False:
         raise NotImplemented()
+
+    # returns empty list if `line` has exactly two elements
+    if len(line) == 2:
+        return line
 
     filtered_points = []
 

@@ -6,7 +6,7 @@ from tkinter import filedialog
 import cv2
 import cytoBoom as CB
 
-from tomni.annotation_manager import AnnotationManager
+from tomni.annotation_manager import AnnotationManager, Point, Polygon
 from tomni.transformers.json2contours import json2contours
 
 #%%
@@ -30,14 +30,14 @@ shape = (2072, 2072)
 bin_mask_fp = filedialog.askopenfilename(title="Select binary mask.")
 mask = cv2.imread(bin_mask_fp, cv2.IMREAD_GRAYSCALE)
 manager = AnnotationManager.from_binary_mask(mask=mask)
-cv2.imwrite("from_bin_mask.png", manager.to_binary_mask(shape))
-cv2.imwrite("labeled_mask.png", manager.to_labeled_mask(shape))
+cv2.imwrite("to_binary_mask.png", manager.to_binary_mask(shape))
 
 #%%
-labeled_mask_fp = filedialog.askopenfilename(title="Select binary mask.")
+shape = (2072, 2072)
+labeled_mask_fp = filedialog.askopenfilename(title="Select labeled mask.")
 mask = cv2.imread(labeled_mask_fp, cv2.IMREAD_GRAYSCALE)
-manager = AnnotationManager.from_binary_mask(mask=mask)
-cv2.imwrite("from_bin_mask.png", manager.to_labeled_mask((2072, 2072)))
+manager = AnnotationManager.from_labeled_mask(mask=mask)
+cv2.imwrite("to_labeled_mask.png", manager.to_labeled_mask(shape))
 
 #%%
 print(f"__len__: {len(manager)}")

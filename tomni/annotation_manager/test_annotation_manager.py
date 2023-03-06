@@ -305,28 +305,11 @@ class TestAnnotationManager(TestCase):
 
         self.assertEqual(expected, actual)
 
-    # def assert_output(self, expected_output, result):
-    #     # TODO: FIGURE OUT input params
-    #     self.assertEqual(len(expected_output), len(result))
-    #     for i in range(len(expected_output)):
-    #         result_external = result[i][0]
-    #         print(result_external)
-    #         np.testing.assert_array_equal(result_external, expected_output[i][0])
-
-    #         # Test inner contours
-    #         result_internal_list = result[i][1]
-    #         expected_internal_list = expected_output[i][1]
-    #         self.assertEqual(len(expected_internal_list), len(result_internal_list))
-    #         for result_internal, expected_internal in zip(
-    #             result_internal_list, expected_internal_list
-    #         ):
-    #     np.testing.assert_array_equal(result_internal, expected_internal)
-
-    def test_init_from_labeled_to_labeled_mask_wo_inner_contours(self):
+    def test_init_from_labeled_to_labeled_mask(self):
         data = np.array(
             [
-                [0, 5, 5, 0, 0, 0],
-                [0, 5, 5, 0, 0, 0],
+                [0, 3, 3, 0, 0, 0],
+                [0, 3, 3, 0, 0, 0],
                 [1, 1, 1, 0, 0, 0],
                 [0, 2, 0, 0, 0, 0],
                 [0, 2, 2, 0, 0, 0],
@@ -334,76 +317,154 @@ class TestAnnotationManager(TestCase):
                 [0, 2, 2, 2, 2, 0],
             ]
         )
+        shape = data.shape
         manager = AnnotationManager.from_labeled_mask(data)
 
-        n_labels = 5
+        n_labels = 3
         self.assertEqual(len(manager), n_labels)
 
-        expected_output = [
-            [[[0, 2]], [[2, 2]]],  # 1
-            [[[1, 3]], [[1, 6]], [[4, 6]]],  # 2
-            [[[1, 0]], [[1, 1]], [[2, 1]], [[2, 0]]],  # 5
-        ]
-        actual = manager.to_labeled_mask()
+        actual = manager.to_labeled_mask(shape)
 
         np.testing.assert_array_equal(actual, data)
 
-    # def init_from_labeled_test_return_inner_no_inner(self):
-    #     data = array(
-    #         [
-    #             [0, 5, 5, 0, 0, 0],
-    #             [0, 5, 5, 0, 0, 0],
-    #             [1, 1, 1, 0, 0, 0],
-    #             [0, 2, 0, 0, 0, 0],
-    #             [0, 2, 2, 0, 0, 0],
-    #             [0, 2, 2, 2, 0, 0],
-    #             [0, 2, 2, 2, 2, 0],
-    #         ]
-    #     )
+    def test_init_from_binary_to_labeled_mask(self):
+        data = np.array(
+            [
+                [0, 1, 1, 0, 0, 0],
+                [0, 1, 1, 0, 0, 0],
+                [1, 1, 1, 0, 0, 0],
+                [0, 1, 0, 0, 0, 0],
+                [0, 1, 1, 0, 0, 0],
+                [0, 1, 1, 1, 0, 0],
+                [0, 1, 1, 1, 1, 0],
+            ]
+        )
 
-    #     expected_output = [
-    #         [[[[0, 2]], [[2, 2]]], []],  # 1
-    #         [[[[1, 3]], [[1, 6]], [[4, 6]]], []],  # 2
-    #         [[[[1, 0]], [[1, 1]], [[2, 1]], [[2, 0]]], []],  # 5
-    #     ]
+        shape = data.shape
+        manager = AnnotationManager.from_binary_mask(data)
 
-    #     result = labels2contours(data, return_inner_contours=True)
-    #     self.assert_output(expected_output, result)
+        n_labels = 1
+        self.assertEqual(len(manager), n_labels)
 
-    # def init_from_labeled_test_donut(self):
-    #     data = array(
-    #         [
-    #             [0, 0, 0, 0, 0, 0],
-    #             [0, 0, 0, 0, 0, 0],
-    #             [0, 0, 0, 0, 0, 0],
-    #             [0, 2, 2, 2, 2, 0],
-    #             [0, 2, 0, 0, 2, 0],
-    #             [0, 2, 0, 0, 2, 0],
-    #             [0, 2, 2, 2, 2, 0],
-    #         ]
-    #     )
+        actual = manager.to_labeled_mask(shape)
 
-    #     expected_output = [
-    #         [
-    #             # External contour
-    #             [[[1, 3]], [[1, 6]], [[4, 6]], [[4, 3]]],
-    #             # All the internal contours
-    #             [
-    #                 # Corners are interpolated as being diagonal
-    #                 # hench the 8 points for something that looks like a square
-    #                 [
-    #                     [[1, 4]],
-    #                     [[2, 3]],
-    #                     [[3, 3]],
-    #                     [[4, 4]],
-    #                     [[4, 5]],
-    #                     [[3, 6]],
-    #                     [[2, 6]],
-    #                     [[1, 5]],
-    #                 ]
-    #             ],
-    #         ],
-    #     ]
+        np.testing.assert_array_equal(actual, data)
 
-    #     result = labels2contours(data, return_inner_contours=True)
-    #     self.assert_output(expected_output, result)
+    def test_init_from_non_binary_mask_raises(self):
+        data = np.array(
+            [
+                [0, 3, 3, 0, 0, 0],
+                [0, 3, 3, 0, 0, 0],
+                [1, 1, 1, 0, 0, 0],
+                [0, 2, 0, 0, 0, 0],
+                [0, 2, 2, 0, 0, 0],
+                [0, 2, 2, 2, 0, 0],
+                [0, 2, 2, 2, 2, 0],
+            ]
+        )
+        self.assertRaises(AssertionError, AnnotationManager.from_binary_mask, data)
+
+    def test_init_from_labeled_mask_to_binary_mask(self):
+        data = np.array(
+            [
+                [0, 3, 3, 0, 0, 0],
+                [0, 3, 3, 0, 0, 0],
+                [1, 1, 1, 0, 0, 0],
+                [0, 2, 0, 0, 0, 0],
+                [0, 2, 2, 0, 0, 0],
+                [0, 2, 2, 2, 0, 0],
+                [0, 2, 2, 2, 2, 0],
+            ]
+        )
+        expected = np.array(
+            [
+                [0, 1, 1, 0, 0, 0],
+                [0, 1, 1, 0, 0, 0],
+                [1, 1, 1, 0, 0, 0],
+                [0, 1, 0, 0, 0, 0],
+                [0, 1, 1, 0, 0, 0],
+                [0, 1, 1, 1, 0, 0],
+                [0, 1, 1, 1, 1, 0],
+            ]
+        )
+
+        shape = data.shape
+        manager = AnnotationManager.from_labeled_mask(data)
+
+        n_labels = 3
+        self.assertEqual(len(manager), n_labels)
+
+        actual = manager.to_binary_mask(shape)
+
+        np.testing.assert_array_equal(actual, expected)
+
+    def test_to_binary_mask(self):
+        polygons = [
+            Polygon(
+                points=[
+                    Point(1, 3),
+                    Point(2, 3),
+                    Point(3, 5),
+                    Point(5, 3),
+                    Point(3, 1),
+                    Point(2, 2),
+                ],
+                id="132132132123132",
+                children=[],
+                parents=[],
+                label="star",
+            ),
+        ]
+
+        expected = np.array(
+            [
+                [0, 0, 0, 0, 0, 0, 0],
+                [0, 0, 0, 1, 0, 0, 0],
+                [0, 0, 1, 1, 1, 0, 0],
+                [0, 1, 1, 1, 1, 1, 0],
+                [0, 0, 1, 1, 1, 0, 0],
+                [0, 0, 0, 1, 0, 0, 0],
+                [0, 0, 0, 0, 0, 0, 0],
+            ]
+        )
+        manager = AnnotationManager(polygons)
+
+        actual = manager.to_binary_mask((7, 7))
+
+        np.testing.assert_array_equal(actual, expected)
+
+    def test_to_labeled_mask(self):
+        polygons = [
+            Polygon(
+                points=[Point(1, 1), Point(1, 2), Point(2, 2), Point(2, 1),],
+                id="132132132123132",
+                children=[],
+                parents=[],
+                label="star",
+            ),
+            Polygon(
+                points=[Point(3, 3), Point(3, 5), Point(5, 5), Point(5, 3),],
+                id="132132132123132",
+                children=[],
+                parents=[],
+                label="star",
+            ),
+        ]
+
+        expected = np.array(
+            [
+                [0, 0, 0, 0, 0, 0, 0],
+                [0, 1, 1, 0, 0, 0, 0],
+                [0, 1, 1, 0, 0, 0, 0],
+                [0, 0, 0, 2, 2, 2, 0],
+                [0, 0, 0, 2, 2, 2, 0],
+                [0, 0, 0, 2, 2, 2, 0],
+                [0, 0, 0, 0, 0, 0, 0],
+            ]
+        )
+        manager = AnnotationManager(polygons)
+
+        actual = manager.to_labeled_mask((7, 7))
+
+        np.testing.assert_array_equal(actual, expected)
+

@@ -255,23 +255,25 @@ class AnnotationManager(object):
         for annotation in self._annotations:
             if isinstance(annotation, Polygon):
                 points = np.array(
-                    [[point.x, point.y] for point in self._points], dtype=np.int32
+                    [[point.x, point.y] for point in annotation.points], dtype=np.int32
                 )
                 cv2.fillPoly(mask, [points], color=label_color)
             elif isinstance(annotation, Ellipse):
                 cv2.ellipse(
-                mask,
-                center=(annotation.center.x, annotation.center.y),
-                axes=(annotation.radius_x, annotation.radius_y),
-                angle=annotation.rotation,
-                startAngle=0,
-                endAngle=360,
-                color=label_color,
-                thickness=-1,
-            )
+                    mask,
+                    center=(annotation.center.x, annotation.center.y),
+                    axes=(annotation.radius_x, annotation.radius_y),
+                    angle=annotation.rotation,
+                    startAngle=0,
+                    endAngle=360,
+                    color=label_color,
+                    thickness=-1,
+                )
             else:
-                raise TypeError("Innapropiate annotation type for `to_labeled_mask`. Supported annotations are ellipse and polygon.")
-            
+                raise TypeError(
+                    "Innapropiate annotation type for `to_labeled_mask`. Supported annotations are ellipse and polygon."
+                )
+
             # increase color for every annotation.
             label_color += 1
 
