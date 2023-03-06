@@ -4,6 +4,8 @@ from typing import Dict, List, Tuple
 import cv2
 import numpy as np
 
+from tomni.transformers import labels2contours, labels2listsOfPoints
+
 from .annotations import Annotation, Ellipse, Point, Polygon
 from .utils import parse_points_to_contour
 
@@ -85,9 +87,33 @@ class AnnotationManager(object):
         return cls(annotations)
 
     @classmethod
-    def from_masks(cls, masks: List[np.ndarray]):
-        """could be an option"""
-        pass
+    def from_binary_mask(cls, mask: np.ndarray):
+        """Initializes a AnnotationManager object from a binary mask.
+        Binary mask can contain either 0 and 1 or 0 and 255.
+
+        Args:
+            mask (np.ndarray): Binary mask input.
+
+        Returns:
+            AnnotationManager: New annotation manager object from binary mask.
+        """
+        unique_values = np.unique(mask)
+        assert np.array_equal(unique_values, np.array([0, 1])) or np.array_equal(
+            unique_values, np.array([0, 255])
+        ), "A binary mask must contain either 0 and 1 or 0 and 255 only."
+
+        # Hardcode to 8 for now for diagonally connected items!?
+        _, labeled_mask = cv2.connectedComponents(
+            mask.astype(np.uint8), connectivity=8
+        )
+        return AnnotationManager.from_labeled_mask(labeled_mask)
+
+    @classmethod
+    def from_labeled_mask(cls, mask: np.ndarray):
+        # masks2json
+        contours = labels2listsOfPoints(mask)
+
+        return AnnotationManager.from_contours(contours)
 
     @classmethod
     def from_darwin(cls, dicts: List[dict]):

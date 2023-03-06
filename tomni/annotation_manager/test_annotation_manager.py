@@ -116,9 +116,53 @@ class TestAnnotationManager(TestCase):
         self.assertEqual(len(self.manager), expected_n_items)
 
     def test_from_json_to_bin_mask_back_to_json(self):
-        # TODO
-        # requires am.from_mask to be implemented.
-        self.assertTrue(True)
+        im_shape = (2072, 2072)
+        quadrant_size = im_shape[0] / 4
+
+        am = AnnotationManager(
+            [
+                Polygon(
+                    points=[
+                        Point(quadrant_size, quadrant_size),
+                        Point(quadrant_size, 2 * quadrant_size),
+                        Point(2 * quadrant_size, quadrant_size),
+                        Point(2 * quadrant_size, 2 * quadrant_size),
+                    ],
+                    id="132132132123132",
+                    children=[],
+                    parents=[],
+                    label="star",
+                ),
+                Polygon(
+                    points=[
+                        Point(3 * quadrant_size, quadrant_size),
+                        Point(3 * quadrant_size, 2 * quadrant_size),
+                        Point(4 * quadrant_size, 3 * quadrant_size),
+                        Point(4 * quadrant_size, 2 * quadrant_size),
+                    ],
+                    id="132132132123132",
+                    children=[],
+                    parents=[],
+                    label="star",
+                ),
+                Polygon(
+                    points=[
+                        Point(quadrant_size, 3*quadrant_size),
+                        Point(quadrant_size, 4 * quadrant_size),
+                        Point(2 * quadrant_size, 4*quadrant_size),
+                        Point(2 * quadrant_size, 3 * quadrant_size),
+                    ],
+                    id="132132132123132",
+                    children=[],
+                    parents=[],
+                    label="star",
+                ),
+            ]
+        )
+        
+        bin_mask = am.to_binary_mask(im_shape)
+
+
 
     def test_to_dict_with_polygon_mask(self):
         mask = np.ones((3000, 3000), dtype=np.uint8)
