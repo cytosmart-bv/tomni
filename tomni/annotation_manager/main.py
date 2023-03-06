@@ -101,11 +101,32 @@ class AnnotationManager(object):
         assert np.array_equal(unique_values, np.array([0, 1])) or np.array_equal(
             unique_values, np.array([0, 255])
         ), "A binary mask must contain either 0 and 1 or 0 and 255 only."
+        mask = mask.astype(np.uint8)
 
         # Hardcode to 8 for now for diagonally connected items!?
-        # TODO: padding
-        _, labeled_mask = cv2.connectedComponents(mask.astype(np.uint8), connectivity=8)
-        return AnnotationManager.from_labeled_mask(labeled_mask)
+        _, labeled_mask = cv2.connectedComponents(
+            mask, connectivity=8
+        )
+        
+        padded_mask = cv2.copyMakeBorder(
+            mask,
+            top=1,
+            bottom=1,
+            left=1,
+            right=1,
+            borderType=cv2.BORDER_CONSTANT,
+            value=0,
+        )
+        edges = cv2.Canny(padded_mask, 50, 150)
+
+        edges = cv2.dilate(edges, np.ones((5, 5)))
+        edges = np.divide(edges, 255, dtype=np.float16)
+        edges = edges.astype(np.uint8)
+        edges = edges[1:-1, 1:-1]
+        
+        edged_mask = edges * labeled_mask
+        
+        return AnnotationManager.from_labeled_mask(edged_mask)
 
     @classmethod
     def from_labeled_mask(cls, mask: np.ndarray, include_inner_contours: bool = False):

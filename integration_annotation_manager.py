@@ -6,8 +6,36 @@ from tkinter import filedialog
 import cv2
 import cytoBoom as CB
 
-from tomni.annotation_manager import AnnotationManager, Point, Polygon
+from tomni.annotation_manager import AnnotationManager
 from tomni.transformers.json2contours import json2contours
+
+#%%
+
+print(1)
+import numpy as np
+
+data = np.array(
+            [
+                [0, 1, 1, 0, 0, 0],
+                [0, 1, 1, 0, 0, 0],
+                [1, 1, 1, 0, 0, 0],
+                [0, 1, 0, 0, 0, 0],
+                [0, 1, 1, 0, 0, 0],
+                [0, 1, 1, 1, 0, 0],
+                [0, 1, 1, 1, 1, 0],
+            ]
+        )
+
+shape = data.shape
+manager = AnnotationManager.from_binary_mask(data)
+
+# n_labels = 1
+# self.assertEqual(len(manager), n_labels)
+
+actual = manager.to_labeled_mask(shape)
+cv2.imwrite("actual.png", actual)
+
+np.testing.assert_array_equal(actual, data)
 
 #%%
 json_fp = filedialog.askopenfilename(title="Select CDF JSONs.")
