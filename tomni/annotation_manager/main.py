@@ -5,6 +5,7 @@ import cv2
 import numpy as np
 
 from tomni.transformers import labels2contours, labels2listsOfPoints
+from tomni.transformers.labels2contours import positions2contour
 
 from .annotations import Annotation, Ellipse, Point, Polygon
 from .utils import parse_points_to_contour
@@ -103,16 +104,33 @@ class AnnotationManager(object):
         ), "A binary mask must contain either 0 and 1 or 0 and 255 only."
 
         # Hardcode to 8 for now for diagonally connected items!?
-        _, labeled_mask = cv2.connectedComponents(
-            mask.astype(np.uint8), connectivity=8
-        )
+        # TODO: padding
+        _, labeled_mask = cv2.connectedComponents(mask.astype(np.uint8), connectivity=8)
         return AnnotationManager.from_labeled_mask(labeled_mask)
 
     @classmethod
-    def from_labeled_mask(cls, mask: np.ndarray):
-        # masks2json
-        contours = labels2listsOfPoints(mask)
+    def from_labeled_mask(cls, mask: np.ndarray, include_inner_contours: bool = False):
+        """Initializes a AnnotationManager object from a labeled mask.
+        A labeled mask contains components indicated by the same pixel values (see example below). 
 
+        Example containing two components yielding a AnnotationManager object with two annotations:
+        [[0,0,2,1,1],
+        [0,0,2,0,0],
+        [0,0,2,0,]]
+
+        Args:
+            mask (np.ndarray): A labeled mask with a max. nr. of components limited by max(np.uint32).
+            include_inner_contours (bool, optional): Include annotations that are contained within another annotation. Defaults to False.
+
+        Returns:
+            AnnotationManager: A new AnnotationManager object.
+        """
+        points = labels2listsOfPoints(mask)
+        contours = [
+            positions2contour(point, return_inner_contours=include_inner_contours,)
+            for point in points
+            if len(point) > 0
+        ]
         return AnnotationManager.from_contours(contours)
 
     @classmethod

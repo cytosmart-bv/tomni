@@ -19,6 +19,7 @@
 - Add `is_in_mask` for `Ellipse` and `Polygon`
 - Add `min_overlap`-parameter in `to_dict` to apply masks to filter annotations
 - Add `to_binary_mask` for `AnnotationManager`, `Ellipse` and `Polygon`
+- Add init-function `from_binary_mask` and `from_labeled_mask` to `AnnotationManager`
 
 1.15.0 (2022-12-05)
 ------------------
