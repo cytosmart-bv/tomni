@@ -137,6 +137,27 @@ class TestMask2Annotation(TestCase):
 
         self.compare_result_to_expected(result.to_dict(), self.json_objects.to_dict())
 
+    def test_single_object_all_ones(self):
+        input_mask = np.array(
+            [
+                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                [0, 0, 1, 1, 1, 0, 0, 0, 0, 0],
+                [0, 0, 1, 1, 1, 0, 0, 0, 0, 0],
+                [0, 0, 1, 1, 1, 0, 0, 0, 0, 0],
+                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+            ],
+            dtype=np.uint8,
+        )
+        result = AnnotationManager.from_binary_mask(input_mask)
+        print(result.to_dict())
+
+        self.compare_result_to_expected(result.to_dict(), self.json_objects.to_dict())
+
     def test_single_donut(self):
         input_mask = (
             np.array(
