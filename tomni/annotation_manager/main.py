@@ -4,8 +4,7 @@ from typing import Dict, List, Tuple
 import cv2
 import numpy as np
 
-from tomni.transformers import labels2contours, labels2listsOfPoints
-from tomni.transformers.labels2contours import positions2contour
+from tomni.transformers import labels2contours, labels2listsOfPoints, positi
 
 from .annotations import Annotation, Ellipse, Point, Polygon
 from .utils import parse_points_to_contour
@@ -238,6 +237,43 @@ class AnnotationManager(object):
         mask = np.zeros(shape, dtype=np.uint8)
         for annotation in self.annotations:
             mask = cv2.add(mask, annotation.to_binary_mask(shape))
+
+        return mask
+
+    def to_labeled_mask(self, shape: Tuple[int, int]) -> np.ndarray:
+        """Transform an AM object to a labeled mask. 
+        Annotations can only be polygon or ellipse.
+
+        shape (Tuple[int, int]): Shape of the new labeled mask.
+
+        Returns:
+            np.ndarray: A new labeled mask.
+        """
+        mask = np.zeros(shape, dtype=np.uint8)
+        label_color = 1
+
+        for annotation in self._annotations:
+            if isinstance(annotation, Polygon):
+                points = np.array(
+                    [[point.x, point.y] for point in self._points], dtype=np.int32
+                )
+                cv2.fillPoly(mask, [points], color=label_color)
+            elif isinstance(annotation, Ellipse):
+                cv2.ellipse(
+                mask,
+                center=(annotation.center.x, annotation.center.y),
+                axes=(annotation.radius_x, annotation.radius_y),
+                angle=annotation.rotation,
+                startAngle=0,
+                endAngle=360,
+                color=label_color,
+                thickness=-1,
+            )
+            else:
+                raise TypeError("Innapropiate annotation type for `to_labeled_mask`. Supported annotations are ellipse and polygon.")
+            
+            # increase color for every annotation.
+            label_color += 1
 
         return mask
 
