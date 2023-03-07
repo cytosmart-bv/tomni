@@ -1,6 +1,7 @@
 from unittest import TestCase
 
 from tomni.annotation_manager import Point
+
 from .main import simplify_line
 
 
@@ -101,3 +102,16 @@ class TestPolygonSimplify(TestCase):
         result = simplify_line(line)
 
         self.assertListEqual(expected, result)
+
+    def test_two_points(self):
+        line = [
+            Point(1, 1),
+            Point(5, 5),
+        ]
+        expected = [
+            Point(1, 1),
+            Point(5, 5),
+        ]
+        actual = simplify_line(line)
+
+        self.assertListEqual(expected, actual)
