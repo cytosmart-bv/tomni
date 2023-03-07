@@ -469,3 +469,145 @@ class TestAnnotationManager(TestCase):
 
         np.testing.assert_array_equal(actual, expected)
 
+    def test_binary_mask_double_donut(self):
+        input_mask = np.array(
+            [
+                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                [0, 0, 1, 1, 1, 1, 1, 1, 1, 0],
+                [0, 0, 1, 0, 0, 1, 0, 0, 1, 0],
+                [0, 0, 1, 0, 0, 1, 0, 0, 1, 0],
+                [0, 0, 1, 1, 1, 1, 1, 1, 1, 0],
+                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+            ],
+            dtype=np.uint8,
+        )
+
+        expected = np.array(
+            [
+                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                [0, 0, 1, 1, 1, 1, 1, 1, 1, 0],
+                [0, 0, 1, 1, 1, 1, 1, 1, 1, 0],
+                [0, 0, 1, 1, 1, 1, 1, 1, 1, 0],
+                [0, 0, 1, 1, 1, 1, 1, 1, 1, 0],
+                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+            ],
+            dtype=np.uint8,
+        )
+
+        manager = AnnotationManager.from_binary_mask(input_mask)
+        actual = manager.to_binary_mask(input_mask.shape)
+
+        np.testing.assert_array_equal(expected, actual)
+
+    def test_binary_mask_small_object(self):
+        input_mask = np.array(
+            [
+                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                [0, 0, 1, 1, 1, 0, 0, 0, 0, 0],
+                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+            ],
+            dtype=np.uint8,
+        )
+
+        manager = AnnotationManager.from_binary_mask(input_mask)
+        actual = manager.to_binary_mask(input_mask.shape)
+
+        np.testing.assert_array_equal(input_mask, actual)
+
+    def test_binary_mask_multiple_objects_not_connected_to_labeled_mask_connectivity_4(
+        self,
+    ):
+        connectivity = 4
+        input_mask = np.array(
+            [
+                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                [0, 0, 1, 1, 1, 0, 0, 0, 0, 0],
+                [0, 0, 1, 1, 1, 0, 0, 0, 0, 0],
+                [0, 0, 1, 1, 1, 0, 0, 0, 0, 0],
+                [0, 0, 0, 0, 0, 1, 1, 1, 0, 0],
+                [0, 0, 0, 0, 0, 1, 1, 1, 0, 0],
+                [0, 0, 0, 0, 0, 1, 1, 1, 0, 0],
+                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+            ],
+            dtype=np.uint8,
+        )
+
+        expected = np.array(
+            [
+                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                [0, 0, 1, 1, 1, 0, 0, 0, 0, 0],
+                [0, 0, 1, 1, 1, 0, 0, 0, 0, 0],
+                [0, 0, 1, 1, 1, 0, 0, 0, 0, 0],
+                [0, 0, 0, 0, 0, 2, 2, 2, 0, 0],
+                [0, 0, 0, 0, 0, 2, 2, 2, 0, 0],
+                [0, 0, 0, 0, 0, 2, 2, 2, 0, 0],
+                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+            ],
+            dtype=np.uint8,
+        )
+
+        manager = AnnotationManager.from_binary_mask(input_mask, connectivity=connectivity)
+        actual = manager.to_labeled_mask(input_mask.shape)
+
+        np.testing.assert_array_equal(expected, actual)
+
+    def test_binary_mask_multiple_objects_not_connected_to_labeled_mask_connectivity_8(
+        self,
+    ):
+        connectivity = 8
+        input_mask = np.array(
+            [
+                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                [0, 0, 1, 1, 1, 0, 0, 0, 0, 0],
+                [0, 0, 1, 1, 1, 0, 0, 0, 0, 0],
+                [0, 0, 1, 1, 1, 0, 0, 0, 0, 0],
+                [0, 0, 0, 0, 0, 1, 1, 1, 0, 0],
+                [0, 0, 0, 0, 0, 1, 1, 1, 0, 0],
+                [0, 0, 0, 0, 0, 1, 1, 1, 0, 0],
+                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+            ],
+            dtype=np.uint8,
+        )
+
+        expected = np.array(
+            [
+                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                [0, 0, 1, 1, 1, 0, 0, 0, 0, 0],
+                [0, 0, 1, 1, 1, 0, 0, 0, 0, 0],
+                [0, 0, 1, 1, 1, 0, 0, 0, 0, 0],
+                [0, 0, 0, 0, 0, 1, 1, 1, 0, 0],
+                [0, 0, 0, 0, 0, 1, 1, 1, 0, 0],
+                [0, 0, 0, 0, 0, 1, 1, 1, 0, 0],
+                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+            ],
+            dtype=np.uint8,
+        )
+
+        manager = AnnotationManager.from_binary_mask(input_mask, connectivity=connectivity)
+        actual = manager.to_labeled_mask(input_mask.shape)
+
+        np.testing.assert_array_equal(expected, actual)
+

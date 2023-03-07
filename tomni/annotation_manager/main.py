@@ -87,12 +87,18 @@ class AnnotationManager(object):
         return cls(annotations)
 
     @classmethod
-    def from_binary_mask(cls, mask: np.ndarray):
+    def from_binary_mask(cls, mask: np.ndarray, connectivity: int = 8):
         """Initializes a AnnotationManager object from a binary mask.
         Binary mask can contain either 0 and 1 or 0 and 255.
 
         Args:
             mask (np.ndarray): Binary mask input.
+            connectivity (int): When deriving connected components connectivy determines how diagonally components are handled.
+                `8` allows for diagonally connected components to be merged, while 4 does not. In the example below `8`-connectivity
+                will treat the ones as the same object while 4 treats them as seperate two distinct components.
+                Example:
+                    [[1,0],
+                    [0,1]]
 
         Returns:
             AnnotationManager: New annotation manager object from binary mask.
@@ -103,11 +109,8 @@ class AnnotationManager(object):
         ), "A binary mask must contain either 0 and 1 or 0 and 255 only."
         mask = mask.astype(np.uint8)
 
-        # Hardcode to 8 for now for diagonally connected items!?
-        _, labeled_mask = cv2.connectedComponents(
-            mask, connectivity=8
-        )
-        
+        _, labeled_mask = cv2.connectedComponents(mask, connectivity=connectivity)
+
         padded_mask = cv2.copyMakeBorder(
             mask,
             top=1,
@@ -117,15 +120,19 @@ class AnnotationManager(object):
             borderType=cv2.BORDER_CONSTANT,
             value=0,
         )
+
+        # If bin mask with 0's and 1's is input then canny fails, so multiply by 255 and clip.
+        if padded_mask.max() == 1:
+            padded_mask = padded_mask * 255
         edges = cv2.Canny(padded_mask, 50, 150)
 
         edges = cv2.dilate(edges, np.ones((5, 5)))
         edges = np.divide(edges, 255, dtype=np.float16)
         edges = edges.astype(np.uint8)
         edges = edges[1:-1, 1:-1]
-        
+
         edged_mask = edges * labeled_mask
-        
+
         return AnnotationManager.from_labeled_mask(edged_mask)
 
     @classmethod
