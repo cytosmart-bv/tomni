@@ -264,7 +264,7 @@ class AnnotationManager(object):
         """
         mask = np.zeros(shape, dtype=np.uint8)
         for annotation in self.annotations:
-            mask = cv2.add(mask, annotation.to_binary_mask(shape))
+            mask = cv2.bitwise_or(mask, annotation.to_binary_mask(shape))
 
         return mask
 
