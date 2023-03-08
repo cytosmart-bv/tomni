@@ -4,7 +4,8 @@ from unittest import TestCase
 import cv2
 import numpy as np
 
-from tomni.annotation_manager import Point, Polygon
+from tomni.annotation_manager import Ellipse, Point, Polygon
+from tomni.annotation_manager.main import AnnotationManager
 
 
 class TestPolygon(TestCase):
@@ -297,18 +298,20 @@ class TestPolygon(TestCase):
     def test_to_dict_with_ellipse_mask(self):
         center = int(2072 / 2)
         rad = int(2072 / 3)
-        mask = np.zeros((2072, 2072), dtype=np.uint8)
 
-        cv2.ellipse(
-            mask,
-            center=(center, center),
-            axes=(rad, rad),
-            angle=0,
-            startAngle=0,
-            endAngle=360,
-            color=1,
-            thickness=-1,
-        )
+        mask = AnnotationManager(
+            [
+                Ellipse(
+                    center=Point(center, center),
+                    radius_x=rad,
+                    rotation=0,
+                    id="",
+                    label="",
+                    children=[],
+                    parents=[],
+                )
+            ]
+        ).to_binary_mask((2072, 2072))
 
         polygon1 = Polygon(
             points=[
@@ -361,17 +364,15 @@ class TestPolygon(TestCase):
         center = 2072 / 2
         size = 2072
         quadrant = size / 4
-        points = np.array(
-            [
-                [quadrant, quadrant],
-                [quadrant, quadrant * 3],
-                [quadrant * 3, quadrant * 3],
-                [quadrant * 3, quadrant],
-            ],
-            dtype=np.int32,
-        )
-        mask = np.zeros((size, size), dtype=np.uint8)
-        cv2.fillPoly(mask, [points], color=1)
+        points = [
+            Point(quadrant, quadrant),
+            Point(quadrant, quadrant * 3),
+            Point(quadrant * 3, quadrant * 3),
+            Point(quadrant * 3, quadrant),
+        ]
+        mask = AnnotationManager(
+            [Polygon(points, id="", label="", children=[], parents=[],)]
+        ).to_binary_mask((size, size))
 
         polygon1 = Polygon(
             points=[

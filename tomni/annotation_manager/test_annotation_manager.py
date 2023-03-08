@@ -3,8 +3,7 @@ from unittest import TestCase
 import cv2
 import numpy as np
 
-from tomni.annotation_manager.annotations.point.main import Point
-from tomni.annotation_manager.annotations.polygon.main import Polygon
+from tomni.annotation_manager.annotations import Ellipse, Point, Polygon
 
 from .main import AnnotationManager
 
@@ -248,17 +247,7 @@ class TestAnnotationManager(TestCase):
         self.assertEqual(expected, actual)
 
     def test_to_dict_with_ellipse_mask(self):
-        mask = np.zeros((3000, 3000), dtype=np.uint8)
-        mask = cv2.ellipse(
-            mask,
-            center=(50, 50),
-            axes=(100, 100),
-            angle=0,
-            startAngle=0,
-            endAngle=360,
-            color=1,
-            thickness=-1,
-        )
+        mask = AnnotationManager([Ellipse(center=Point(50,50), radius_x=100, rotation=0,id="",label="",children=[],parents=[])]).to_binary_mask((3000,3000))
 
         expected = [
             {
