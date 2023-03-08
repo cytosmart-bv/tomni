@@ -1,7 +1,10 @@
 import uuid
-from typing import Dict, List
+from typing import Dict, List, Tuple
 
+import cv2
 import numpy as np
+
+from tomni.transformers import labels2listsOfPoints, positions2contour
 
 from .annotations import Annotation, Ellipse, Point, Polygon
 from .utils import parse_points_to_contour
@@ -84,9 +87,78 @@ class AnnotationManager(object):
         return cls(annotations)
 
     @classmethod
-    def from_masks(cls, masks: List[np.ndarray]):
-        """could be an option"""
-        pass
+    def from_binary_mask(cls, mask: np.ndarray, connectivity: int = 8):
+        """Initializes a AnnotationManager object from a binary mask.
+        Binary mask can contain either 0 and 1 or 0 and 255.
+
+        Args:
+            mask (np.ndarray): Binary mask input.
+            connectivity (int): When deriving connected components connectivy determines how diagonally components are handled.
+                `8` allows for diagonally connected components to be merged, while 4 does not. In the example below `8`-connectivity
+                will treat the ones as the same object while 4 treats them as seperate two distinct components.
+                Example:
+                    [[1,0],
+                    [0,1]]
+
+        Returns:
+            AnnotationManager: New annotation manager object from binary mask.
+        """
+        unique_values = np.unique(mask)
+        assert np.array_equal(unique_values, np.array([0, 1])) or np.array_equal(
+            unique_values, np.array([0, 255])
+        ), "A binary mask must contain either 0 and 1 or 0 and 255 only."
+        mask = mask.astype(np.uint8)
+
+        _, labeled_mask = cv2.connectedComponents(mask, connectivity=connectivity)
+
+        padded_mask = cv2.copyMakeBorder(
+            mask,
+            top=1,
+            bottom=1,
+            left=1,
+            right=1,
+            borderType=cv2.BORDER_CONSTANT,
+            value=0,
+        )
+
+        # If bin mask with 0's and 1's is input then canny fails, so multiply by 255 and clip.
+        if padded_mask.max() == 1:
+            padded_mask = padded_mask * 255
+        edges = cv2.Canny(padded_mask, 50, 150)
+
+        edges = cv2.dilate(edges, np.ones((5, 5)))
+        edges = np.divide(edges, 255, dtype=np.float16)
+        edges = edges.astype(np.uint8)
+        edges = edges[1:-1, 1:-1]
+
+        edged_mask = edges * labeled_mask
+
+        return AnnotationManager.from_labeled_mask(edged_mask)
+
+    @classmethod
+    def from_labeled_mask(cls, mask: np.ndarray, include_inner_contours: bool = False):
+        """Initializes a AnnotationManager object from a labeled mask.
+        A labeled mask contains components indicated by the same pixel values (see example below). 
+
+        Example containing two components yielding a AnnotationManager object with two annotations:
+        [[0,0,2,1,1],
+        [0,0,2,0,0],
+        [0,0,2,0,]]
+
+        Args:
+            mask (np.ndarray): A labeled mask with a max. nr. of components limited by max(np.uint32).
+            include_inner_contours (bool, optional): Include annotations that are contained within another annotation. Defaults to False.
+
+        Returns:
+            AnnotationManager: A new AnnotationManager object.
+        """
+        points = labels2listsOfPoints(mask)
+        contours = [
+            positions2contour(point, return_inner_contours=include_inner_contours,)
+            for point in points
+            if len(point) > 0
+        ]
+        return AnnotationManager.from_contours(contours)
 
     @classmethod
     def from_darwin(cls, dicts: List[dict]):
@@ -131,21 +203,36 @@ class AnnotationManager(object):
         else:
             raise StopIteration
 
-    def to_dict(self, decimals: int = 2) -> List[Dict]:
-        """Transform CDF object to a collection of our format.
+    def to_dict(
+        self, decimals: int = 2, mask: np.ndarray = None, min_overlap: float = 0.9
+    ) -> List[Dict]:
+        """Transform AM object to a collection of our format.
 
         Args:
             decimals (int, optional): The number of decimals to use when rounding. Defaults to 2.
 
         Returns:
-            List[Dict]: Collection of CDF dicts.
+            List[Dict]: Collection of dicts.
         """
+        if mask is not None:
+            filtered_annotations = self._annotations.copy()
+            filtered_annotations = [
+                annotation
+                for annotation in filtered_annotations
+                if annotation.is_in_mask(mask, min_overlap)
+            ]
+
+            return [
+                annotation.to_dict(decimals=decimals)
+                for annotation in filtered_annotations
+            ]
+
         return [
             annotation.to_dict(decimals=decimals) for annotation in self._annotations
         ]
 
     def to_contours(self) -> List[np.ndarray]:
-        """Transform CDF object to a collection of cv2 contours.
+        """Transform AM object to a collection of cv2 contours.
 
         Raises:
             ValueError: Raises error when annotations are not of type `Polygon`.
@@ -164,6 +251,61 @@ class AnnotationManager(object):
         ]
 
         return contours
+
+    def to_binary_mask(self, shape: Tuple[int, int]) -> np.ndarray:
+        """Transform an AM object to a binary mask. 
+        Annotations can only be polygon or ellipse.
+
+        Args:
+            shape (Tuple[int, int]): Shape of the new binary mask.
+
+        Returns:
+            np.ndarray: A binary mask in [0, 1].
+        """
+        mask = np.zeros(shape, dtype=np.uint8)
+        for annotation in self.annotations:
+            mask = cv2.bitwise_or(mask, annotation.to_binary_mask(shape))
+
+        return mask
+
+    def to_labeled_mask(self, shape: Tuple[int, int]) -> np.ndarray:
+        """Transform an AM object to a labeled mask. 
+        Annotations can only be polygon or ellipse.
+
+        shape (Tuple[int, int]): Shape of the new labeled mask.
+
+        Returns:
+            np.ndarray: A new labeled mask.
+        """
+        mask = np.zeros(shape, dtype=np.uint8)
+        label_color = 1
+
+        for annotation in self._annotations:
+            if isinstance(annotation, Polygon):
+                points = np.array(
+                    [[point.x, point.y] for point in annotation.points], dtype=np.int32
+                )
+                cv2.fillPoly(mask, [points], color=label_color)
+            elif isinstance(annotation, Ellipse):
+                cv2.ellipse(
+                    mask,
+                    center=(annotation.center.x, annotation.center.y),
+                    axes=(annotation.radius_x, annotation.radius_y),
+                    angle=annotation.rotation,
+                    startAngle=0,
+                    endAngle=360,
+                    color=label_color,
+                    thickness=-1,
+                )
+            else:
+                raise TypeError(
+                    "Innapropiate annotation type for `to_labeled_mask`. Supported annotations are ellipse and polygon."
+                )
+
+            # increase color for every annotation.
+            label_color += 1
+
+        return mask
 
     def to_darwin(self) -> List[Dict]:
         """

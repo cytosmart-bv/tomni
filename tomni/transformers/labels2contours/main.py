@@ -1,6 +1,7 @@
-from .positions2contour import positions2contour
-from ..labels2listsOfPoints import labels2listsOfPoints
 import numpy as np
+
+from ..labels2listsOfPoints import labels2listsOfPoints
+from ..positions2contour import positions2contour
 
 
 def labels2contours(

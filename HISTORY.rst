@@ -16,6 +16,11 @@
 - CDF-ellipse: Implement `__eq__`
 - CDF-ellipse: Set all rotations between 0 and 90, flip radii if needed
 - Renamed `CytoSmartDataFormat` to `AnnotationManager`
+- Add `is_in_mask` for `Ellipse` and `Polygon`
+- Add `min_overlap`-parameter in `to_dict` to apply masks to filter annotations
+- Add `to_binary_mask` and `to_labeled_mask` for `AnnotationManager`, `Ellipse` and `Polygon`
+- Add init-function `from_binary_mask` and `from_labeled_mask` to `AnnotationManager`
+- Bugfix: Fixed a bug where `simplify_line` returns empty list when passing two points.
 
 1.15.0 (2022-12-05)
 ------------------

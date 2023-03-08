@@ -1,8 +1,10 @@
 from unittest import TestCase
 
+import cv2
 import numpy as np
 
-from tomni.annotation_manager import Ellipse, Point
+from tomni.annotation_manager import Ellipse, Point, Polygon
+from tomni.annotation_manager.main import AnnotationManager
 
 
 class TestEllipse(TestCase):
@@ -170,3 +172,116 @@ class TestEllipse(TestCase):
         actual = self.oval.to_dict()
 
         self.assertDictEqual(expected, actual)
+
+    def test_to_dict_with_ellipse_mask(self):
+        size = 2072
+        quadrant = int(size / 4)
+        center = int(size / 2)
+        rad = int(size / 3)
+
+        mask = AnnotationManager([
+            Ellipse(
+                center=Point(center, center),
+                radius_x=rad,
+                rotation=0,
+                id="",
+                label="",
+                children=[],
+                parents=[],
+            )]
+        ).to_binary_mask((size, size))
+
+        ellipse1 = Ellipse(
+            radius_x=quadrant,
+            center=Point(center, center),
+            rotation=0,
+            id="",
+            label="",
+            children=[],
+            parents=[],
+        )
+        ellipse2 = Ellipse(
+            radius_x=quadrant - 100,
+            center=Point(center + 100, center - 100),
+            rotation=0,
+            id="",
+            label="",
+            children=[],
+            parents=[],
+        )
+        ellipse3 = Ellipse(
+            radius_x=quadrant - 150,
+            center=Point(center - 100, center + 150),
+            rotation=0,
+            id="",
+            label="",
+            children=[],
+            parents=[],
+        )
+
+        ellipses_inside = [ellipse1, ellipse2, ellipse3]
+        ellipses_outside = [self.circle, self.oval]
+
+        for ellipse in ellipses_inside:
+            self.assertTrue(ellipse.is_in_mask(mask, 0.9))
+
+        for ellipse in ellipses_outside:
+            self.assertFalse(ellipse.is_in_mask(mask, 0.9))
+
+    def test_to_dict_with_polygon_mask(self):
+        center = int(2072 / 2)
+        size = 2072
+        quadrant = int(size / 4)
+        points =            [
+                Point(quadrant, quadrant),
+                Point(quadrant, quadrant * 3),
+                Point(quadrant * 3, quadrant * 3),
+                Point(quadrant * 3, quadrant),
+            ]
+        mask = AnnotationManager([
+            Polygon(
+                points=points,
+                id="",
+                label="",
+                children=[],
+                parents=[],
+            )]
+        ).to_binary_mask((size, size))
+
+
+        ellipse1 = Ellipse(
+            radius_x=quadrant,
+            center=Point(center, center),
+            rotation=0,
+            id="",
+            label="",
+            children=[],
+            parents=[],
+        )
+        ellipse2 = Ellipse(
+            radius_x=quadrant - 100,
+            center=Point(center + 100, center - 100),
+            rotation=0,
+            id="",
+            label="",
+            children=[],
+            parents=[],
+        )
+        ellipse3 = Ellipse(
+            radius_x=quadrant - 150,
+            center=Point(center - 100, center + 150),
+            rotation=0,
+            id="",
+            label="",
+            children=[],
+            parents=[],
+        )
+
+        ellipses_inside = [ellipse1, ellipse2, ellipse3]
+        ellipses_outside = [self.circle, self.oval]
+
+        for ellipse in ellipses_inside:
+            self.assertTrue(ellipse.is_in_mask(mask, 0.9))
+
+        for ellipse in ellipses_outside:
+            self.assertFalse(ellipse.is_in_mask(mask, 0.9))
