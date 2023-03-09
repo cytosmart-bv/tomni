@@ -1,9 +1,11 @@
-from typing import List
 from copy import deepcopy
+from typing import List
+import warnings
+
 import numpy as np
 
 from ...transformers import json2dict
-from .. import add_area, add_circularity
+from .. import add_area
 
 
 def summary_json(
@@ -26,6 +28,8 @@ def summary_json(
     Returns:
         tuple: (Number of objects, Total sum of objects, Mean of objects, Max of objects, Min of objects)
     """
+    warnings.warn("Function is deprecated and will be removed in the future. Use the `AnnotationManager` instead.", DeprecationWarning)
+
     if do_copy:
         copy_json_list = deepcopy(json_list)
     else:

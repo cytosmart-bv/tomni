@@ -1,3 +1,4 @@
+import warnings
 import numpy as np
 
 from ..labels2listsOfPoints import labels2listsOfPoints
@@ -17,6 +18,8 @@ def labels2contours(
             default: False
 
     """
+    warnings.warn("Function is deprecated and will be removed in the future. Use the `AnnotationManager` instead.", DeprecationWarning)
+
     listPoints = labels2listsOfPoints(labels)
     contours = [
         positions2contour(

@@ -1,3 +1,4 @@
+import warnings
 import numpy as np
 
 
@@ -8,6 +9,8 @@ def json2contours(json: dict) -> np.ndarray:
         'points': (if polygon) list of dict of form {x: ..., y: ...}
         'type': needs to be polygon
     """
+    warnings.warn("Function is deprecated and will be removed in the future. Use the `AnnotationManager` instead.", DeprecationWarning)
+
     if json.get("type", "").lower() == "polygon":
         result = [[[i["x"], i["y"]]] for i in json["points"]]
     else:

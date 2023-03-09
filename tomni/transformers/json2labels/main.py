@@ -1,3 +1,4 @@
+import warnings
 import cv2
 import numpy as np
 from typing import List
@@ -12,6 +13,7 @@ def json2labels(json_list: List[dict], output_dim: tuple) -> np.ndarray:
     output_dim: (tulpe (2,)) The dimensions of the output image.
         Given in image coordinates
     """
+    warnings.warn("Function is deprecated and will be removed in the future. Use the `AnnotationManager` instead.", DeprecationWarning)
 
     seg_map = np.zeros((output_dim[1], output_dim[0]), dtype=np.uint8)
 

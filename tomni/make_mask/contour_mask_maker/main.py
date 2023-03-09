@@ -1,3 +1,4 @@
+import warnings
 import numpy as np
 import cv2
 from typing import Union
@@ -18,6 +19,8 @@ def make_mask_contour(img_shape: tuple, contour: Union[list, np.ndarray]) -> np.
     return:
         numpy array with type boolean
     """
+    warnings.warn("Function is deprecated and will be removed in the future. Use the `AnnotationManager` instead.", DeprecationWarning)
+    
     contour = np.array(contour, dtype=np.int32)
     shapeC = np.shape(contour)
 

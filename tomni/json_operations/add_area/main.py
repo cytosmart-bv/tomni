@@ -1,5 +1,8 @@
 import math
+import warnings
+
 import cv2
+
 from ...transformers import json2contours
 
 
@@ -11,6 +14,10 @@ def add_area(json_object: dict) -> None:
         json_object (dict): following the standard CytoSMART format
 
     """
+    warnings.warn(
+        "Function is deprecated and will be removed in the future. Use the `AnnotationManager` instead.",
+        DeprecationWarning,
+    )
     type_anno = json_object["type"]
 
     if type_anno == "circle":

@@ -1,4 +1,5 @@
 from typing import List
+import warnings
 
 
 def json2dict(
@@ -16,6 +17,8 @@ def json2dict(
     Returns:
         dict: a dict containing list of each keyword extracted from the json objects
     """
+    warnings.warn("Function is deprecated and will be removed in the future. Use the `AnnotationManager` instead.", DeprecationWarning)
+
     keywords.append("index")
     json_dict = {}
 

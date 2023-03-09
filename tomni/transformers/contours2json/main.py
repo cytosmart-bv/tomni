@@ -1,4 +1,5 @@
 import uuid
+import warnings
 import numpy as np
 from typing import List, Union
 
@@ -8,6 +9,9 @@ def contours2json(contours: Union[np.ndarray, List[list]]) -> List[dict]:
     Transforms a list or array of contours into list of jsons
     contours: (numpy.array, list) needs to be the contours produced by opencv
     """
+    warnings.warn("Function is deprecated and will be removed in the future. Use the `AnnotationManager` instead.", DeprecationWarning)
+
+
     result = []
     for contour in contours:
         shape = {"type": "polygon", "points": []}

@@ -1,5 +1,6 @@
 import uuid
 from typing import Union
+import warnings
 
 
 def ellipse2json(
@@ -12,6 +13,8 @@ def ellipse2json(
     secondRadius: (int, None) (optional) In case of an ellipse, this is the smallest radius of the two.
     alpha: (float) (optional) In case of an ellipse. This is the angle between the biggest radius and the x-axis.
     """
+    warnings.warn("Function is deprecated and will be removed in the future. Use the `AnnotationManager` instead.", DeprecationWarning)
+
     result = []
     result = {
         "type": "ellipse",

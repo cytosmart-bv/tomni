@@ -1,3 +1,4 @@
+import warnings
 import numpy as np
 
 from ...img_dim import img_dim
@@ -76,6 +77,8 @@ def json2mask(
     Returns:
         np.ndarray: binary mask
     """
+    warnings.warn("Function is deprecated and will be removed in the future. Use the `AnnotationManager` instead.", DeprecationWarning)
+
     mask = np.zeros(img_shape, dtype=np.uint8)
     for json_object in json_objects:
         if json_object["type"] == "polygon":

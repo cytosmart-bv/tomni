@@ -1,6 +1,9 @@
 from __future__ import division
-import numpy as np
+import warnings
+
 import cv2
+import numpy as np
+
 from . import bbox_fitting
 
 
@@ -18,6 +21,11 @@ def make_mask_ellipse(image_size, x1, y1, rx, ry):
     The small ellipse function is more precise.
 
     """
+    warnings.warn(
+        "Function is deprecated and will be removed in the future. Use the `AnnotationManager` instead.",
+        DeprecationWarning,
+    )
+
     x1 = int(x1)
     y1 = int(y1)
     rx = int(rx)
@@ -67,11 +75,11 @@ def make_small_mask_ellipse(image_size, x1, y1, rx, ry):
     # The ellipse formula used to calculate the points is
     # x^2 * (ry)^2 + y^2 * (rx)^2
     # Calculating the value of each point depending on the ellipse equation
-    ellipse = (xx**2) * (ry**2) + (yy**2) * (rx**2)
+    ellipse = (xx ** 2) * (ry ** 2) + (yy ** 2) * (rx ** 2)
 
     # The ellipse formula determines if a point is inside the ellipse or not
     # x^2 * (ry)^2 + y^2 * (rx)^2 <= (rx)^2 * (ry)^2
-    kernel = ellipse <= (rx**2) * (ry**2)
+    kernel = ellipse <= (rx ** 2) * (ry ** 2)
     kernel = kernel * (np.abs(xx) <= rx)
     kernel = kernel * (np.abs(yy) <= ry)
     return kernel

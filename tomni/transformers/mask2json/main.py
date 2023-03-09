@@ -1,3 +1,4 @@
+import warnings
 import cv2
 import numpy as np
 
@@ -8,13 +9,7 @@ from ..labels2contours import labels2contours
 def get_edges(mask: np.ndarray):
     """get edges of the mask"""
     mask_copy = cv2.copyMakeBorder(
-        mask,
-        top=1,
-        bottom=1,
-        left=1,
-        right=1,
-        borderType=cv2.BORDER_CONSTANT,
-        value=0,
+        mask, top=1, bottom=1, left=1, right=1, borderType=cv2.BORDER_CONSTANT, value=0,
     )
     edges = cv2.Canny(mask_copy, 50, 150)
 
@@ -65,6 +60,11 @@ def mask2json(
                     }
                 ]
     """
+    warnings.warn(
+        "Function is deprecated and will be removed in the future. Use the `AnnotationManager` instead.",
+        DeprecationWarning,
+    )
+
     connectivity = 4
     if is_diagonal_connected:
         connectivity = 8

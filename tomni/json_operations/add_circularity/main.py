@@ -1,6 +1,4 @@
-import math
-
-import cv2
+import warnings
 
 from ...contour_operations import circularity
 from ...transformers import json2contours
@@ -15,6 +13,7 @@ def add_circularity(json_object: dict) -> None:
 
     json_object: (dict) a json object of type polygon
     """
+    warnings.warn("Function is deprecated and will be removed in the future. Use the `AnnotationManager` instead.", DeprecationWarning)
     if json_object["type"] == "polygon":
         cnt = json2contours(json_object)
 
