@@ -21,6 +21,7 @@
 - Add `to_binary_mask` and `to_labeled_mask` for `AnnotationManager`, `Ellipse` and `Polygon`
 - Add init-function `from_binary_mask` and `from_labeled_mask` to `AnnotationManager`
 - Bugfix: Fixed a bug where `simplify_line` returns empty list when passing two points.
+- Add `DeprecationWarning` for functions that have been added to `AnnotationManager`.
 
 1.15.0 (2022-12-05)
 ------------------
