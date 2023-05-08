@@ -1,4 +1,7 @@
 # History
+1.16.0 (2023-05-08)
+- Add iterative_downsampling for downsampling polygon points in 'naive' way
+
 1.15.0 (2022-12-05)
 ------------------
 - Add json2bbox for ellipse with angle of rotation
