@@ -48,6 +48,8 @@ The name Tomni is a combination of creator (Tom) and other CytoSMART product he 
 - Make a mask
   - Ellipse
   - Polygon
+- Polygon downsampling
+  - iterative downsampling
 - Shape fitting
   - Rect around ellipse
 - Transformers of data format
