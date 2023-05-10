@@ -66,5 +66,9 @@ class TestIterativeDownsampling(TestCase):
 
         self.assertEqual(expected, actual)
 
+    def test_iterative_downsampling_zero(self):
+        actual = iterative_downsampling(self.circular_points, 0)
+        self.assertEqual(self.circular_points, actual)
+
     def test_raises_assertion(self):
-        self.assertRaises(AssertionError, iterative_downsampling, [], 0)
+        self.assertRaises(AssertionError, iterative_downsampling, [], -1)

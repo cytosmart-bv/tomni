@@ -1,4 +1,7 @@
 # History
+1.16.1 (2023-05-10)
+- make it possible to set n_iter to 0. 
+
 1.16.0 (2023-05-08)
 - Add iterative_downsampling for downsampling polygon points in 'naive' way
 
