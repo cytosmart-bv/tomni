@@ -1,6 +1,6 @@
 import gc
 from dataclasses import asdict
-from typing import List, Tuple
+from typing import List, Tuple, Union
 
 import cv2
 import numpy as np
@@ -20,7 +20,7 @@ class Ellipse(Annotation):
         label: str = "",
         children: List[Annotation] = [],
         parents: List[Annotation] = [],
-        radius_y: float = None,
+        radius_y: Union[float, None] = None,
     ):
         """Initializes a Ellipse object.
 
@@ -188,7 +188,7 @@ class Ellipse(Annotation):
         """Check if an ellipse is within a binary mask.
 
         Args:
-            mask (np.ndarray): Binary mask in [0, 1].
+            mask (dict): A mask in cytosmart dict format.
             min_overlap (float, optional): Minimum overlap required between the ellipse and the mask, expressed as a value between 0 and 1. Defaults to 0.9.
 
         Returns:

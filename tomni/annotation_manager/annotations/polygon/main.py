@@ -9,6 +9,7 @@ import numpy as np
 from tomni.annotation_manager.annotations import Annotation, Point
 from tomni.annotation_manager.utils import (
     are_lines_equal,
+    overlap_object,
     parse_points_to_contour,
     simplify_line,
 )
@@ -149,11 +150,11 @@ class Polygon(Annotation):
         dict_return_value = {**super_dict, **polygon_dict}
         return dict_return_value
 
-    def is_in_mask(self, mask: np.ndarray, min_overlap: float = 0.9):
+    def is_in_mask(self, mask: dict, min_overlap: float = 0.9):
         """Check if a polygon is within a binary mask.
 
         Args:
-            mask (np.ndarray): Binary mask in [0, 1].
+            mask (dict): A mask in cytosmart dict format.
             min_overlap (float, optional): Minimum overlap required between the polygon and the mask, expressed as a value between 0 and 1. Defaults to 0.9.
 
         Returns:
@@ -162,22 +163,15 @@ class Polygon(Annotation):
         if len(self.points) < 1:
             return False
 
-        poly_mask = np.zeros_like(mask)
-        # Convert the polygon to a numpy array of shape (N, 2)
-        points = np.array([[point.x, point.y] for point in self.points], dtype=np.int32)
-        poly_mask = cv2.fillPoly(poly_mask, [points], color=1)
+        json_points = [{point.x, point.y} for point in self.points]
+        json_object = {"type": "polygon", "points": json_points}
 
-        # Calculate the intersection of the annotation and the mask
-        intersection = np.logical_and(mask, poly_mask)
-        # Calculate the overlap ratio between the polygon and the mask
-        overlap_ratio = intersection.sum() / poly_mask.sum()
+        overlap_percentage = overlap_object(json_object, mask)
 
-        del poly_mask
-        del intersection
         gc.collect()
 
         # Check if the polygon is within the masked area with at least the specified overlap
-        return overlap_ratio >= min_overlap
+        return overlap_percentage >= min_overlap
 
     def to_binary_mask(self, shape: Tuple[int, int]) -> np.ndarray:
         """Transform a polygon to a binary mask.
