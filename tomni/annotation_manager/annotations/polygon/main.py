@@ -180,7 +180,7 @@ class Polygon(Annotation):
         return overlap_ratio >= min_overlap
 
     def to_binary_mask(self, shape: Tuple[int, int]) -> np.ndarray:
-        """Transform a polygon to a binary mask. 
+        """Transform a polygon to a binary mask.
 
         Args:
             shape (Tuple[int, int]): Shape of the new polygon's binary mask.
@@ -190,9 +190,7 @@ class Polygon(Annotation):
         """
         mask = np.zeros(shape, dtype=np.uint8)
         if len(self._points) > 0:
-            points = np.array(
-                [[point.x, point.y] for point in self._points], dtype=np.int32
-            )
+            points = np.array([[point.x, point.y] for point in self._points], dtype=np.int32)
             cv2.fillPoly(mask, [points], color=1)
 
         return mask
@@ -211,7 +209,7 @@ class Polygon(Annotation):
         if not self._perimeter:
             self._calculate_perimeter()
 
-        self._circularity = (4 * np.pi * self._area) / (self._perimeter ** 2)
+        self._circularity = (4 * np.pi * self._area) / (self._perimeter**2)
 
     def _calculate_convex_hull_area(self) -> None:
         if not self._has_enough_points:
@@ -231,7 +229,7 @@ class Polygon(Annotation):
             self._calculate_area()
 
         _, radius = cv2.minEnclosingCircle(self._contour)
-        enclosing_circle_area = radius ** 2 * np.pi
+        enclosing_circle_area = radius**2 * np.pi
         self._roundness = self._area / enclosing_circle_area
 
     def __eq__(self, other):
@@ -242,8 +240,5 @@ class Polygon(Annotation):
         are_points_equal = are_lines_equal(self.points, other.points, is_enclosed=True)
         reverse_points = other.points
         reverse_points.reverse()
-        are_points_equal_mirrored = are_lines_equal(
-            self.points, reverse_points, is_enclosed=True
-        )
+        are_points_equal_mirrored = are_lines_equal(self.points, reverse_points, is_enclosed=True)
         return are_points_equal | are_points_equal_mirrored
-

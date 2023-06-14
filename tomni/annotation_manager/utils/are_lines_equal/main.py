@@ -1,4 +1,5 @@
 from typing import List
+
 from tomni.annotation_manager.annotations import Point
 
 

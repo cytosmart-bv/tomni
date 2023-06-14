@@ -5,6 +5,7 @@ from typing import List, Tuple
 import cv2
 import numpy as np
 
+from tomni.annotation_manager.utils import overlap_object
 from ..annotation import Annotation
 from ..point import Point
 
@@ -146,7 +147,6 @@ class Ellipse(Annotation):
         return self._aspect_ratio
 
     def to_dict(self, decimals: int = 2) -> dict:
-
         dict_ellipse = {
             "type": "ellipse",
             "center": asdict(self.center),
@@ -164,7 +164,7 @@ class Ellipse(Annotation):
         return dict_return_value
 
     def to_binary_mask(self, shape: Tuple[int, int]) -> np.ndarray:
-        """Transform an ellipse to a binary mask. 
+        """Transform an ellipse to a binary mask.
 
         Args:
             shape (Tuple[int, int]): Shape of the new ellipse's binary mask.
@@ -184,7 +184,7 @@ class Ellipse(Annotation):
             thickness=-1,
         )
 
-    def is_in_mask(self, mask: np.ndarray, min_overlap: float = 0.9) -> bool:
+    def is_in_mask(self, mask: dict, min_overlap: float = 0.9) -> bool:
         """Check if an ellipse is within a binary mask.
 
         Args:
@@ -194,38 +194,27 @@ class Ellipse(Annotation):
         Returns:
             bool: True if the ellipse is within the mask and meets the required overlap, False otherwise.
         """
-        ellipse_mask = np.zeros_like(mask)
 
-        cv2.ellipse(
-            ellipse_mask,
-            center=(self.center.x, self.center.y),
-            axes=(self.radius_x, self.radius_y),
-            angle=self.rotation,
-            startAngle=0,
-            endAngle=360,
-            color=1,
-            thickness=-1,
-        )
+        json_object = {
+            "type": "ellipse",
+            "center": {"x": self.center.x, "y": self.center.y},
+            "radiusX": self.radius_x,
+            "radiusY": self.radius_y,
+            "angleOfRotation": self.rotation,
+        }
 
-        # Calculate the intersection of the annotation and the mask
-        intersection = np.logical_and(mask, ellipse_mask)
-        # Calculate the overlap ratio between the polygon and the mask
-        overlap_ratio = intersection.sum() / ellipse_mask.sum()
+        overlap_percentage = overlap_object(json_object, mask)
 
-        del ellipse_mask
-        del intersection
         gc.collect()
 
         # Check if the polygon is within the masked area with at least the specified overlap
-        return overlap_ratio >= min_overlap
+        return overlap_percentage >= min_overlap
 
     def _calculate_circularity(self) -> None:
-        self._circularity = 4 * np.pi * self.area / self.perimeter ** 2
+        self._circularity = 4 * np.pi * self.area / self.perimeter**2
 
     def _calculate_perimeter(self) -> None:
-        self._perimeter = (
-            2 * np.pi * np.sqrt((self._radius_x ** 2 + self._radius_y ** 2) / 2)
-        )
+        self._perimeter = 2 * np.pi * np.sqrt((self._radius_x**2 + self._radius_y**2) / 2)
 
     def _calculate_area(self) -> None:
         self._area = np.pi * self._radius_x * self._radius_y
