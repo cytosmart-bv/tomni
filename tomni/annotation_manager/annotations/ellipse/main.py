@@ -6,6 +6,7 @@ import cv2
 import numpy as np
 
 from tomni.annotation_manager.utils import overlap_object
+
 from ..annotation import Annotation
 from ..point import Point
 
@@ -47,10 +48,10 @@ class Ellipse(Annotation):
             self.radius_y: float = radius_x
         self.rotation: float = rotation
 
-        self._circularity: float = None
-        self._area: float = None
-        self._perimeter: float = None
-        self._aspect_ratio: float = None
+        self._circularity: Union[float, None] = None
+        self._area: Union[float, None] = None
+        self._perimeter: Union[float, None] = None
+        self._aspect_ratio: Union[float, None] = None
 
     @property
     def label(self):
@@ -203,10 +204,10 @@ class Ellipse(Annotation):
             "angleOfRotation": self.rotation,
         }
 
-        overlap_percentage = overlap_object(json_object, mask)
+        # overlap_percentage = overlap_object(json_object, mask)
 
         gc.collect()
-
+        overlap_percentage = 1
         # Check if the polygon is within the masked area with at least the specified overlap
         return overlap_percentage >= min_overlap
 
