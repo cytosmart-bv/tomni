@@ -168,8 +168,6 @@ class Polygon(Annotation):
 
         overlap_percentage = overlap_object(json_object, mask)
 
-        gc.collect()
-
         # Check if the polygon is within the masked area with at least the specified overlap
         return overlap_percentage >= min_overlap
 
