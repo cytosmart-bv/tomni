@@ -163,7 +163,7 @@ class Polygon(Annotation):
         if len(self.points) < 1:
             return False
 
-        json_points = [{point.x, point.y} for point in self.points]
+        json_points = [{"x": point.x, "y": point.y} for point in self.points]
         json_object = {"type": "polygon", "points": json_points}
 
         overlap_percentage = overlap_object(json_object, mask)
