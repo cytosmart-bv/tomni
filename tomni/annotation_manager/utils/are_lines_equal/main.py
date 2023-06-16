@@ -1,6 +1,6 @@
 from typing import List
 
-from tomni.annotation_manager.annotations import Point
+from tomni.annotation_manager.annotations.point import Point
 
 
 def are_lines_equal(l1: List[Point], l2: List[Point], is_enclosed: bool = True):

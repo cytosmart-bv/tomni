@@ -1,6 +1,6 @@
 from unittest import TestCase
 
-from tomni.annotation_manager import Point
+from tomni.annotation_manager.annotations.point import Point
 from .main import are_lines_equal
 
 

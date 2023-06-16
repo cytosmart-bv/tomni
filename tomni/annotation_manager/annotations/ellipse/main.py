@@ -5,10 +5,9 @@ from typing import List, Tuple, Union
 import cv2
 import numpy as np
 
-from tomni.annotation_manager.utils import overlap_object
-
-from ..annotation import Annotation
-from ..point import Point
+from tomni.annotation_manager.annotations.annotation import Annotation
+from tomni.annotation_manager.annotations.point import Point
+from tomni.annotation_manager.utils.overlap_object import overlap_object
 
 
 class Ellipse(Annotation):

@@ -6,13 +6,11 @@ from typing import List, Tuple
 import cv2
 import numpy as np
 
-from tomni.annotation_manager.annotations import Annotation, Point
-from tomni.annotation_manager.utils import (
-    are_lines_equal,
-    overlap_object,
-    parse_points_to_contour,
-    simplify_line,
-)
+from tomni.annotation_manager.annotations.annotation import Annotation
+from tomni.annotation_manager.annotations.point import Point
+from tomni.annotation_manager.utils import (are_lines_equal, overlap_object,
+                                            parse_points_to_contour,
+                                            simplify_line)
 
 
 class Polygon(Annotation):
