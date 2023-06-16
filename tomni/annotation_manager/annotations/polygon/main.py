@@ -8,9 +8,12 @@ import numpy as np
 
 from tomni.annotation_manager.annotations.annotation import Annotation
 from tomni.annotation_manager.annotations.point import Point
-from tomni.annotation_manager.utils import (are_lines_equal, overlap_object,
-                                            parse_points_to_contour,
-                                            simplify_line)
+from tomni.annotation_manager.utils import (
+    are_lines_equal,
+    overlap_object,
+    parse_points_to_contour,
+    simplify_line,
+)
 
 
 class Polygon(Annotation):
@@ -164,10 +167,10 @@ class Polygon(Annotation):
         json_points = [{"x": point.x, "y": point.y} for point in self.points]
         json_object = {"type": "polygon", "points": json_points}
 
-        overlap_percentage = overlap_object(json_object, mask)
+        overlap_ratio = overlap_object(json_object, mask)
 
         # Check if the polygon is within the masked area with at least the specified overlap
-        return overlap_percentage >= min_overlap
+        return overlap_ratio >= min_overlap
 
     def to_binary_mask(self, shape: Tuple[int, int]) -> np.ndarray:
         """Transform a polygon to a binary mask.

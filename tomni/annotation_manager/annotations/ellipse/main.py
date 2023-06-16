@@ -203,10 +203,10 @@ class Ellipse(Annotation):
             "angleOfRotation": self.rotation,
         }
 
-        overlap_percentage = overlap_object(json_object, mask)
+        overlap_ratio = overlap_object(json_object, mask)
 
         # Check if the polygon is within the masked area with at least the specified overlap
-        return overlap_percentage >= min_overlap
+        return overlap_ratio >= min_overlap
 
     def _calculate_circularity(self) -> None:
         self._circularity = 4 * np.pi * self.area / self.perimeter**2
