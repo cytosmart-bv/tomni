@@ -184,7 +184,7 @@ class Ellipse(Annotation):
             thickness=-1,
         )
 
-    def is_in_mask(self, mask: dict, min_overlap: float = 0.9) -> bool:
+    def is_in_mask(self, mask_json: dict, min_overlap: float = 0.9) -> bool:
         """Check if an ellipse is within a binary mask.
 
         Args:
@@ -203,7 +203,7 @@ class Ellipse(Annotation):
             "angleOfRotation": self.rotation,
         }
 
-        overlap_ratio = overlap_object(json_object, mask)
+        overlap_ratio = overlap_object(json_object, mask_json)
 
         # Check if the polygon is within the masked area with at least the specified overlap
         return overlap_ratio >= min_overlap

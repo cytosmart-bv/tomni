@@ -205,7 +205,7 @@ class AnnotationManager(object):
             raise StopIteration
 
     def to_dict(
-        self, decimals: int = 2, mask: Union[dict, None] = None, min_overlap: float = 0.9
+        self, decimals: int = 2, mask_json: Union[dict, None] = None, min_overlap: float = 0.9
     ) -> List[Dict]:
         """Transform AM object to a collection of our format.
 
@@ -215,12 +215,12 @@ class AnnotationManager(object):
         Returns:
             List[Dict]: Collection of dicts.
         """
-        if mask is not None:
+        if mask_json is not None:
             filtered_annotations = self._annotations.copy()
             filtered_annotations = [
                 annotation
                 for annotation in filtered_annotations
-                if annotation.is_in_mask(mask, min_overlap)
+                if annotation.is_in_mask(mask_json, min_overlap)
             ]
 
             return [annotation.to_dict(decimals=decimals) for annotation in filtered_annotations]

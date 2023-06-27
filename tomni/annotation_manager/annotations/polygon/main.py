@@ -151,7 +151,7 @@ class Polygon(Annotation):
         dict_return_value = {**super_dict, **polygon_dict}
         return dict_return_value
 
-    def is_in_mask(self, mask: dict, min_overlap: float = 0.9):
+    def is_in_mask(self, mask_json: dict, min_overlap: float = 0.9):
         """Check if a polygon is within a binary mask.
 
         Args:
@@ -167,7 +167,7 @@ class Polygon(Annotation):
         json_points = [{"x": point.x, "y": point.y} for point in self.points]
         json_object = {"type": "polygon", "points": json_points}
 
-        overlap_ratio = overlap_object(json_object, mask)
+        overlap_ratio = overlap_object(json_object, mask_json)
 
         # Check if the polygon is within the masked area with at least the specified overlap
         return overlap_ratio >= min_overlap
