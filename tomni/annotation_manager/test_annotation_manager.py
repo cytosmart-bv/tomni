@@ -4,6 +4,7 @@ import cv2
 import numpy as np
 
 from tomni.annotation_manager.annotations import Ellipse, Point, Polygon
+from tomni.annotation_manager.utils import overlap_object
 
 from .main import AnnotationManager
 
@@ -96,9 +97,7 @@ class TestAnnotationManager(TestCase):
         self.assertEqual(len(actual), expected_n_items)
 
     def test_filter_single_inplace(self):
-        actual = self.manager.filter(
-            feature="area", min_val=500, max_val=5000000, inplace=True
-        )
+        actual = self.manager.filter(feature="area", min_val=500, max_val=5000000, inplace=True)
         expected_n_items = 2
 
         self.assertIsInstance(actual, AnnotationManager)
@@ -106,9 +105,9 @@ class TestAnnotationManager(TestCase):
         self.assertEqual(len(self.manager), expected_n_items)
 
     def test_filter_chained(self):
-        actual = self.manager.filter(
-            feature="area", min_val=0, max_val=500, inplace=True
-        ).filter(feature="perimeter", min_val=11, max_val=12, inplace=True)
+        actual = self.manager.filter(feature="area", min_val=0, max_val=500, inplace=True).filter(
+            feature="perimeter", min_val=11, max_val=12, inplace=True
+        )
         expected_n_items = 1
 
         self.assertIsInstance(actual, AnnotationManager)
@@ -162,8 +161,15 @@ class TestAnnotationManager(TestCase):
         bin_mask = am.to_binary_mask(im_shape)
 
     def test_to_dict_with_polygon_mask(self):
-        mask = np.ones((3000, 3000), dtype=np.uint8)
-
+        mask = {
+            "type": "polygon",
+            "points": [
+                {"x": 0, "y": 0},
+                {"x": 0, "y": 4000},
+                {"x": 4000, "y": 4000},
+                {"x": 4000, "y": 0},
+            ],
+        }
         expected = [
             {
                 "id": "132132132123132",
@@ -222,32 +228,25 @@ class TestAnnotationManager(TestCase):
                     {"x": 300, "y": 100},
                 ],
             },
-            {
-                "id": "132132132123132",
-                "label": "star",
-                "children": [],
-                "parents": [],
-                "area": 7000000.0,
-                "circularity": 0.64,
-                "convex_hull_area": 8000000.0,
-                "perimeter": 11721.35,
-                "roundness": 0.56,
-                "type": "polygon",
-                "points": [
-                    {"x": 1000, "y": 3000},
-                    {"x": 2000, "y": 3000},
-                    {"x": 3000, "y": 5000},
-                    {"x": 5000, "y": 3000},
-                    {"x": 3000, "y": 1000},
-                ],
-            },
         ]
         actual = self.manager.to_dict(mask=mask)
 
         self.assertEqual(expected, actual)
 
     def test_to_dict_with_ellipse_mask(self):
-        mask = AnnotationManager([Ellipse(center=Point(50,50), radius_x=100, rotation=0,id="",label="",children=[],parents=[])]).to_binary_mask((3000,3000))
+        mask = AnnotationManager(
+            [
+                Ellipse(
+                    center=Point(50, 50),
+                    radius_x=100,
+                    rotation=0,
+                    id="",
+                    label="",
+                    children=[],
+                    parents=[],
+                )
+            ]
+        ).to_dict()[0]
 
         expected = [
             {
@@ -426,14 +425,24 @@ class TestAnnotationManager(TestCase):
     def test_to_labeled_mask(self):
         polygons = [
             Polygon(
-                points=[Point(1, 1), Point(1, 2), Point(2, 2), Point(2, 1),],
+                points=[
+                    Point(1, 1),
+                    Point(1, 2),
+                    Point(2, 2),
+                    Point(2, 1),
+                ],
                 id="132132132123132",
                 children=[],
                 parents=[],
                 label="star",
             ),
             Polygon(
-                points=[Point(3, 3), Point(3, 5), Point(5, 5), Point(5, 3),],
+                points=[
+                    Point(3, 3),
+                    Point(3, 5),
+                    Point(5, 5),
+                    Point(5, 3),
+                ],
                 id="132132132123132",
                 children=[],
                 parents=[],
@@ -599,4 +608,3 @@ class TestAnnotationManager(TestCase):
         actual = manager.to_labeled_mask(input_mask.shape)
 
         np.testing.assert_array_equal(expected, actual)
-
