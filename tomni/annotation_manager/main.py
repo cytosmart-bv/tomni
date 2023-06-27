@@ -1,5 +1,5 @@
 import uuid
-from typing import Dict, List, Tuple
+from typing import Dict, List, Tuple, Union
 
 import cv2
 import numpy as np
@@ -70,7 +70,7 @@ class AnnotationManager(object):
             # change shape from [N, 1, 2] to [N, 2]
             contour = np.vstack(contour)
 
-            points: Point = []
+            points: List[Point] = []
             for i in range(contour.shape[0]):
                 points.append(Point(x=int(contour[i][0]), y=int(contour[i][1])))
 
@@ -138,7 +138,7 @@ class AnnotationManager(object):
     @classmethod
     def from_labeled_mask(cls, mask: np.ndarray, include_inner_contours: bool = False):
         """Initializes a AnnotationManager object from a labeled mask.
-        A labeled mask contains components indicated by the same pixel values (see example below). 
+        A labeled mask contains components indicated by the same pixel values (see example below).
 
         Example containing two components yielding a AnnotationManager object with two annotations:
         [[0,0,2,1,1],
@@ -154,7 +154,10 @@ class AnnotationManager(object):
         """
         points = labels2listsOfPoints(mask)
         contours = [
-            positions2contour(point, return_inner_contours=include_inner_contours,)
+            positions2contour(
+                point,
+                return_inner_contours=include_inner_contours,
+            )
             for point in points
             if len(point) > 0
         ]
@@ -171,8 +174,7 @@ class AnnotationManager(object):
 
     @annotations.setter
     def annotations(self, other_annotations: List[Annotation]):
-        """I doubt this setter should be allowed to exist.
-        """
+        """I doubt this setter should be allowed to exist."""
 
     def __len__(self) -> int:
         return len(self._annotations)
@@ -187,8 +189,7 @@ class AnnotationManager(object):
         pass
 
     def __contains__(self, other: Annotation):
-        """to check if self.annotations contains other.
-        """
+        """to check if self.annotations contains other."""
         pass
 
     def __iter__(self):
@@ -204,7 +205,7 @@ class AnnotationManager(object):
             raise StopIteration
 
     def to_dict(
-        self, decimals: int = 2, mask: np.ndarray = None, min_overlap: float = 0.9
+        self, decimals: int = 2, mask: Union[dict, None] = None, min_overlap: float = 0.9
     ) -> List[Dict]:
         """Transform AM object to a collection of our format.
 
@@ -222,14 +223,9 @@ class AnnotationManager(object):
                 if annotation.is_in_mask(mask, min_overlap)
             ]
 
-            return [
-                annotation.to_dict(decimals=decimals)
-                for annotation in filtered_annotations
-            ]
+            return [annotation.to_dict(decimals=decimals) for annotation in filtered_annotations]
 
-        return [
-            annotation.to_dict(decimals=decimals) for annotation in self._annotations
-        ]
+        return [annotation.to_dict(decimals=decimals) for annotation in self._annotations]
 
     def to_contours(self) -> List[np.ndarray]:
         """Transform AM object to a collection of cv2 contours.
@@ -240,20 +236,15 @@ class AnnotationManager(object):
         Returns:
             List[np.ndarray]: Collection of contours as [[[x_0, y_0],..., [x_n, y_n]], ... ,[[x_0, y_0],..., [x_m, y_m]]]
         """
-        if not all(
-            [isinstance(annotation, Polygon) for annotation in self._annotations]
-        ):
+        if not all([isinstance(annotation, Polygon) for annotation in self._annotations]):
             raise ValueError("`to_contours is only supported on polygon-annotations.`")
 
-        contours = [
-            parse_points_to_contour(annotation.points)
-            for annotation in self._annotations
-        ]
+        contours = [parse_points_to_contour(annotation.points) for annotation in self._annotations]
 
         return contours
 
     def to_binary_mask(self, shape: Tuple[int, int]) -> np.ndarray:
-        """Transform an AM object to a binary mask. 
+        """Transform an AM object to a binary mask.
         Annotations can only be polygon or ellipse.
 
         Args:
@@ -269,7 +260,7 @@ class AnnotationManager(object):
         return mask
 
     def to_labeled_mask(self, shape: Tuple[int, int]) -> np.ndarray:
-        """Transform an AM object to a labeled mask. 
+        """Transform an AM object to a labeled mask.
         Annotations can only be polygon or ellipse.
 
         shape (Tuple[int, int]): Shape of the new labeled mask.
@@ -339,7 +330,11 @@ class AnnotationManager(object):
         pass
 
     def filter(
-        self, feature: str, min_val: float, max_val: float, inplace: bool = False,
+        self,
+        feature: str,
+        min_val: float,
+        max_val: float,
+        inplace: bool = False,
     ):
         """Filter annotations by feature.
 
@@ -367,8 +362,7 @@ class AnnotationManager(object):
 
     @classmethod
     def get_circularity_summary(self):
-        """loops the cdf items to get avg, std, min, max.
-        """
+        """loops the cdf items to get avg, std, min, max."""
 
     def get_feature_summaries(self, features: List[str]) -> Dict:
         """Pass a list of features to calculated.

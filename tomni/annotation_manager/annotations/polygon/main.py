@@ -1,7 +1,7 @@
 import gc
 import warnings
 from dataclasses import asdict
-from typing import List, Tuple
+from typing import List, Tuple, Union
 
 import cv2
 import numpy as np
@@ -38,7 +38,7 @@ class Polygon(Annotation):
 
         super().__init__(id, label, children, parents)
         self._points: List[Point] = simplify_line(points)
-        self._contour: List[np.ndarray] = parse_points_to_contour(points)
+        self._contour: np.ndarray = parse_points_to_contour(points)
 
         self._has_enough_points = len(points) >= MIN_NR_POINTS
         if not self._has_enough_points:
