@@ -192,9 +192,9 @@ class AnnotationManager(object):
             filtered_annotations = self._annotations.copy()
             filtered_annotations = [annotation for annotation in filtered_annotations if annotation.is_in_mask(mask, min_overlap)]
 
-            return [annotation.to_dict(decimals=decimals) for annotation in filtered_annotations]
+            return [annotation.to_dict(decimals=decimals, **kwargs) for annotation in filtered_annotations]
 
-        return [annotation.to_dict(decimals=decimals) for annotation in self._annotations]
+        return [annotation.to_dict(decimals=decimals, **kwargs) for annotation in self._annotations]
 
     def to_contours(self) -> List[np.ndarray]:
         """Transform AM object to a collection of cv2 contours.
