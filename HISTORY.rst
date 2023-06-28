@@ -21,6 +21,7 @@
 - Add `to_binary_mask` and `to_labeled_mask` for `AnnotationManager`, `Ellipse` and `Polygon`
 - Add init-function `from_binary_mask` and `from_labeled_mask` to `AnnotationManager`
 - Bugfix: Fixed a bug where `simplify_line` returns empty list when passing two points.
+- Add option to to compress polygons in `to_dict()`.
 
 1.15.0 (2022-12-05)
 ------------------

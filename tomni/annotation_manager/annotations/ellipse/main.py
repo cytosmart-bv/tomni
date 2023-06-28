@@ -145,8 +145,7 @@ class Ellipse(Annotation):
 
         return self._aspect_ratio
 
-    def to_dict(self, decimals: int = 2) -> dict:
-
+    def to_dict(self, decimals: int = 2, **kwargs) -> dict:
         dict_ellipse = {
             "type": "ellipse",
             "center": asdict(self.center),
@@ -164,7 +163,7 @@ class Ellipse(Annotation):
         return dict_return_value
 
     def to_binary_mask(self, shape: Tuple[int, int]) -> np.ndarray:
-        """Transform an ellipse to a binary mask. 
+        """Transform an ellipse to a binary mask.
 
         Args:
             shape (Tuple[int, int]): Shape of the new ellipse's binary mask.
@@ -220,12 +219,10 @@ class Ellipse(Annotation):
         return overlap_ratio >= min_overlap
 
     def _calculate_circularity(self) -> None:
-        self._circularity = 4 * np.pi * self.area / self.perimeter ** 2
+        self._circularity = 4 * np.pi * self.area / self.perimeter**2
 
     def _calculate_perimeter(self) -> None:
-        self._perimeter = (
-            2 * np.pi * np.sqrt((self._radius_x ** 2 + self._radius_y ** 2) / 2)
-        )
+        self._perimeter = 2 * np.pi * np.sqrt((self._radius_x**2 + self._radius_y**2) / 2)
 
     def _calculate_area(self) -> None:
         self._area = np.pi * self._radius_x * self._radius_y

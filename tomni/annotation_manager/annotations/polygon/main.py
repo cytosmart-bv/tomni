@@ -5,24 +5,14 @@ from typing import List, Tuple
 
 import cv2
 import numpy as np
+from ...utils import parse_points_to_contour, compress_polygon_points
 
 from tomni.annotation_manager.annotations import Annotation, Point
-from tomni.annotation_manager.utils import (
-    are_lines_equal,
-    parse_points_to_contour,
-    simplify_line,
-)
+from tomni.annotation_manager.utils import are_lines_equal, parse_points_to_contour, simplify_line
 
 
 class Polygon(Annotation):
-    def __init__(
-        self,
-        points: List[Point],
-        id: str,
-        label: str = "",
-        children: List[Annotation] = [],
-        parents: List[Annotation] = [],
-    ):
+    def __init__(self, points: List[Point], id: str, label: str = "", children: List[Annotation] = [], parents: List[Annotation] = []):
         """Initializes a Polygon object.
 
         Args:
@@ -40,9 +30,7 @@ class Polygon(Annotation):
 
         self._has_enough_points = len(points) >= MIN_NR_POINTS
         if not self._has_enough_points:
-            warnings.warn(
-                f"Polygon has less than {MIN_NR_POINTS} points. Some features may not be available."
-            )
+            warnings.warn(f"Polygon has less than {MIN_NR_POINTS} points. Some features may not be available.")
 
         # features
         self._area = None
@@ -128,11 +116,12 @@ class Polygon(Annotation):
 
         return self._roundness
 
-    def to_dict(self, decimals: int = 2) -> dict:
-        polygon_dict = {
-            "type": "polygon",
-            "points": [asdict(point) for point in self.points],
-        }
+    def to_dict(self, decimals: int = 2, **kwargs) -> dict:
+        points = self._points.copy()
+        if kwargs.get("do_compress", False):
+            points = compress_polygon_points(points, kwargs.get("epsilon", 3))
+
+        polygon_dict = {"type": "polygon", "points": [asdict(point) for point in points]}
 
         if self._has_enough_points:
             # Feature property is None if polygon has not enough points which results the round() to fail on a NoneType.
@@ -180,7 +169,7 @@ class Polygon(Annotation):
         return overlap_ratio >= min_overlap
 
     def to_binary_mask(self, shape: Tuple[int, int]) -> np.ndarray:
-        """Transform a polygon to a binary mask. 
+        """Transform a polygon to a binary mask.
 
         Args:
             shape (Tuple[int, int]): Shape of the new polygon's binary mask.
@@ -190,9 +179,7 @@ class Polygon(Annotation):
         """
         mask = np.zeros(shape, dtype=np.uint8)
         if len(self._points) > 0:
-            points = np.array(
-                [[point.x, point.y] for point in self._points], dtype=np.int32
-            )
+            points = np.array([[point.x, point.y] for point in self._points], dtype=np.int32)
             cv2.fillPoly(mask, [points], color=1)
 
         return mask
@@ -211,7 +198,7 @@ class Polygon(Annotation):
         if not self._perimeter:
             self._calculate_perimeter()
 
-        self._circularity = (4 * np.pi * self._area) / (self._perimeter ** 2)
+        self._circularity = (4 * np.pi * self._area) / (self._perimeter**2)
 
     def _calculate_convex_hull_area(self) -> None:
         if not self._has_enough_points:
@@ -231,7 +218,7 @@ class Polygon(Annotation):
             self._calculate_area()
 
         _, radius = cv2.minEnclosingCircle(self._contour)
-        enclosing_circle_area = radius ** 2 * np.pi
+        enclosing_circle_area = radius**2 * np.pi
         self._roundness = self._area / enclosing_circle_area
 
     def __eq__(self, other):
@@ -242,8 +229,5 @@ class Polygon(Annotation):
         are_points_equal = are_lines_equal(self.points, other.points, is_enclosed=True)
         reverse_points = other.points
         reverse_points.reverse()
-        are_points_equal_mirrored = are_lines_equal(
-            self.points, reverse_points, is_enclosed=True
-        )
+        are_points_equal_mirrored = are_lines_equal(self.points, reverse_points, is_enclosed=True)
         return are_points_equal | are_points_equal_mirrored
-
