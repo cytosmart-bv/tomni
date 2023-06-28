@@ -1,28 +1,18 @@
 import gc
 import warnings
 from dataclasses import asdict
-from typing import List, Tuple
+from typing import List, Tuple, Union
 
 import cv2
 import numpy as np
 
-from tomni.annotation_manager.annotations import Annotation, Point
-from tomni.annotation_manager.utils import (
-    are_lines_equal,
-    parse_points_to_contour,
-    simplify_line,
-)
+from tomni.annotation_manager.annotations.annotation import Annotation
+from tomni.annotation_manager.annotations.point import Point
+from tomni.annotation_manager.utils import are_lines_equal, overlap_object, parse_points_to_contour, simplify_line
 
 
 class Polygon(Annotation):
-    def __init__(
-        self,
-        points: List[Point],
-        id: str,
-        label: str = "",
-        children: List[Annotation] = [],
-        parents: List[Annotation] = [],
-    ):
+    def __init__(self, points: List[Point], id: str, label: str = "", children: List[Annotation] = [], parents: List[Annotation] = []):
         """Initializes a Polygon object.
 
         Args:
@@ -36,13 +26,11 @@ class Polygon(Annotation):
 
         super().__init__(id, label, children, parents)
         self._points: List[Point] = simplify_line(points)
-        self._contour: List[np.ndarray] = parse_points_to_contour(points)
+        self._contour: np.ndarray = parse_points_to_contour(points)
 
         self._has_enough_points = len(points) >= MIN_NR_POINTS
         if not self._has_enough_points:
-            warnings.warn(
-                f"Polygon has less than {MIN_NR_POINTS} points. Some features may not be available."
-            )
+            warnings.warn(f"Polygon has less than {MIN_NR_POINTS} points. Some features may not be available.")
 
         # features
         self._area = None
@@ -129,10 +117,7 @@ class Polygon(Annotation):
         return self._roundness
 
     def to_dict(self, decimals: int = 2) -> dict:
-        polygon_dict = {
-            "type": "polygon",
-            "points": [asdict(point) for point in self.points],
-        }
+        polygon_dict = {"type": "polygon", "points": [asdict(point) for point in self.points]}
 
         if self._has_enough_points:
             # Feature property is None if polygon has not enough points which results the round() to fail on a NoneType.
@@ -149,12 +134,13 @@ class Polygon(Annotation):
         dict_return_value = {**super_dict, **polygon_dict}
         return dict_return_value
 
-    def is_in_mask(self, mask: np.ndarray, min_overlap: float = 0.9):
+    def is_in_mask(self, mask_json: dict, min_overlap: float = 0.9):
         """Check if a polygon is within a binary mask.
 
         Args:
-            mask (np.ndarray): Binary mask in [0, 1].
-            min_overlap (float, optional): Minimum overlap required between the polygon and the mask, expressed as a value between 0 and 1. Defaults to 0.9.
+            mask_json (dict): A dict mask in cytosmart dict format.
+            min_overlap (float, optional): Minimum overlap required between the polygon and the mask, expressed as a value between 0 and 1.
+            Defaults to 0.9.
 
         Returns:
             bool: True if the polygon is within the mask and meets the required overlap, False otherwise.
@@ -162,25 +148,16 @@ class Polygon(Annotation):
         if len(self.points) < 1:
             return False
 
-        poly_mask = np.zeros_like(mask)
-        # Convert the polygon to a numpy array of shape (N, 2)
-        points = np.array([[point.x, point.y] for point in self.points], dtype=np.int32)
-        poly_mask = cv2.fillPoly(poly_mask, [points], color=1)
+        json_points = [{"x": point.x, "y": point.y} for point in self.points]
+        json_object = {"type": "polygon", "points": json_points}
 
-        # Calculate the intersection of the annotation and the mask
-        intersection = np.logical_and(mask, poly_mask)
-        # Calculate the overlap ratio between the polygon and the mask
-        overlap_ratio = intersection.sum() / poly_mask.sum()
-
-        del poly_mask
-        del intersection
-        gc.collect()
+        overlap_ratio = overlap_object(json_object, mask_json)
 
         # Check if the polygon is within the masked area with at least the specified overlap
         return overlap_ratio >= min_overlap
 
     def to_binary_mask(self, shape: Tuple[int, int]) -> np.ndarray:
-        """Transform a polygon to a binary mask. 
+        """Transform a polygon to a binary mask.
 
         Args:
             shape (Tuple[int, int]): Shape of the new polygon's binary mask.
@@ -190,9 +167,7 @@ class Polygon(Annotation):
         """
         mask = np.zeros(shape, dtype=np.uint8)
         if len(self._points) > 0:
-            points = np.array(
-                [[point.x, point.y] for point in self._points], dtype=np.int32
-            )
+            points = np.array([[point.x, point.y] for point in self._points], dtype=np.int32)
             cv2.fillPoly(mask, [points], color=1)
 
         return mask
@@ -211,7 +186,7 @@ class Polygon(Annotation):
         if not self._perimeter:
             self._calculate_perimeter()
 
-        self._circularity = (4 * np.pi * self._area) / (self._perimeter ** 2)
+        self._circularity = (4 * np.pi * self._area) / (self._perimeter**2)
 
     def _calculate_convex_hull_area(self) -> None:
         if not self._has_enough_points:
@@ -231,7 +206,7 @@ class Polygon(Annotation):
             self._calculate_area()
 
         _, radius = cv2.minEnclosingCircle(self._contour)
-        enclosing_circle_area = radius ** 2 * np.pi
+        enclosing_circle_area = radius**2 * np.pi
         self._roundness = self._area / enclosing_circle_area
 
     def __eq__(self, other):
@@ -242,8 +217,5 @@ class Polygon(Annotation):
         are_points_equal = are_lines_equal(self.points, other.points, is_enclosed=True)
         reverse_points = other.points
         reverse_points.reverse()
-        are_points_equal_mirrored = are_lines_equal(
-            self.points, reverse_points, is_enclosed=True
-        )
+        are_points_equal_mirrored = are_lines_equal(self.points, reverse_points, is_enclosed=True)
         return are_points_equal | are_points_equal_mirrored
-

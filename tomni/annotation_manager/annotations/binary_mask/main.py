@@ -3,8 +3,8 @@ from typing import Tuple, Union
 
 import numpy as np
 
-from ..annotation import Annotation
-from ..point import Point
+from tomni.annotation_manager.annotations.point import Point
+from tomni.annotation_manager.annotations.annotation import Annotation
 
 
 class BinaryMask(Annotation):
@@ -30,4 +30,3 @@ class BinaryMask(Annotation):
         not sure what mask features we commonly use but they could be here.
         """
         pass
-
