@@ -8,23 +8,11 @@ import numpy as np
 
 from tomni.annotation_manager.annotations.annotation import Annotation
 from tomni.annotation_manager.annotations.point import Point
-from tomni.annotation_manager.utils import (
-    are_lines_equal,
-    overlap_object,
-    parse_points_to_contour,
-    simplify_line,
-)
+from tomni.annotation_manager.utils import are_lines_equal, overlap_object, parse_points_to_contour, simplify_line
 
 
 class Polygon(Annotation):
-    def __init__(
-        self,
-        points: List[Point],
-        id: str,
-        label: str = "",
-        children: List[Annotation] = [],
-        parents: List[Annotation] = [],
-    ):
+    def __init__(self, points: List[Point], id: str, label: str = "", children: List[Annotation] = [], parents: List[Annotation] = []):
         """Initializes a Polygon object.
 
         Args:
@@ -42,9 +30,7 @@ class Polygon(Annotation):
 
         self._has_enough_points = len(points) >= MIN_NR_POINTS
         if not self._has_enough_points:
-            warnings.warn(
-                f"Polygon has less than {MIN_NR_POINTS} points. Some features may not be available."
-            )
+            warnings.warn(f"Polygon has less than {MIN_NR_POINTS} points. Some features may not be available.")
 
         # features
         self._area = None
@@ -131,10 +117,7 @@ class Polygon(Annotation):
         return self._roundness
 
     def to_dict(self, decimals: int = 2) -> dict:
-        polygon_dict = {
-            "type": "polygon",
-            "points": [asdict(point) for point in self.points],
-        }
+        polygon_dict = {"type": "polygon", "points": [asdict(point) for point in self.points]}
 
         if self._has_enough_points:
             # Feature property is None if polygon has not enough points which results the round() to fail on a NoneType.
@@ -155,8 +138,9 @@ class Polygon(Annotation):
         """Check if a polygon is within a binary mask.
 
         Args:
-            mask (dict): A mask in cytosmart dict format.
-            min_overlap (float, optional): Minimum overlap required between the polygon and the mask, expressed as a value between 0 and 1. Defaults to 0.9.
+            mask_json (dict): A dict mask in cytosmart dict format.
+            min_overlap (float, optional): Minimum overlap required between the polygon and the mask, expressed as a value between 0 and 1.
+            Defaults to 0.9.
 
         Returns:
             bool: True if the polygon is within the mask and meets the required overlap, False otherwise.

@@ -188,7 +188,7 @@ class Ellipse(Annotation):
         """Check if an ellipse is within a binary mask.
 
         Args:
-            mask (dict): A mask in cytosmart dict format.
+            mask_json (dict): A dict mask in cytosmart dict format.
             min_overlap (float, optional): Minimum overlap required between the ellipse and the mask, expressed as a value between 0 and 1. Defaults to 0.9.
 
         Returns:
