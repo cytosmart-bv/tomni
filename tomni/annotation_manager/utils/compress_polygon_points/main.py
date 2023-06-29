@@ -14,7 +14,7 @@ def compress_polygon_points(points: List[Point], epsilon: float = 3.0):
     Returns:
         _type_: A list of 2D points, each represented as an instance of the `Point` class.
     """
-    assert 0 <= epsilon
+    assert epsilon >= 0
 
     point_arr = [[point.x, point.y] for point in points]
     point_arr_compressed = simplify_coords(point_arr, epsilon)
