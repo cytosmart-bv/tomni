@@ -1,5 +1,5 @@
 import uuid
-from typing import Dict, List, Tuple
+from typing import Dict, List, Tuple, Union
 
 import cv2
 import numpy as np
@@ -68,7 +68,7 @@ class AnnotationManager(object):
             # change shape from [N, 1, 2] to [N, 2]
             contour = np.vstack(contour)
 
-            points: Point = []
+            points: List[Point] = []
             for i in range(contour.shape[0]):
                 points.append(Point(x=int(contour[i][0]), y=int(contour[i][1])))
 
@@ -179,18 +179,21 @@ class AnnotationManager(object):
         else:
             raise StopIteration
 
-    def to_dict(self, decimals: int = 2, mask: np.ndarray = None, min_overlap: float = 0.9, **kwargs) -> List[Dict]:
+    def to_dict(self, decimals: int = 2, mask_json: Union[dict, None] = None, min_overlap: float = 0.9, **kwargs) -> List[Dict]:
         """Transform AM object to a collection of our format.
 
         Args:
             decimals (int, optional): The number of decimals to use when rounding. Defaults to 2.
-
+            mask_json (Union[dict, None], optional): The dict mask that indicates what area to include in the output dict.
+            Defaults to None.
+            min_overlap (float, optional): Minimum overlap required between the polygon and the mask, expressed as a value between 0 and 1
+            Defaults to 0.9.
         Returns:
             List[Dict]: Collection of dicts.
         """
-        if mask is not None:
+        if mask_json is not None:
             filtered_annotations = self._annotations.copy()
-            filtered_annotations = [annotation for annotation in filtered_annotations if annotation.is_in_mask(mask, min_overlap)]
+            filtered_annotations = [annotation for annotation in filtered_annotations if annotation.is_in_mask(mask_json, min_overlap)]
 
             return [annotation.to_dict(decimals=decimals, **kwargs) for annotation in filtered_annotations]
 

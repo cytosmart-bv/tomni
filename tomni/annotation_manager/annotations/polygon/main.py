@@ -1,14 +1,16 @@
 import gc
 import warnings
 from dataclasses import asdict
-from typing import List, Tuple
+from typing import List, Tuple, Union
 
 import cv2
 import numpy as np
-from ...utils import parse_points_to_contour, compress_polygon_points
 
-from tomni.annotation_manager.annotations import Annotation, Point
-from tomni.annotation_manager.utils import are_lines_equal, parse_points_to_contour, simplify_line
+from tomni.annotation_manager.annotations.annotation import Annotation
+from tomni.annotation_manager.annotations.point import Point
+from tomni.annotation_manager.utils import are_lines_equal, parse_points_to_contour, simplify_line, overlap_object
+
+from ...utils import compress_polygon_points, parse_points_to_contour
 
 
 class Polygon(Annotation):
@@ -26,7 +28,7 @@ class Polygon(Annotation):
 
         super().__init__(id, label, children, parents)
         self._points: List[Point] = simplify_line(points)
-        self._contour: List[np.ndarray] = parse_points_to_contour(points)
+        self._contour: np.ndarray = parse_points_to_contour(points)
 
         self._has_enough_points = len(points) >= MIN_NR_POINTS
         if not self._has_enough_points:
@@ -138,12 +140,13 @@ class Polygon(Annotation):
         dict_return_value = {**super_dict, **polygon_dict}
         return dict_return_value
 
-    def is_in_mask(self, mask: np.ndarray, min_overlap: float = 0.9):
+    def is_in_mask(self, mask_json: dict, min_overlap: float = 0.9):
         """Check if a polygon is within a binary mask.
 
         Args:
-            mask (np.ndarray): Binary mask in [0, 1].
-            min_overlap (float, optional): Minimum overlap required between the polygon and the mask, expressed as a value between 0 and 1. Defaults to 0.9.
+            mask_json (dict): A dict mask in cytosmart dict format.
+            min_overlap (float, optional): Minimum overlap required between the polygon and the mask, expressed as a value between 0 and 1.
+            Defaults to 0.9.
 
         Returns:
             bool: True if the polygon is within the mask and meets the required overlap, False otherwise.
@@ -151,19 +154,10 @@ class Polygon(Annotation):
         if len(self.points) < 1:
             return False
 
-        poly_mask = np.zeros_like(mask)
-        # Convert the polygon to a numpy array of shape (N, 2)
-        points = np.array([[point.x, point.y] for point in self.points], dtype=np.int32)
-        poly_mask = cv2.fillPoly(poly_mask, [points], color=1)
+        json_points = [{"x": point.x, "y": point.y} for point in self.points]
+        json_object = {"type": "polygon", "points": json_points}
 
-        # Calculate the intersection of the annotation and the mask
-        intersection = np.logical_and(mask, poly_mask)
-        # Calculate the overlap ratio between the polygon and the mask
-        overlap_ratio = intersection.sum() / poly_mask.sum()
-
-        del poly_mask
-        del intersection
-        gc.collect()
+        overlap_ratio = overlap_object(json_object, mask_json)
 
         # Check if the polygon is within the masked area with at least the specified overlap
         return overlap_ratio >= min_overlap

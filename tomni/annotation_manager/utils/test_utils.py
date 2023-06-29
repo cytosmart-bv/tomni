@@ -2,7 +2,7 @@ from unittest import TestCase
 
 import numpy as np
 
-from tomni.annotation_manager.annotations.point.main import Point
+from tomni.annotation_manager.annotations.point import Point
 
 from .main import parse_points_to_contour
 

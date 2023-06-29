@@ -1,12 +1,13 @@
 import gc
 from dataclasses import asdict
-from typing import List, Tuple
+from typing import List, Tuple, Union
 
 import cv2
 import numpy as np
 
-from ..annotation import Annotation
-from ..point import Point
+from tomni.annotation_manager.annotations.annotation import Annotation
+from tomni.annotation_manager.annotations.point import Point
+from tomni.annotation_manager.utils import overlap_object
 
 
 class Ellipse(Annotation):
@@ -19,7 +20,7 @@ class Ellipse(Annotation):
         label: str = "",
         children: List[Annotation] = [],
         parents: List[Annotation] = [],
-        radius_y: float = None,
+        radius_y: Union[float, None] = None,
     ):
         """Initializes a Ellipse object.
 
@@ -46,10 +47,10 @@ class Ellipse(Annotation):
             self.radius_y: float = radius_x
         self.rotation: float = rotation
 
-        self._circularity: float = None
-        self._area: float = None
-        self._perimeter: float = None
-        self._aspect_ratio: float = None
+        self._circularity: Union[float, None] = None
+        self._area: Union[float, None] = None
+        self._perimeter: Union[float, None] = None
+        self._aspect_ratio: Union[float, None] = None
 
     @property
     def label(self):
@@ -183,37 +184,26 @@ class Ellipse(Annotation):
             thickness=-1,
         )
 
-    def is_in_mask(self, mask: np.ndarray, min_overlap: float = 0.9) -> bool:
+    def is_in_mask(self, mask_json: dict, min_overlap: float = 0.9) -> bool:
         """Check if an ellipse is within a binary mask.
 
         Args:
-            mask (np.ndarray): Binary mask in [0, 1].
+            mask_json (dict): A dict mask in cytosmart dict format.
             min_overlap (float, optional): Minimum overlap required between the ellipse and the mask, expressed as a value between 0 and 1. Defaults to 0.9.
 
         Returns:
             bool: True if the ellipse is within the mask and meets the required overlap, False otherwise.
         """
-        ellipse_mask = np.zeros_like(mask)
 
-        cv2.ellipse(
-            ellipse_mask,
-            center=(self.center.x, self.center.y),
-            axes=(self.radius_x, self.radius_y),
-            angle=self.rotation,
-            startAngle=0,
-            endAngle=360,
-            color=1,
-            thickness=-1,
-        )
+        json_object = {
+            "type": "ellipse",
+            "center": {"x": self.center.x, "y": self.center.y},
+            "radiusX": self.radius_x,
+            "radiusY": self.radius_y,
+            "angleOfRotation": self.rotation,
+        }
 
-        # Calculate the intersection of the annotation and the mask
-        intersection = np.logical_and(mask, ellipse_mask)
-        # Calculate the overlap ratio between the polygon and the mask
-        overlap_ratio = intersection.sum() / ellipse_mask.sum()
-
-        del ellipse_mask
-        del intersection
-        gc.collect()
+        overlap_ratio = overlap_object(json_object, mask_json)
 
         # Check if the polygon is within the masked area with at least the specified overlap
         return overlap_ratio >= min_overlap
