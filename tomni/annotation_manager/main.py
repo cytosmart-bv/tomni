@@ -179,7 +179,7 @@ class AnnotationManager(object):
         else:
             raise StopIteration
 
-    def to_dict(self, decimals: int = 2, mask_json: Union[dict, None] = None, min_overlap: float = 0.9) -> List[Dict]:
+    def to_dict(self, decimals: int = 2, mask_json: Union[dict, None] = None, min_overlap: float = 0.9, **kwargs) -> List[Dict]:
         """Transform AM object to a collection of our format.
 
         Args:
@@ -195,9 +195,9 @@ class AnnotationManager(object):
             filtered_annotations = self._annotations.copy()
             filtered_annotations = [annotation for annotation in filtered_annotations if annotation.is_in_mask(mask_json, min_overlap)]
 
-            return [annotation.to_dict(decimals=decimals) for annotation in filtered_annotations]
+            return [annotation.to_dict(decimals=decimals, **kwargs) for annotation in filtered_annotations]
 
-        return [annotation.to_dict(decimals=decimals) for annotation in self._annotations]
+        return [annotation.to_dict(decimals=decimals, **kwargs) for annotation in self._annotations]
 
     def to_contours(self) -> List[np.ndarray]:
         """Transform AM object to a collection of cv2 contours.

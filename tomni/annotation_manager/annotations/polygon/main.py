@@ -8,7 +8,9 @@ import numpy as np
 
 from tomni.annotation_manager.annotations.annotation import Annotation
 from tomni.annotation_manager.annotations.point import Point
-from tomni.annotation_manager.utils import are_lines_equal, overlap_object, parse_points_to_contour, simplify_line
+from tomni.annotation_manager.utils import are_lines_equal, parse_points_to_contour, simplify_line, overlap_object
+
+from ...utils import compress_polygon_points, parse_points_to_contour
 
 
 class Polygon(Annotation):
@@ -116,8 +118,12 @@ class Polygon(Annotation):
 
         return self._roundness
 
-    def to_dict(self, decimals: int = 2) -> dict:
-        polygon_dict = {"type": "polygon", "points": [asdict(point) for point in self.points]}
+    def to_dict(self, decimals: int = 2, **kwargs) -> dict:
+        points = self._points.copy()
+        if kwargs.get("do_compress", False):
+            points = compress_polygon_points(points, kwargs.get("epsilon", 3))
+
+        polygon_dict = {"type": "polygon", "points": [asdict(point) for point in points]}
 
         if self._has_enough_points:
             # Feature property is None if polygon has not enough points which results the round() to fail on a NoneType.

@@ -7,7 +7,7 @@ import numpy as np
 
 from tomni.annotation_manager.annotations.annotation import Annotation
 from tomni.annotation_manager.annotations.point import Point
-from tomni.annotation_manager.utils.overlap_object import overlap_object
+from tomni.annotation_manager.utils import overlap_object
 
 
 class Ellipse(Annotation):
@@ -146,7 +146,7 @@ class Ellipse(Annotation):
 
         return self._aspect_ratio
 
-    def to_dict(self, decimals: int = 2) -> dict:
+    def to_dict(self, decimals: int = 2, **kwargs) -> dict:
         dict_ellipse = {
             "type": "ellipse",
             "center": asdict(self.center),

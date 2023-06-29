@@ -10,20 +10,15 @@ class Annotation(ABC):
         self._parents: List[Annotation] = parents
 
     @abstractmethod
-    def to_dict(self, decimals: int = 2) -> dict:
+    def to_dict(self, decimals: int = 2, **kwargs) -> dict:
         """Creates a dictionary in CDF of annotation.
         Args:
             decimals (int, optional): The number of decimals to use when rounding. Defaults to 2.
 
         Returns:
             dict: CytoSmart Data Format dict.
-        """        
-        return {
-            "id": self._id,
-            "label": self._label,
-            "children": self._children,
-            "parents": self._parents,
-        }
+        """
+        return {"id": self._id, "label": self._label, "children": self._children, "parents": self._parents}
 
     @property
     @abstractmethod
