@@ -42,13 +42,16 @@ class AnnotationManager(object):
                     rotation=d["angleOfRotation"],
                 )
             elif d[TYPE_KEY] == "polygon":
-                annotation = Polygon(
-                    label=d.get(LABEL_KEY, None),
-                    id=d.get(ID_KEY, str(uuid.uuid4())),
-                    children=d.get(CHILDREN_KEY, []),
-                    parents=d.get(PARENTS_KEY, []),
-                    points=[Point(x=p["x"], y=p["y"]) for p in d["points"]],
-                )
+                if len(d["points"]) < 3:
+                    continue
+                else:
+                    annotation = Polygon(
+                        label=d.get(LABEL_KEY, None),
+                        id=d.get(ID_KEY, str(uuid.uuid4())),
+                        children=d.get(CHILDREN_KEY, []),
+                        parents=d.get(PARENTS_KEY, []),
+                        points=[Point(x=p["x"], y=p["y"]) for p in d["points"]],
+                    )
             else:
                 raise ValueError(f"CDF cannot be created. Dict with id {d.get('id', None)} misses type-key with value ellipse or polygon.")
             annotations.append(annotation)
