@@ -24,8 +24,6 @@ class Polygon(Annotation):
             children (List[Annotation]): Tracking annotations. Refers to t+1.
             parents (List[Annotation]): Tracking annotations. Refers to t-1.
         """
-        MIN_NR_POINTS = 3
-
         super().__init__(id, label, children, parents)
         self._points: List[Point] = simplify_line(points)
         self._contour: np.ndarray = parse_points_to_contour(points)
@@ -173,13 +171,9 @@ class Polygon(Annotation):
         return mask
 
     def _calculate_area(self) -> None:
-        if self._has_enough_points:
-            self._area = cv2.contourArea(self._contour)
+        self._area = cv2.contourArea(self._contour)
 
     def _calculate_circularity(self):
-        if not self._has_enough_points:
-            return
-
         if not self._area:
             self._calculate_area()
 
@@ -189,9 +183,6 @@ class Polygon(Annotation):
         self._circularity = (4 * np.pi * self._area) / (self._perimeter**2)
 
     def _calculate_convex_hull_area(self) -> None:
-        if not self._has_enough_points:
-            return
-
         convex_hull = cv2.convexHull(self._contour)
         self._convex_hull_area = cv2.contourArea(convex_hull)
 
@@ -199,9 +190,6 @@ class Polygon(Annotation):
         self._perimeter = cv2.arcLength(self._contour, True)
 
     def _calculate_roundness(self) -> None:
-        if not self._has_enough_points:
-            return
-
         if not self._area:
             self._calculate_area()
 
