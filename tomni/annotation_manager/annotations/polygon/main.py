@@ -14,7 +14,15 @@ from ...utils import compress_polygon_points, parse_points_to_contour
 
 
 class Polygon(Annotation):
-    def __init__(self, points: List[Point], id: str, label: str = "", children: List[Annotation] = [], parents: List[Annotation] = []):
+    def __init__(
+        self,
+        points: List[Point],
+        id: str,
+        label: str = "",
+        children: List[Annotation] = [],
+        parents: List[Annotation] = [],
+        accuracy: Union[float, None] = None,
+    ):
         """Initializes a Polygon object.
 
         Args:
@@ -23,10 +31,11 @@ class Polygon(Annotation):
             label (str): Class label of annotation.
             children (List[Annotation]): Tracking annotations. Refers to t+1.
             parents (List[Annotation]): Tracking annotations. Refers to t-1.
+            accuracy (Union[float, None], optional): The confidence of the model's prediction. Defaults to None.
         """
         MIN_NR_POINTS = 3
 
-        super().__init__(id, label, children, parents)
+        super().__init__(id, label, children, parents, accuracy)
         self._points: List[Point] = simplify_line(points)
         self._contour: np.ndarray = parse_points_to_contour(points)
 
