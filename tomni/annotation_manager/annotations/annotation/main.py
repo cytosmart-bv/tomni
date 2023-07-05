@@ -1,14 +1,14 @@
 from abc import ABC, abstractmethod
-from typing import List, Union
+from typing import List
 
 
 class Annotation(ABC):
-    def __init__(self, id: str, label: str, children: List, parents: List, accuracy: Union[float, None]) -> None:
+    def __init__(self, id: str, label: str, children: List, parents: List, accuracy: float) -> None:
         self._id: str = id
         self._label: str = label
         self._children: List[Annotation] = children
         self._parents: List[Annotation] = parents
-        self._accuracy: Union[float, None] = accuracy
+        self._accuracy: float = accuracy
 
     @abstractmethod
     def to_dict(self, decimals: int = 2, **kwargs) -> dict:

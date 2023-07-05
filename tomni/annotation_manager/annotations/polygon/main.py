@@ -1,7 +1,7 @@
 import gc
 import warnings
 from dataclasses import asdict
-from typing import List, Tuple, Union
+from typing import List, Tuple
 
 import cv2
 import numpy as np
@@ -15,13 +15,7 @@ from ...utils import compress_polygon_points, parse_points_to_contour
 
 class Polygon(Annotation):
     def __init__(
-        self,
-        points: List[Point],
-        id: str,
-        label: str = "",
-        children: List[Annotation] = [],
-        parents: List[Annotation] = [],
-        accuracy: Union[float, None] = None,
+        self, points: List[Point], id: str, label: str = "", children: List[Annotation] = [], parents: List[Annotation] = [], accuracy: float = 1
     ):
         """Initializes a Polygon object.
 
@@ -31,7 +25,7 @@ class Polygon(Annotation):
             label (str): Class label of annotation.
             children (List[Annotation]): Tracking annotations. Refers to t+1.
             parents (List[Annotation]): Tracking annotations. Refers to t-1.
-            accuracy (Union[float, None], optional): The confidence of the model's prediction. Defaults to None.
+            accuracy (float, optional): The confidence of the model's prediction. Defaults to 1.
         """
         MIN_NR_POINTS = 3
 
@@ -49,6 +43,16 @@ class Polygon(Annotation):
         self._convex_hull_area = None
         self._perimeter = None
         self._roundness = None
+
+    @property
+    def accuracy(self) -> float:
+        """Accuracy of the model's polygon prediction.
+
+        Returns:
+            float: Polygon´s accuracy.
+        """
+
+        return self._accuracy
 
     @property
     def area(self) -> float:

@@ -40,7 +40,7 @@ class AnnotationManager(object):
                     radius_y=d.get("radiusY", None),
                     center=Point(x=d[CENTER_KEY]["x"], y=d[CENTER_KEY]["y"]),
                     rotation=d["angleOfRotation"],
-                    accuracy=d.get("accuracy", None),
+                    accuracy=d.get("accuracy", 1),
                 )
             elif d[TYPE_KEY] == "polygon":
                 annotation = Polygon(
@@ -49,7 +49,7 @@ class AnnotationManager(object):
                     children=d.get(CHILDREN_KEY, []),
                     parents=d.get(PARENTS_KEY, []),
                     points=[Point(x=p["x"], y=p["y"]) for p in d["points"]],
-                    accuracy=d.get("accuracy", None),
+                    accuracy=d.get("accuracy", 1),
                 )
             else:
                 raise ValueError(f"CDF cannot be created. Dict with id {d.get('id', None)} misses type-key with value ellipse or polygon.")
