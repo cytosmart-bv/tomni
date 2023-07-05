@@ -147,6 +147,7 @@ class TestAnnotationManager(TestCase):
                 "roundness": 0.56,
                 "type": "polygon",
                 "points": [{"x": 1, "y": 3}, {"x": 2, "y": 3}, {"x": 3, "y": 5}, {"x": 5, "y": 3}, {"x": 3, "y": 1}],
+                "accuracy": 1,
             },
             {
                 "id": "132132132123132",
@@ -160,6 +161,7 @@ class TestAnnotationManager(TestCase):
                 "roundness": 0.56,
                 "type": "polygon",
                 "points": [{"x": 10, "y": 30}, {"x": 20, "y": 30}, {"x": 30, "y": 50}, {"x": 50, "y": 30}, {"x": 30, "y": 10}],
+                "accuracy": 1,
             },
             {
                 "id": "132132132123132",
@@ -173,6 +175,7 @@ class TestAnnotationManager(TestCase):
                 "roundness": 0.56,
                 "type": "polygon",
                 "points": [{"x": 100, "y": 300}, {"x": 200, "y": 300}, {"x": 300, "y": 500}, {"x": 500, "y": 300}, {"x": 300, "y": 100}],
+                "accuracy": 1,
             },
         ]
         actual = self.manager.to_dict(mask_json=mask)
@@ -195,6 +198,7 @@ class TestAnnotationManager(TestCase):
                 "roundness": 0.56,
                 "type": "polygon",
                 "points": [{"x": 1, "y": 3}, {"x": 2, "y": 3}, {"x": 3, "y": 5}, {"x": 5, "y": 3}, {"x": 3, "y": 1}],
+                "accuracy": 1,
             },
             {
                 "id": "132132132123132",
@@ -208,6 +212,7 @@ class TestAnnotationManager(TestCase):
                 "roundness": 0.56,
                 "type": "polygon",
                 "points": [{"x": 10, "y": 30}, {"x": 20, "y": 30}, {"x": 30, "y": 50}, {"x": 50, "y": 30}, {"x": 30, "y": 10}],
+                "accuracy": 1,
             },
         ]
 

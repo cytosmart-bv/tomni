@@ -101,6 +101,7 @@ class TestEllipse(TestCase):
             "radiusY": 0.0,
             "angleOfRotation": 0,
             "type": "ellipse",
+            "accuracy": 1,
         }
         actual = self.zero_ellipse.to_dict()
 
@@ -122,6 +123,7 @@ class TestEllipse(TestCase):
             "radiusY": 1,
             "angleOfRotation": 0,
             "type": "ellipse",
+            "accuracy": 1,
         }
         actual = self.circle.to_dict()
         self.assertDictEqual(expected, actual)
@@ -141,6 +143,7 @@ class TestEllipse(TestCase):
             "radiusY": 3,
             "angleOfRotation": 0,
             "type": "ellipse",
+            "accuracy": 1,
         }
         actual = self.oval.to_dict()
 

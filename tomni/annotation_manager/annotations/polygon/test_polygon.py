@@ -160,6 +160,7 @@ class TestPolygon(TestCase):
             "perimeter": 13.66,
             "points": [asdict(point) for point in self.circular_points_simplified],
             "roundness": 0.89,
+            "accuracy": 1,
         }
         actual = self.circular_polygon.to_dict()
 
@@ -178,6 +179,7 @@ class TestPolygon(TestCase):
             "perimeter": 16.0,
             "points": [asdict(point) for point in self.rectangle_points_simplified],
             "roundness": 0.64,
+            "accuracy": 1,
         }
         actual = self.rectangle_polygon.to_dict()
 
@@ -199,6 +201,7 @@ class TestPolygon(TestCase):
             "perimeter": 11.72,
             "points": [asdict(point) for point in self.star_shaped_points_simplified],
             "roundness": 0.56,
+            "accuracy": 1,
         }
         actual = self.star_shaped_polygon.to_dict()
 
@@ -217,6 +220,7 @@ class TestPolygon(TestCase):
             "perimeter": 12.94,
             "points": [asdict(point) for point in self.triangle_points],
             "roundness": 0.41,
+            "accuracy": 1,
         }
         actual = self.triangle_polygon.to_dict()
         print(expected)
