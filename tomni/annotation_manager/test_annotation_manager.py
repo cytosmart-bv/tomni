@@ -40,6 +40,7 @@ class TestAnnotationManager(TestCase):
                     children=[],
                     parents=[],
                     label="star",
+                    accuracy=0.5,
                 ),
                 Polygon(
                     points=[
@@ -54,6 +55,7 @@ class TestAnnotationManager(TestCase):
                     children=[],
                     parents=[],
                     label="star",
+                    accuracy=0,
                 ),
             ]
         )
@@ -64,6 +66,20 @@ class TestAnnotationManager(TestCase):
     def test_filter_single(self):
         actual = self.manager.filter(feature="area", min_val=500, max_val=5000000)
         expected_n_items = 2
+
+        self.assertIsInstance(actual, list)
+        self.assertEqual(len(actual), expected_n_items)
+
+    def test_filter_accuracy_big_range(self):
+        actual = self.manager.filter(feature="accuracy", min_val=0, max_val=5)
+        expected_n_items = 5
+
+        self.assertIsInstance(actual, list)
+        self.assertEqual(len(actual), expected_n_items)
+
+    def test_filter_accuracy_tight_range(self):
+        actual = self.manager.filter(feature="accuracy", min_val=0.8, max_val=1)
+        expected_n_items = 3
 
         self.assertIsInstance(actual, list)
         self.assertEqual(len(actual), expected_n_items)
