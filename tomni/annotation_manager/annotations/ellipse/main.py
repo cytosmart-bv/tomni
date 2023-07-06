@@ -21,6 +21,7 @@ class Ellipse(Annotation):
         children: List[Annotation] = [],
         parents: List[Annotation] = [],
         radius_y: Union[float, None] = None,
+        feature_multiplier: int = 1,
     ):
         """Initializes a Ellipse object.
 
@@ -51,6 +52,7 @@ class Ellipse(Annotation):
         self._area: Union[float, None] = None
         self._perimeter: Union[float, None] = None
         self._aspect_ratio: Union[float, None] = None
+        self.feature_multiplier = feature_multiplier
 
     @property
     def label(self):
@@ -149,14 +151,14 @@ class Ellipse(Annotation):
     def to_dict(self, decimals: int = 2, **kwargs) -> dict:
         dict_ellipse = {
             "type": "ellipse",
-            "center": asdict(self.center),
-            "radiusX": self.radius_x,
-            "radiusY": self.radius_y,
+            "center": {key: value * self.feature_multiplier for key, value in asdict(self.center).items()},
+            "radiusX": self.radius_x * self.feature_multiplier,
+            "radiusY": self.radius_y * self.feature_multiplier,
             "angleOfRotation": self.rotation,
             "aspect_ratio": round(self.aspect_ratio, decimals),
-            "area": round(self.area, decimals),
+            "area": (round(self.area, decimals) * self.feature_multiplier**2),
             "circularity": round(self.circularity, decimals),
-            "perimeter": round(self.perimeter, decimals),
+            "perimeter": round(self.perimeter, decimals) * self.feature_multiplier,
         }
 
         super_dict = super().to_dict(decimals=2)

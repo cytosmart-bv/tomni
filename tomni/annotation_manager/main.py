@@ -20,7 +20,7 @@ class AnnotationManager(object):
         self._annotations = annotations
 
     @classmethod
-    def from_dicts(cls, dicts: List[dict]):
+    def from_dicts(cls, dicts: List[dict], feature_multiplier: int = 1):
         TYPE_KEY = "type"
         LABEL_KEY = "label"
         CHILDREN_KEY = "children"
@@ -40,6 +40,7 @@ class AnnotationManager(object):
                     radius_y=d.get("radiusY", None),
                     center=Point(x=d[CENTER_KEY]["x"], y=d[CENTER_KEY]["y"]),
                     rotation=d["angleOfRotation"],
+                    feature_multiplier=feature_multiplier,
                 )
             elif d[TYPE_KEY] == "polygon":
                 annotation = Polygon(
@@ -48,6 +49,7 @@ class AnnotationManager(object):
                     children=d.get(CHILDREN_KEY, []),
                     parents=d.get(PARENTS_KEY, []),
                     points=[Point(x=p["x"], y=p["y"]) for p in d["points"]],
+                    feature_multiplier=feature_multiplier,
                 )
             else:
                 raise ValueError(f"CDF cannot be created. Dict with id {d.get('id', None)} misses type-key with value ellipse or polygon.")
@@ -56,7 +58,7 @@ class AnnotationManager(object):
         return cls(annotations)
 
     @classmethod
-    def from_contours(cls, contours: List[np.ndarray]):
+    def from_contours(cls, contours: List[np.ndarray], feature_multiplier: int = 1):
         """Initializes a AnnotationManager object from cv2 contours.
         Contours' shape must be [N, 1, 2] with dtype of np.int32.
 
@@ -72,12 +74,12 @@ class AnnotationManager(object):
             for i in range(contour.shape[0]):
                 points.append(Point(x=int(contour[i][0]), y=int(contour[i][1])))
 
-            annotations.append(Polygon(label="", id=str(uuid.uuid4()), children=[], parents=[], points=points))
+            annotations.append(Polygon(label="", id=str(uuid.uuid4()), children=[], parents=[], points=points, feature_multiplier=feature_multiplier))
 
         return cls(annotations)
 
     @classmethod
-    def from_binary_mask(cls, mask: np.ndarray, connectivity: int = 8):
+    def from_binary_mask(cls, mask: np.ndarray, connectivity: int = 8, feature_multiplier: int = 1):
         """Initializes a AnnotationManager object from a binary mask.
         Binary mask can contain either 0 and 1 or 0 and 255.
 
@@ -115,10 +117,10 @@ class AnnotationManager(object):
 
         edged_mask = edges * labeled_mask
 
-        return AnnotationManager.from_labeled_mask(edged_mask)
+        return AnnotationManager.from_labeled_mask(edged_mask, feature_multiplier=feature_multiplier)
 
     @classmethod
-    def from_labeled_mask(cls, mask: np.ndarray, include_inner_contours: bool = False):
+    def from_labeled_mask(cls, mask: np.ndarray, include_inner_contours: bool = False, feature_multiplier: int = 1):
         """Initializes a AnnotationManager object from a labeled mask.
         A labeled mask contains components indicated by the same pixel values (see example below).
 
@@ -136,7 +138,7 @@ class AnnotationManager(object):
         """
         points = labels2listsOfPoints(mask)
         contours = [positions2contour(point, return_inner_contours=include_inner_contours) for point in points if len(point) > 0]
-        return AnnotationManager.from_contours(contours)
+        return AnnotationManager.from_contours(contours, feature_multiplier=feature_multiplier)
 
     @classmethod
     def from_darwin(cls, dicts: List[dict]):

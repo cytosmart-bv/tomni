@@ -1,7 +1,7 @@
 import gc
 import warnings
 from dataclasses import asdict
-from typing import List, Tuple, Union
+from typing import List, Tuple
 
 import cv2
 import numpy as np
@@ -14,7 +14,15 @@ from ...utils import compress_polygon_points, parse_points_to_contour
 
 
 class Polygon(Annotation):
-    def __init__(self, points: List[Point], id: str, label: str = "", children: List[Annotation] = [], parents: List[Annotation] = []):
+    def __init__(
+        self,
+        points: List[Point],
+        id: str,
+        label: str = "",
+        children: List[Annotation] = [],
+        parents: List[Annotation] = [],
+        feature_multiplier: int = 1,
+    ):
         """Initializes a Polygon object.
 
         Args:
