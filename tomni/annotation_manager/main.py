@@ -9,7 +9,7 @@ from tomni.transformers import labels2listsOfPoints, positions2contour
 from .annotations import Annotation, Ellipse, Point, Polygon
 from .utils import parse_points_to_contour
 
-MIN_NR_POINTS = 3
+MIN_NR_POINTS = 5
 
 
 class AnnotationManager(object):
