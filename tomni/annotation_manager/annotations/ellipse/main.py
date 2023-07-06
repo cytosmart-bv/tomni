@@ -21,6 +21,7 @@ class Ellipse(Annotation):
         children: List[Annotation] = [],
         parents: List[Annotation] = [],
         radius_y: Union[float, None] = None,
+        features: List[str] = None,
     ):
         """Initializes a Ellipse object.
 
@@ -37,6 +38,8 @@ class Ellipse(Annotation):
             label (str): Class label of annotation.
             children (List[Annotation]): Tracking annotations. Refers to t+1.
             parents (List[Annotation]): Tracking annotations. Refers to t-1.
+            features (List[str]): list of features that the user wants returned.
+                                  Defaults to None
         """
         super().__init__(id, label, children, parents)
         self._center: Point = center
@@ -47,10 +50,36 @@ class Ellipse(Annotation):
             self.radius_y: float = radius_x
         self.rotation: float = rotation
 
-        self._circularity: Union[float, None] = None
-        self._area: Union[float, None] = None
-        self._perimeter: Union[float, None] = None
-        self._aspect_ratio: Union[float, None] = None
+        # featues
+        all_possible_features = [
+            "area",
+            "circularity",
+            "aspect_ratio",
+            "perimeter",
+        ]
+
+        # if features is None all features are returned
+        if features == None:
+            self._features = all_possible_features
+        else:
+            if features:
+                # check if the input features exist
+                check_feature_possibility = all(
+                    item in all_possible_features for item in features
+                )
+                if check_feature_possibility == False:
+                    raise ValueError(
+                        "One or more features do not exist. Check the spelling of the input features or if that feature is implemented."
+                    )
+
+            self._features = features
+
+        # initalize the features
+        # (otherwise when circularity is asked without perimeter, it does not calculate circularity because perimeter was not initialized)
+        self._circularity = None
+        self._area = None
+        self._perimeter = None
+        self._aspect_ratio = None
 
     @property
     def label(self):
@@ -105,10 +134,10 @@ class Ellipse(Annotation):
         Returns:
             float: Ellipse's circularity.
         """
-        if not self._circularity:
+        if "circularity" in self._features:
             self._calculate_circularity()
-
-        return self._circularity
+            return self._circularity
+        return
 
     @property
     def area(self) -> float:
@@ -117,10 +146,10 @@ class Ellipse(Annotation):
         Returns:
             float: Ellipse's area.
         """
-        if not self._area:
+        if "area" in self._features:
             self._calculate_area()
-
-        return self._area
+            return self._area
+        return
 
     @property
     def perimeter(self) -> float:
@@ -129,10 +158,10 @@ class Ellipse(Annotation):
         Returns:
             float: Ellipse's perimeter.
         """
-        if not self._perimeter:
+        if "perimeter" in self._features:
             self._calculate_perimeter()
-
-        return self._perimeter
+            return self._perimeter
+        return
 
     @property
     def aspect_ratio(self) -> float:
@@ -141,10 +170,10 @@ class Ellipse(Annotation):
         Returns:
             float: Ellipse's aspect ratio.
         """
-        if not self._aspect_ratio:
+        if "aspect_ratio" in self._features:
             self._calculate_aspect_ratio()
-
-        return self._aspect_ratio
+            return self._aspect_ratio
+        return
 
     def to_dict(self, decimals: int = 2, **kwargs) -> dict:
         dict_ellipse = {
@@ -153,11 +182,16 @@ class Ellipse(Annotation):
             "radiusX": self.radius_x,
             "radiusY": self.radius_y,
             "angleOfRotation": self.rotation,
-            "aspect_ratio": round(self.aspect_ratio, decimals),
-            "area": round(self.area, decimals),
-            "circularity": round(self.circularity, decimals),
-            "perimeter": round(self.perimeter, decimals),
         }
+
+        if self._features:
+            aspect_ratio = self.aspect_ratio
+            area = self.area
+            circularity = self.circularity
+            perimeter = self.perimeter
+
+            for feature in self._features:
+                dict_ellipse[feature] = round(eval(feature), decimals)
 
         super_dict = super().to_dict(decimals=2)
         dict_return_value = {**super_dict, **dict_ellipse}
@@ -209,10 +243,18 @@ class Ellipse(Annotation):
         return overlap_ratio >= min_overlap
 
     def _calculate_circularity(self) -> None:
-        self._circularity = 4 * np.pi * self.area / self.perimeter**2
+        if not self._area:
+            self._calculate_area()
+
+        if not self._perimeter:
+            self._calculate_perimeter()
+
+        self._circularity = 4 * np.pi * self._area / self._perimeter**2
 
     def _calculate_perimeter(self) -> None:
-        self._perimeter = 2 * np.pi * np.sqrt((self._radius_x**2 + self._radius_y**2) / 2)
+        self._perimeter = (
+            2 * np.pi * np.sqrt((self._radius_x**2 + self._radius_y**2) / 2)
+        )
 
     def _calculate_area(self) -> None:
         self._area = np.pi * self._radius_x * self._radius_y

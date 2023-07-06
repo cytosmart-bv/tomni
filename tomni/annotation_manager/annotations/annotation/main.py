@@ -18,7 +18,12 @@ class Annotation(ABC):
         Returns:
             dict: CytoSmart Data Format dict.
         """
-        return {"id": self._id, "label": self._label, "children": self._children, "parents": self._parents}
+        return {
+            "id": self._id,
+            "label": self._label,
+            "children": self._children,
+            "parents": self._parents,
+        }
 
     @property
     @abstractmethod
