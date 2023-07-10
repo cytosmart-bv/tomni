@@ -33,7 +33,7 @@ class Polygon(Annotation):
             features (Union[List[str],None]): list of features that the user wants returned.
                                   Defaults to None
         """
-        MIN_NR_POINTS = 5
+        MIN_NR_POINTS = 3
 
         super().__init__(id, label, children, parents, accuracy)
         self._points: List[Point] = simplify_line(points)
