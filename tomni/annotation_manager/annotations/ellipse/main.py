@@ -21,7 +21,7 @@ class Ellipse(Annotation):
         children: List[Annotation] = [],
         parents: List[Annotation] = [],
         radius_y: Union[float, None] = None,
-        features: List[str] = None,
+        features: Union[List[str], None] = None,
     ):
         """Initializes a Ellipse object.
 
@@ -38,7 +38,7 @@ class Ellipse(Annotation):
             label (str): Class label of annotation.
             children (List[Annotation]): Tracking annotations. Refers to t+1.
             parents (List[Annotation]): Tracking annotations. Refers to t-1.
-            features (List[str]): list of features that the user wants returned.
+            features (Union[List[str], None]): list of features that the user wants returned.
                                   Defaults to None
         """
         super().__init__(id, label, children, parents)
@@ -51,7 +51,7 @@ class Ellipse(Annotation):
         self.rotation: float = rotation
 
         # featues
-        all_possible_features = [
+        all_features = [
             "area",
             "circularity",
             "aspect_ratio",
@@ -59,23 +59,17 @@ class Ellipse(Annotation):
         ]
 
         # if features is None all features are returned
-        if features == None:
-            self._features = all_possible_features
+        if features is None:
+            self._features = all_features
         else:
-            if features:
-                # check if the input features exist
-                check_feature_possibility = all(
-                    item in all_possible_features for item in features
+            missing_features = set(features) - set(all_features)
+            if missing_features:
+                raise ValueError(
+                    f"The following features are not compatible with the Annotation Manager: {', '.join(missing_features)}"
                 )
-                if check_feature_possibility == False:
-                    raise ValueError(
-                        "One or more features do not exist. Check the spelling of the input features or if that feature is implemented."
-                    )
 
             self._features = features
-
-        # initalize the features
-        # (otherwise when circularity is asked without perimeter, it does not calculate circularity because perimeter was not initialized)
+            
         self._circularity = None
         self._area = None
         self._perimeter = None
@@ -185,13 +179,8 @@ class Ellipse(Annotation):
         }
 
         if self._features:
-            aspect_ratio = self.aspect_ratio
-            area = self.area
-            circularity = self.circularity
-            perimeter = self.perimeter
-
             for feature in self._features:
-                dict_ellipse[feature] = round(eval(feature), decimals)
+                dict_ellipse[feature] = round(getattr(self, feature), decimals)
 
         super_dict = super().to_dict(decimals=2)
         dict_return_value = {**super_dict, **dict_ellipse}

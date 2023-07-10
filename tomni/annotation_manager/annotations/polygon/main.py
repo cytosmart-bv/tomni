@@ -25,7 +25,7 @@ class Polygon(Annotation):
         label: str = "",
         children: List[Annotation] = [],
         parents: List[Annotation] = [],
-        features: List[str] = None,
+        features: Union[List[str], None] = None,
     ):
         """Initializes a Polygon object.
 
@@ -35,7 +35,7 @@ class Polygon(Annotation):
             label (str): Class label of annotation.
             children (List[Annotation]): Tracking annotations. Refers to t+1.
             parents (List[Annotation]): Tracking annotations. Refers to t-1.
-            features (List[str]): list of features that the user wants returned.
+            features (Union[List[str],None]): list of features that the user wants returned.
                                   Defaults to None
         """
         MIN_NR_POINTS = 3
@@ -51,7 +51,7 @@ class Polygon(Annotation):
             )
 
         # featues
-        all_possible_features = [
+        all_features = [
             "area",
             "circularity",
             "convex_hull_area",
@@ -60,23 +60,17 @@ class Polygon(Annotation):
         ]
 
         # if features is None all features are returned
-        if features == None:
-            self._features = all_possible_features
+        if features is None:
+            self._features = all_features
         else:
-            if features:
-                # check if the input features exist
-                check_feature_possibility = all(
-                    item in all_possible_features for item in features
+            missing_features = set(features) - set(all_features)
+            if missing_features:
+                raise ValueError(
+                    f"The following features are not compatible with the Annotation Manager: {', '.join(missing_features)}"
                 )
-                if check_feature_possibility == False:
-                    raise ValueError(
-                        "One or more features do not exist. Check the spelling of the input features or if that feature is implemented."
-                    )
 
             self._features = features
 
-        # initalize the features
-        # (otherwise when circularity is asked without perimeter, it does not calculate circularity because perimeter was not initialized)
         self._area = None
         self._circularity = None
         self._convex_hull_area = None
@@ -180,19 +174,10 @@ class Polygon(Annotation):
         if self._features:
             # Feature property is None if polygon has not enough points which results the round() to fail on a NoneType.
             if self._has_enough_points:
-                # these statements calculate the features if they are not None. If the feature is None nothing is calculated.
-                # it looks like these arent used but the line: polygon_features[feature] = round(eval(feature), decimals)
-                # uses it when the corresponding name is included in the feature list
-                area = self.area
-                convex_hull_area = self.convex_hull_area
-                perimeter = self.perimeter
-                circularity = self.circularity
-                roundness = self.roundness
-
                 # when the corresponding name occurs in the feature list, it is added to the dict polygon features
                 polygon_features = {}
                 for feature in self._features:
-                    polygon_features[feature] = round(eval(feature), decimals)
+                    polygon_features[feature] = round(getattr(self, feature), decimals)
 
                 polygon_dict = {**polygon_features, **polygon_dict}
 
