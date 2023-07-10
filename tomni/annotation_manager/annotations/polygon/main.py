@@ -1,21 +1,25 @@
-import gc
 import warnings
 from dataclasses import asdict
-from typing import List, Tuple
+from typing import List, Tuple, Union
 
 import cv2
 import numpy as np
 
 from tomni.annotation_manager.annotations.annotation import Annotation
 from tomni.annotation_manager.annotations.point import Point
-from tomni.annotation_manager.utils import are_lines_equal, parse_points_to_contour, simplify_line, overlap_object
+from tomni.annotation_manager.utils import (
+    are_lines_equal,
+    parse_points_to_contour,
+    simplify_line,
+    overlap_object,
+)
 
 from ...utils import compress_polygon_points, parse_points_to_contour
 
 
 class Polygon(Annotation):
     def __init__(
-        self, points: List[Point], id: str, label: str = "", children: List[Annotation] = [], parents: List[Annotation] = [], accuracy: float = 1
+        self, points: List[Point], id: str, label: str = "", children: List[Annotation] = [], parents: List[Annotation] = [], accuracy: float = 1, features: Union[List[str], None] = None,
     ):
         """Initializes a Polygon object.
 
@@ -26,8 +30,10 @@ class Polygon(Annotation):
             children (List[Annotation]): Tracking annotations. Refers to t+1.
             parents (List[Annotation]): Tracking annotations. Refers to t-1.
             accuracy (float, optional): The confidence of the model's prediction. Defaults to 1.
+            features (Union[List[str],None]): list of features that the user wants returned.
+                                  Defaults to None
         """
-        MIN_NR_POINTS = 3
+        MIN_NR_POINTS = 5
 
         super().__init__(id, label, children, parents, accuracy)
         self._points: List[Point] = simplify_line(points)
@@ -35,9 +41,31 @@ class Polygon(Annotation):
 
         self._has_enough_points = len(points) >= MIN_NR_POINTS
         if not self._has_enough_points:
-            warnings.warn(f"Polygon has less than {MIN_NR_POINTS} points. Some features may not be available.")
+            warnings.warn(
+                f"Polygon has less than {MIN_NR_POINTS} points. Some features may not be available."
+            )
 
-        # features
+        # featues
+        all_features = [
+            "area",
+            "circularity",
+            "convex_hull_area",
+            "perimeter",
+            "roundness",
+        ]
+
+        # if features is None all features are returned
+        if features is None:
+            self._features = all_features
+        else:
+            missing_features = set(features) - set(all_features)
+            if missing_features:
+                raise ValueError(
+                    f"The following features are not compatible with the Annotation Manager: {', '.join(missing_features)}"
+                )
+
+            self._features = features
+
         self._area = None
         self._circularity = None
         self._convex_hull_area = None
@@ -55,41 +83,45 @@ class Polygon(Annotation):
         return self._accuracy
 
     @property
-    def area(self) -> float:
+    def area(self) -> Union[float, None]:
         """Quantity that expresses the extent of a polygon determined by cv2 contour operations.
         Requires 5 or more points.
 
         Returns:
-            float: Polygon's area.
+            Union[float, None]: Polygon's area or None.
         """
-        if not self._area:
-            self._calculate_area()
 
-        return self._area
+        if "area" in self._features:
+            self._calculate_area()
+            return self._area
+        return
 
     @property
-    def circularity(self) -> float:
+    def circularity(self) -> Union[float, None]:
         """Circularity: (4 * pi * Area) / perimeter ** 2)
 
         Returns:
-            float: Circularity in [0, 1].
+            Union[float, None]: Circularity in [0, 1] or None.
         """
-        if not self._circularity:
-            self._calculate_circularity()
 
-        return self._circularity
+        if "circularity" in self._features:
+            self._calculate_circularity()
+            return self._circularity
+        return
+        # return self._circularity
 
     @property
-    def convex_hull_area(self) -> float:
+    def convex_hull_area(self) -> Union[float, None]:
         """Convex Hull Area by cv2 contour operations.
 
         Returns:
-            float: Polygon's convex hull area.
+            Union[float, None]: Polygon's convex hull area or None.
         """
-        if not self._convex_hull_area:
-            self._calculate_convex_hull_area()
 
-        return self._convex_hull_area
+        if "convex_hull_area" in self._features:
+            self._calculate_convex_hull_area()
+            return self._convex_hull_area
+        return
 
     @property
     def label(self):
@@ -100,16 +132,17 @@ class Polygon(Annotation):
         super().label = value
 
     @property
-    def perimeter(self) -> float:
+    def perimeter(self) -> Union[float, None]:
         """Total length of polygon's boundary determined by cv2 contour operations.
 
         Returns:
-            float: Polygon's perimeter.
+            Union[float, None]: Polygon's perimeter or None.
         """
-        if not self._perimeter:
-            self._calculate_perimeter()
 
-        return self._perimeter
+        if "perimeter" in self._features:
+            self._calculate_perimeter()
+            return self._perimeter
+        return
 
     @property
     def points(self) -> List[Point]:
@@ -120,49 +153,53 @@ class Polygon(Annotation):
         raise SyntaxError("Points are Immutable")
 
     @property
-    def roundness(self) -> float:
+    def roundness(self) -> Union[float, None]:
         """Roundness: Area / (radius_enclosing_circle**2 * pi).
 
         Returns:
-            float: Polygon's roundness in [0, 1].
+            Union[float, None]: Polygon's roundness in [0, 1] or None.
         """
-        if not self._roundness:
-            self._calculate_roundness()
 
-        return self._roundness
+        if "roundness" in self._features:
+            self._calculate_roundness()
+            return self._roundness
+        return
 
     def to_dict(self, decimals: int = 2, **kwargs) -> dict:
         points = self._points.copy()
         if kwargs.get("do_compress", False):
             points = compress_polygon_points(points, kwargs.get("epsilon", 3))
 
-        polygon_dict = {"type": "polygon", "points": [asdict(point) for point in points]}
+        polygon_dict = {
+            "type": "polygon",
+            "points": [asdict(point) for point in points],
+        }
 
-        if self._has_enough_points:
+        # if the user wants any features returned
+        if self._features:
             # Feature property is None if polygon has not enough points which results the round() to fail on a NoneType.
-            polygon_features = {
-                "area": round(self.area, decimals),
-                "circularity": round(self.circularity, decimals),
-                "convex_hull_area": round(self.convex_hull_area, decimals),
-                "perimeter": round(self.perimeter, decimals),
-                "roundness": round(self.roundness, decimals),
-            }
-            polygon_dict = {**polygon_features, **polygon_dict}
+            if self._has_enough_points:
+                # when the corresponding name occurs in the feature list, it is added to the dict polygon features
+                polygon_features = {}
+                for feature in self._features:
+                    polygon_features[feature] = round(getattr(self, feature), decimals)
+
+                polygon_dict = {**polygon_features, **polygon_dict}
 
         super_dict = super().to_dict(decimals=decimals)
         dict_return_value = {**super_dict, **polygon_dict}
         return dict_return_value
 
-    def is_in_mask(self, mask_json: dict, min_overlap: float = 0.9):
+    def is_in_mask(self, mask_json: List[dict], min_overlap: float = 0.9):
         """Check if a polygon is within a binary mask.
 
         Args:
-            mask_json (dict): A dict mask in cytosmart dict format.
-            min_overlap (float, optional): Minimum overlap required between the polygon and the mask, expressed as a value between 0 and 1.
+            mask_json (List[dict]): A list of dict masks in cytosmart dict format.
+            min_overlap (float, optional): Minimum overlap required between the polygon a mask, expressed as a value between 0 and 1.
             Defaults to 0.9.
 
         Returns:
-            bool: True if the polygon is within the mask and meets the required overlap, False otherwise.
+            bool: True if the polygon is within a mask and meets the required overlap, False otherwise.
         """
         if len(self.points) < 1:
             return False
@@ -170,10 +207,12 @@ class Polygon(Annotation):
         json_points = [{"x": point.x, "y": point.y} for point in self.points]
         json_object = {"type": "polygon", "points": json_points}
 
-        overlap_ratio = overlap_object(json_object, mask_json)
+        for mask in mask_json:
+            overlap_ratio = overlap_object(json_object, mask)
+            if overlap_ratio >= min_overlap:
+                return True
 
-        # Check if the polygon is within the masked area with at least the specified overlap
-        return overlap_ratio >= min_overlap
+        return False
 
     def to_binary_mask(self, shape: Tuple[int, int]) -> np.ndarray:
         """Transform a polygon to a binary mask.
@@ -186,7 +225,9 @@ class Polygon(Annotation):
         """
         mask = np.zeros(shape, dtype=np.uint8)
         if len(self._points) > 0:
-            points = np.array([[point.x, point.y] for point in self._points], dtype=np.int32)
+            points = np.array(
+                [[point.x, point.y] for point in self._points], dtype=np.int32
+            )
             cv2.fillPoly(mask, [points], color=1)
 
         return mask
@@ -236,5 +277,7 @@ class Polygon(Annotation):
         are_points_equal = are_lines_equal(self.points, other.points, is_enclosed=True)
         reverse_points = other.points
         reverse_points.reverse()
-        are_points_equal_mirrored = are_lines_equal(self.points, reverse_points, is_enclosed=True)
+        are_points_equal_mirrored = are_lines_equal(
+            self.points, reverse_points, is_enclosed=True
+        )
         return are_points_equal | are_points_equal_mirrored

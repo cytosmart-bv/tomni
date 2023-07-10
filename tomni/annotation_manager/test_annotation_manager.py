@@ -149,7 +149,7 @@ class TestAnnotationManager(TestCase):
         bin_mask = am.to_binary_mask(im_shape)
 
     def test_to_dict_with_polygon_mask(self):
-        mask = {"type": "polygon", "points": [{"x": 0, "y": 0}, {"x": 0, "y": 4000}, {"x": 4000, "y": 4000}, {"x": 4000, "y": 0}]}
+        mask = [{"type": "polygon", "points": [{"x": 0, "y": 0}, {"x": 0, "y": 4000}, {"x": 4000, "y": 4000}, {"x": 4000, "y": 0}]}]
         expected = [
             {
                 "id": "132132132123132",
@@ -199,7 +199,7 @@ class TestAnnotationManager(TestCase):
         self.assertEqual(expected, actual)
 
     def test_to_dict_with_ellipse_mask(self):
-        mask = AnnotationManager([Ellipse(center=Point(50, 50), radius_x=100, rotation=0, id="", label="", children=[], parents=[])]).to_dict()[0]
+        mask = AnnotationManager([Ellipse(center=Point(50, 50), radius_x=100, rotation=0, id="", label="", children=[], parents=[])]).to_dict()
 
         expected = [
             {

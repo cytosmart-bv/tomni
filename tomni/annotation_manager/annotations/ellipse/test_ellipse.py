@@ -181,7 +181,7 @@ class TestEllipse(TestCase):
 
         mask_json = AnnotationManager(
             [Ellipse(center=Point(center, center), radius_x=rad, rotation=0, id="", label="", children=[], parents=[])]
-        ).to_dict()[0]
+        ).to_dict()
         ellipse1 = Ellipse(radius_x=quadrant, center=Point(center, center), rotation=0, id="", label="", children=[], parents=[])
         ellipse2 = Ellipse(radius_x=quadrant - 100, center=Point(center + 100, center - 100), rotation=0, id="", label="", children=[], parents=[])
         ellipse3 = Ellipse(radius_x=quadrant - 150, center=Point(center - 100, center + 150), rotation=0, id="", label="", children=[], parents=[])
@@ -200,7 +200,7 @@ class TestEllipse(TestCase):
         size = 2072
         quadrant = int(size / 4)
         points = [Point(quadrant, quadrant), Point(quadrant, quadrant * 3), Point(quadrant * 3, quadrant * 3), Point(quadrant * 3, quadrant)]
-        mask = AnnotationManager([Polygon(points=points, id="", label="", children=[], parents=[])]).to_dict()[0]
+        mask = AnnotationManager([Polygon(points=points, id="", label="", children=[], parents=[])]).to_dict()
 
         ellipse1 = Ellipse(radius_x=quadrant, center=Point(center, center), rotation=0, id="", label="", children=[], parents=[])
         ellipse2 = Ellipse(radius_x=quadrant - 100, center=Point(center + 100, center - 100), rotation=0, id="", label="", children=[], parents=[])

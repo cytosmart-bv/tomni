@@ -255,7 +255,7 @@ class TestPolygon(TestCase):
 
         mask = AnnotationManager(
             [Ellipse(center=Point(center, center), radius_x=rad, rotation=0, id="", label="", children=[], parents=[])]
-        ).to_dict()[0]
+        ).to_dict()
 
         polygon1 = Polygon(
             points=[Point(center, center), Point(center + 200, center + 200), Point(center, center + 200)], id="", label="", children=[], parents=[]
@@ -281,7 +281,7 @@ class TestPolygon(TestCase):
         size = 2072
         quadrant = size / 4
         points = [Point(quadrant, quadrant), Point(quadrant, quadrant * 3), Point(quadrant * 3, quadrant * 3), Point(quadrant * 3, quadrant)]
-        mask = AnnotationManager([Polygon(points, id="", label="", children=[], parents=[])]).to_dict()[0]
+        mask = AnnotationManager([Polygon(points, id="", label="", children=[], parents=[])]).to_dict()
 
         polygon1 = Polygon(
             points=[Point(center, center), Point(center + 200, center + 200), Point(center, center + 200)], id="", label="", children=[], parents=[]
