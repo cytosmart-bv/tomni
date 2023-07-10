@@ -3,11 +3,12 @@ from typing import List
 
 
 class Annotation(ABC):
-    def __init__(self, id: str, label: str, children: List, parents: List) -> None:
+    def __init__(self, id: str, label: str, children: List, parents: List, accuracy: float) -> None:
         self._id: str = id
         self._label: str = label
         self._children: List[Annotation] = children
         self._parents: List[Annotation] = parents
+        self._accuracy: float = accuracy
 
     @abstractmethod
     def to_dict(self, decimals: int = 2, **kwargs) -> dict:
@@ -18,7 +19,7 @@ class Annotation(ABC):
         Returns:
             dict: CytoSmart Data Format dict.
         """
-        return {"id": self._id, "label": self._label, "children": self._children, "parents": self._parents}
+        return {"id": self._id, "label": self._label, "children": self._children, "parents": self._parents, "accuracy": self._accuracy}
 
     @property
     @abstractmethod

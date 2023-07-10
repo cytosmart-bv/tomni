@@ -22,6 +22,8 @@ class Ellipse(Annotation):
         parents: List[Annotation] = [],
         radius_y: Union[float, None] = None,
         feature_multiplier: int = 1,
+        features: Union[List[str], None] = None,
+        accuracy: float = 1,
     ):
         """Initializes a Ellipse object.
 
@@ -38,8 +40,11 @@ class Ellipse(Annotation):
             label (str): Class label of annotation.
             children (List[Annotation]): Tracking annotations. Refers to t+1.
             parents (List[Annotation]): Tracking annotations. Refers to t-1.
+            accuracy (float, optional): The confidence of the model's prediction. Defaults to 1.
+            features (Union[List[str], None]): list of features that the user wants returned.
+                                  Defaults to None
         """
-        super().__init__(id, label, children, parents)
+        super().__init__(id, label, children, parents, accuracy)
         self._center: Point = center
         self.radius_x: float = radius_x
         if radius_y:
@@ -53,6 +58,35 @@ class Ellipse(Annotation):
         self._perimeter: Union[float, None] = None
         self._aspect_ratio: Union[float, None] = None
         self.feature_multiplier = feature_multiplier
+        # featues
+        all_features = [
+            "area",
+            "circularity",
+            "aspect_ratio",
+            "perimeter",
+        ]
+
+        # if features is None all features are returned
+        if features is None:
+            self._features = all_features
+        else:
+            missing_features = set(features) - set(all_features)
+            if missing_features:
+                raise ValueError(
+                    f"The following features are not compatible with the Annotation Manager: {', '.join(missing_features)}"
+                )
+
+            self._features = features
+            
+        self._circularity = None
+        self._area = None
+        self._perimeter = None
+        self._aspect_ratio = None
+
+    @property
+    def accuracy(self):
+        """Accuracy of ellipse."""
+        return self._accuracy
 
     @property
     def label(self):
@@ -107,10 +141,10 @@ class Ellipse(Annotation):
         Returns:
             float: Ellipse's circularity.
         """
-        if not self._circularity:
+        if "circularity" in self._features:
             self._calculate_circularity()
-
-        return self._circularity
+            return self._circularity
+        return
 
     @property
     def area(self) -> float:
@@ -119,10 +153,10 @@ class Ellipse(Annotation):
         Returns:
             float: Ellipse's area.
         """
-        if not self._area:
+        if "area" in self._features:
             self._calculate_area()
-
-        return self._area
+            return self._area
+        return
 
     @property
     def perimeter(self) -> float:
@@ -131,10 +165,10 @@ class Ellipse(Annotation):
         Returns:
             float: Ellipse's perimeter.
         """
-        if not self._perimeter:
+        if "perimeter" in self._features:
             self._calculate_perimeter()
-
-        return self._perimeter
+            return self._perimeter
+        return
 
     @property
     def aspect_ratio(self) -> float:
@@ -143,10 +177,10 @@ class Ellipse(Annotation):
         Returns:
             float: Ellipse's aspect ratio.
         """
-        if not self._aspect_ratio:
+        if "aspect_ratio" in self._features:
             self._calculate_aspect_ratio()
-
-        return self._aspect_ratio
+            return self._aspect_ratio
+        return
 
     def to_dict(self, decimals: int = 2, **kwargs) -> dict:
         dict_ellipse = {
@@ -160,6 +194,10 @@ class Ellipse(Annotation):
             "circularity": round(self.circularity, decimals),
             "perimeter": round(self.perimeter, decimals) * self.feature_multiplier,
         }
+
+        if self._features:
+            for feature in self._features:
+                dict_ellipse[feature] = round(getattr(self, feature), decimals)
 
         super_dict = super().to_dict(decimals=2)
         dict_return_value = {**super_dict, **dict_ellipse}
@@ -186,15 +224,15 @@ class Ellipse(Annotation):
             thickness=-1,
         )
 
-    def is_in_mask(self, mask_json: dict, min_overlap: float = 0.9) -> bool:
+    def is_in_mask(self, mask_json: List[dict], min_overlap: float = 0.9) -> bool:
         """Check if an ellipse is within a binary mask.
 
         Args:
-            mask_json (dict): A dict mask in cytosmart dict format.
+            mask_json (List[dict]): A list of dict masks in cytosmart dict format.
             min_overlap (float, optional): Minimum overlap required between the ellipse and the mask, expressed as a value between 0 and 1. Defaults to 0.9.
 
         Returns:
-            bool: True if the ellipse is within the mask and meets the required overlap, False otherwise.
+            bool: True if the ellipse is within a mask and meets the required overlap, False otherwise.
         """
 
         json_object = {
@@ -205,16 +243,26 @@ class Ellipse(Annotation):
             "angleOfRotation": self.rotation,
         }
 
-        overlap_ratio = overlap_object(json_object, mask_json)
+        for mask in mask_json:
+            overlap_ratio = overlap_object(json_object, mask)
+            if overlap_ratio >= min_overlap:
+                return True
 
-        # Check if the polygon is within the masked area with at least the specified overlap
-        return overlap_ratio >= min_overlap
+        return False
 
     def _calculate_circularity(self) -> None:
-        self._circularity = 4 * np.pi * self.area / self.perimeter**2
+        if not self._area:
+            self._calculate_area()
+
+        if not self._perimeter:
+            self._calculate_perimeter()
+
+        self._circularity = 4 * np.pi * self._area / self._perimeter**2
 
     def _calculate_perimeter(self) -> None:
-        self._perimeter = 2 * np.pi * np.sqrt((self._radius_x**2 + self._radius_y**2) / 2)
+        self._perimeter = (
+            2 * np.pi * np.sqrt((self._radius_x**2 + self._radius_y**2) / 2)
+        )
 
     def _calculate_area(self) -> None:
         self._area = np.pi * self._radius_x * self._radius_y

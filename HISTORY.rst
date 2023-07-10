@@ -1,5 +1,11 @@
 # History
 
+2.0.0-b1 (2023-07-06)
+------------------
+- AnnotationManager function from_dict is called with an optional list of features
+- Changed Polygon and Ellipse classes to include the list of features initialized by AnnotationManager
+- to_dict function now only returns features in the dictionary that were asked for in the feature list
+
 2.0.0-b0 (2022-11-29)
 ------------------
 - CDF-Main: Implement `filter` to allow filtering of annotations by feature values (aka gating).
