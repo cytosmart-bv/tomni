@@ -40,17 +40,37 @@ class Polygon(Annotation):
             features (Union[List[str],None]): list of features that the user wants returned.
                                   Defaults to None
         """
-        super().__init__(id, label, children, parents)
+        super().__init__(id, label, children, parents, accuracy)
         self._points: List[Point] = simplify_line(points)
         self._contour: np.ndarray = parse_points_to_contour(points)
 
-        # features
+
+        # featues
+        all_features = [
+            "area",
+            "circularity",
+            "convex_hull_area",
+            "perimeter",
+            "roundness",
+        ]
+
+        # if features is None all features are returned
+        if features is None:
+            self._features = all_features
+        else:
+            missing_features = set(features) - set(all_features)
+            if missing_features:
+                raise ValueError(
+                    f"The following features are not compatible with the Annotation Manager: {', '.join(missing_features)}"
+                )
+
+            self._features = features
+
         self._area = None
         self._circularity = None
         self._convex_hull_area = None
         self._perimeter = None
         self._roundness = None
-
     @property
     def accuracy(self) -> float:
         """Accuracy of the model's polygon prediction.
@@ -156,14 +176,11 @@ class Polygon(Annotation):
 
         # if the user wants any features returned
         if self._features:
-            # Feature property is None if polygon has not enough points which results the round() to fail on a NoneType.
-            if self._has_enough_points:
-                # when the corresponding name occurs in the feature list, it is added to the dict polygon features
-                polygon_features = {}
-                for feature in self._features:
-                    polygon_features[feature] = round(getattr(self, feature), decimals)
+            polygon_features = {}
+            for feature in self._features:
+                polygon_features[feature] = round(getattr(self, feature), decimals)
 
-                polygon_dict = {**polygon_features, **polygon_dict}
+            polygon_dict = {**polygon_features, **polygon_dict}
 
         super_dict = super().to_dict(decimals=decimals)
         dict_return_value = {**super_dict, **polygon_dict}
