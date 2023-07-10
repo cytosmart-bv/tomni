@@ -22,7 +22,7 @@ class AnnotationManager(object):
         self._annotations = annotations
 
     @classmethod
-    def from_dicts(cls, dicts: List[dict]):
+    def from_dicts(cls, dicts: List[dict], features: List[str] = None):
         TYPE_KEY = "type"
         LABEL_KEY = "label"
         CHILDREN_KEY = "children"
@@ -42,6 +42,7 @@ class AnnotationManager(object):
                     radius_y=d.get("radiusY", None),
                     center=Point(x=d[CENTER_KEY]["x"], y=d[CENTER_KEY]["y"]),
                     rotation=d["angleOfRotation"],
+                    features=features,
                 )
             elif d[TYPE_KEY] == "polygon":
                 if len(d["points"]) < MIN_NR_POINTS:
@@ -52,9 +53,12 @@ class AnnotationManager(object):
                     children=d.get(CHILDREN_KEY, []),
                     parents=d.get(PARENTS_KEY, []),
                     points=[Point(x=p["x"], y=p["y"]) for p in d["points"]],
+                    features=features,
                 )
             else:
-                raise ValueError(f"CDF cannot be created. Dict with id {d.get('id', None)} misses type-key with value ellipse or polygon.")
+                raise ValueError(
+                    f"CDF cannot be created. Dict with id {d.get('id', None)} misses type-key with value ellipse or polygon."
+                )
             annotations.append(annotation)
 
         return cls(annotations)
@@ -76,7 +80,15 @@ class AnnotationManager(object):
             for i in range(contour.shape[0]):
                 points.append(Point(x=int(contour[i][0]), y=int(contour[i][1])))
 
-            annotations.append(Polygon(label="", id=str(uuid.uuid4()), children=[], parents=[], points=points))
+            annotations.append(
+                Polygon(
+                    label="",
+                    id=str(uuid.uuid4()),
+                    children=[],
+                    parents=[],
+                    points=points,
+                )
+            )
 
         return cls(annotations)
 
@@ -105,7 +117,15 @@ class AnnotationManager(object):
 
         _, labeled_mask = cv2.connectedComponents(mask, connectivity=connectivity)
 
-        padded_mask = cv2.copyMakeBorder(mask, top=1, bottom=1, left=1, right=1, borderType=cv2.BORDER_CONSTANT, value=0)
+        padded_mask = cv2.copyMakeBorder(
+            mask,
+            top=1,
+            bottom=1,
+            left=1,
+            right=1,
+            borderType=cv2.BORDER_CONSTANT,
+            value=0,
+        )
 
         # If bin mask with 0's and 1's is input then canny fails, so multiply by 255 and clip.
         if padded_mask.max() == 1:
@@ -139,7 +159,11 @@ class AnnotationManager(object):
             AnnotationManager: A new AnnotationManager object.
         """
         points = labels2listsOfPoints(mask)
-        contours = [positions2contour(point, return_inner_contours=include_inner_contours) for point in points if len(point) > 0]
+        contours = [
+            positions2contour(point, return_inner_contours=include_inner_contours)
+            for point in points
+            if len(point) > 0
+        ]
         return AnnotationManager.from_contours(contours)
 
     @classmethod
@@ -183,7 +207,13 @@ class AnnotationManager(object):
         else:
             raise StopIteration
 
-    def to_dict(self, decimals: int = 2, mask_json: Union[dict, None] = None, min_overlap: float = 0.9, **kwargs) -> List[Dict]:
+    def to_dict(
+        self,
+        decimals: int = 2,
+        mask_json: Union[dict, None] = None,
+        min_overlap: float = 0.9,
+        **kwargs,
+    ) -> List[Dict]:
         """Transform AM object to a collection of our format.
 
         Args:
@@ -197,11 +227,21 @@ class AnnotationManager(object):
         """
         if mask_json is not None:
             filtered_annotations = self._annotations.copy()
-            filtered_annotations = [annotation for annotation in filtered_annotations if annotation.is_in_mask(mask_json, min_overlap)]
+            filtered_annotations = [
+                annotation
+                for annotation in filtered_annotations
+                if annotation.is_in_mask(mask_json, min_overlap)
+            ]
 
-            return [annotation.to_dict(decimals=decimals, **kwargs) for annotation in filtered_annotations]
+            return [
+                annotation.to_dict(decimals=decimals, **kwargs)
+                for annotation in filtered_annotations
+            ]
 
-        return [annotation.to_dict(decimals=decimals, **kwargs) for annotation in self._annotations]
+        return [
+            annotation.to_dict(decimals=decimals, **kwargs)
+            for annotation in self._annotations
+        ]
 
     def to_contours(self) -> List[np.ndarray]:
         """Transform AM object to a collection of cv2 contours.
@@ -212,10 +252,15 @@ class AnnotationManager(object):
         Returns:
             List[np.ndarray]: Collection of contours as [[[x_0, y_0],..., [x_n, y_n]], ... ,[[x_0, y_0],..., [x_m, y_m]]]
         """
-        if not all([isinstance(annotation, Polygon) for annotation in self._annotations]):
+        if not all(
+            [isinstance(annotation, Polygon) for annotation in self._annotations]
+        ):
             raise ValueError("`to_contours is only supported on polygon-annotations.`")
 
-        contours = [parse_points_to_contour(annotation.points) for annotation in self._annotations]
+        contours = [
+            parse_points_to_contour(annotation.points)
+            for annotation in self._annotations
+        ]
 
         return contours
 
@@ -249,7 +294,9 @@ class AnnotationManager(object):
 
         for annotation in self._annotations:
             if isinstance(annotation, Polygon):
-                points = np.array([[point.x, point.y] for point in annotation.points], dtype=np.int32)
+                points = np.array(
+                    [[point.x, point.y] for point in annotation.points], dtype=np.int32
+                )
                 cv2.fillPoly(mask, [points], color=label_color)
             elif isinstance(annotation, Ellipse):
                 cv2.ellipse(
@@ -263,7 +310,9 @@ class AnnotationManager(object):
                     thickness=-1,
                 )
             else:
-                raise TypeError("Innapropiate annotation type for `to_labeled_mask`. Supported annotations are ellipse and polygon.")
+                raise TypeError(
+                    "Innapropiate annotation type for `to_labeled_mask`. Supported annotations are ellipse and polygon."
+                )
 
             # increase color for every annotation.
             label_color += 1
@@ -301,7 +350,9 @@ class AnnotationManager(object):
         """
         pass
 
-    def filter(self, feature: str, min_val: float, max_val: float, inplace: bool = False):
+    def filter(
+        self, feature: str, min_val: float, max_val: float, inplace: bool = False
+    ):
         """Filter annotations by feature.
 
         Args:
@@ -339,4 +390,8 @@ class AnnotationManager(object):
         for cdf_item in self._cdf_data:
             circularity.append(cdf_item.circularity)
 
-        return {"circularity": {"avg": 1, "std": 1, "min": 1, "max": 1}, "...": "...", "feature_n": {"avg_n": 1, "std_n": 1, "min_n": 1, "max_n": 1}}
+        return {
+            "circularity": {"avg": 1, "std": 1, "min": 1, "max": 1},
+            "...": "...",
+            "feature_n": {"avg_n": 1, "std_n": 1, "min_n": 1, "max_n": 1},
+        }
