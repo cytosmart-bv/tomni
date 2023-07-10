@@ -22,6 +22,7 @@ class Ellipse(Annotation):
         parents: List[Annotation] = [],
         radius_y: Union[float, None] = None,
         features: Union[List[str], None] = None,
+        accuracy: float = 1,
     ):
         """Initializes a Ellipse object.
 
@@ -38,10 +39,11 @@ class Ellipse(Annotation):
             label (str): Class label of annotation.
             children (List[Annotation]): Tracking annotations. Refers to t+1.
             parents (List[Annotation]): Tracking annotations. Refers to t-1.
+            accuracy (float, optional): The confidence of the model's prediction. Defaults to 1.
             features (Union[List[str], None]): list of features that the user wants returned.
                                   Defaults to None
         """
-        super().__init__(id, label, children, parents)
+        super().__init__(id, label, children, parents, accuracy)
         self._center: Point = center
         self.radius_x: float = radius_x
         if radius_y:
@@ -74,6 +76,11 @@ class Ellipse(Annotation):
         self._area = None
         self._perimeter = None
         self._aspect_ratio = None
+
+    @property
+    def accuracy(self):
+        """Accuracy of ellipse."""
+        return self._accuracy
 
     @property
     def label(self):
@@ -207,15 +214,15 @@ class Ellipse(Annotation):
             thickness=-1,
         )
 
-    def is_in_mask(self, mask_json: dict, min_overlap: float = 0.9) -> bool:
+    def is_in_mask(self, mask_json: List[dict], min_overlap: float = 0.9) -> bool:
         """Check if an ellipse is within a binary mask.
 
         Args:
-            mask_json (dict): A dict mask in cytosmart dict format.
+            mask_json (List[dict]): A list of dict masks in cytosmart dict format.
             min_overlap (float, optional): Minimum overlap required between the ellipse and the mask, expressed as a value between 0 and 1. Defaults to 0.9.
 
         Returns:
-            bool: True if the ellipse is within the mask and meets the required overlap, False otherwise.
+            bool: True if the ellipse is within a mask and meets the required overlap, False otherwise.
         """
 
         json_object = {
@@ -226,10 +233,12 @@ class Ellipse(Annotation):
             "angleOfRotation": self.rotation,
         }
 
-        overlap_ratio = overlap_object(json_object, mask_json)
+        for mask in mask_json:
+            overlap_ratio = overlap_object(json_object, mask)
+            if overlap_ratio >= min_overlap:
+                return True
 
-        # Check if the polygon is within the masked area with at least the specified overlap
-        return overlap_ratio >= min_overlap
+        return False
 
     def _calculate_circularity(self) -> None:
         if not self._area:

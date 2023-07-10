@@ -42,6 +42,7 @@ class AnnotationManager(object):
                     radius_y=d.get("radiusY", None),
                     center=Point(x=d[CENTER_KEY]["x"], y=d[CENTER_KEY]["y"]),
                     rotation=d["angleOfRotation"],
+                    accuracy=d.get("accuracy", 1),
                     features=features,
                 )
             elif d[TYPE_KEY] == "polygon":
@@ -53,6 +54,7 @@ class AnnotationManager(object):
                     children=d.get(CHILDREN_KEY, []),
                     parents=d.get(PARENTS_KEY, []),
                     points=[Point(x=p["x"], y=p["y"]) for p in d["points"]],
+                    accuracy=d.get("accuracy", 1),
                     features=features,
                 )
             else:
@@ -207,13 +209,7 @@ class AnnotationManager(object):
         else:
             raise StopIteration
 
-    def to_dict(
-        self,
-        decimals: int = 2,
-        mask_json: Union[dict, None] = None,
-        min_overlap: float = 0.9,
-        **kwargs,
-    ) -> List[Dict]:
+    def to_dict(self, decimals: int = 2, mask_json: Union[List[dict], None] = None, min_overlap: float = 0.9, **kwargs) -> List[Dict]:
         """Transform AM object to a collection of our format.
 
         Args:

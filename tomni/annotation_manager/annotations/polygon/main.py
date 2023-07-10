@@ -19,13 +19,7 @@ from ...utils import compress_polygon_points, parse_points_to_contour
 
 class Polygon(Annotation):
     def __init__(
-        self,
-        points: List[Point],
-        id: str,
-        label: str = "",
-        children: List[Annotation] = [],
-        parents: List[Annotation] = [],
-        features: Union[List[str], None] = None,
+        self, points: List[Point], id: str, label: str = "", children: List[Annotation] = [], parents: List[Annotation] = [], accuracy: float = 1, features: Union[List[str], None] = None,
     ):
         """Initializes a Polygon object.
 
@@ -35,6 +29,7 @@ class Polygon(Annotation):
             label (str): Class label of annotation.
             children (List[Annotation]): Tracking annotations. Refers to t+1.
             parents (List[Annotation]): Tracking annotations. Refers to t-1.
+            accuracy (float, optional): The confidence of the model's prediction. Defaults to 1.
             features (Union[List[str],None]): list of features that the user wants returned.
                                   Defaults to None
         """
@@ -48,6 +43,16 @@ class Polygon(Annotation):
         self._convex_hull_area = None
         self._perimeter = None
         self._roundness = None
+
+    @property
+    def accuracy(self) -> float:
+        """Accuracy of the model's polygon prediction.
+
+        Returns:
+            float: Polygon´s accuracy.
+        """
+
+        return self._accuracy
 
     @property
     def area(self) -> Union[float, None]:
@@ -157,16 +162,16 @@ class Polygon(Annotation):
         dict_return_value = {**super_dict, **polygon_dict}
         return dict_return_value
 
-    def is_in_mask(self, mask_json: dict, min_overlap: float = 0.9):
+    def is_in_mask(self, mask_json: List[dict], min_overlap: float = 0.9):
         """Check if a polygon is within a binary mask.
 
         Args:
-            mask_json (dict): A dict mask in cytosmart dict format.
-            min_overlap (float, optional): Minimum overlap required between the polygon and the mask, expressed as a value between 0 and 1.
+            mask_json (List[dict]): A list of dict masks in cytosmart dict format.
+            min_overlap (float, optional): Minimum overlap required between the polygon a mask, expressed as a value between 0 and 1.
             Defaults to 0.9.
 
         Returns:
-            bool: True if the polygon is within the mask and meets the required overlap, False otherwise.
+            bool: True if the polygon is within a mask and meets the required overlap, False otherwise.
         """
         if len(self.points) < 1:
             return False
@@ -174,10 +179,12 @@ class Polygon(Annotation):
         json_points = [{"x": point.x, "y": point.y} for point in self.points]
         json_object = {"type": "polygon", "points": json_points}
 
-        overlap_ratio = overlap_object(json_object, mask_json)
+        for mask in mask_json:
+            overlap_ratio = overlap_object(json_object, mask)
+            if overlap_ratio >= min_overlap:
+                return True
 
-        # Check if the polygon is within the masked area with at least the specified overlap
-        return overlap_ratio >= min_overlap
+        return False
 
     def to_binary_mask(self, shape: Tuple[int, int]) -> np.ndarray:
         """Transform a polygon to a binary mask.

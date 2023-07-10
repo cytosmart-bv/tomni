@@ -17,6 +17,9 @@ class TestEllipse(TestCase):
         self.zero_ellipse = Ellipse(radius_x=0, radius_y=0, center=Point(0, 0), rotation=0, id=id_, children=children, parents=parents, label=label)
         self.circle = Ellipse(radius_x=1, radius_y=1, center=Point(0, 0), rotation=0, id=id_, children=children, parents=parents, label=label)
         self.oval = Ellipse(radius_x=1, radius_y=3, center=Point(0, 0), rotation=0, id=id_, children=children, parents=parents, label=label)
+        self.oval_accuracy = Ellipse(
+            radius_x=1, radius_y=3, center=Point(0, 0), rotation=0, id=id_, children=children, parents=parents, label=label, accuracy=0.5
+        )
 
     def test_zero_area(self):
         expected = 0.0
@@ -101,6 +104,7 @@ class TestEllipse(TestCase):
             "radiusY": 0.0,
             "angleOfRotation": 0,
             "type": "ellipse",
+            "accuracy": 1,
         }
         actual = self.zero_ellipse.to_dict()
 
@@ -122,6 +126,7 @@ class TestEllipse(TestCase):
             "radiusY": 1,
             "angleOfRotation": 0,
             "type": "ellipse",
+            "accuracy": 1,
         }
         actual = self.circle.to_dict()
         self.assertDictEqual(expected, actual)
@@ -141,8 +146,30 @@ class TestEllipse(TestCase):
             "radiusY": 3,
             "angleOfRotation": 0,
             "type": "ellipse",
+            "accuracy": 1,
         }
         actual = self.oval.to_dict()
+
+        self.assertDictEqual(expected, actual)
+
+    def test_oval_to_dict_accuracy(self):
+        expected = {
+            "area": 9.42,
+            "aspect_ratio": 0.33,
+            "center": {"x": 0, "y": 0},
+            "children": [],
+            "circularity": 0.6,
+            "id": "1234-1234-2134-1321",
+            "label": "ellipse_test",
+            "parents": [],
+            "perimeter": 14.05,
+            "radiusX": 1,
+            "radiusY": 3,
+            "angleOfRotation": 0,
+            "type": "ellipse",
+            "accuracy": 0.5,
+        }
+        actual = self.oval_accuracy.to_dict()
 
         self.assertDictEqual(expected, actual)
 
@@ -154,7 +181,7 @@ class TestEllipse(TestCase):
 
         mask_json = AnnotationManager(
             [Ellipse(center=Point(center, center), radius_x=rad, rotation=0, id="", label="", children=[], parents=[])]
-        ).to_dict()[0]
+        ).to_dict()
         ellipse1 = Ellipse(radius_x=quadrant, center=Point(center, center), rotation=0, id="", label="", children=[], parents=[])
         ellipse2 = Ellipse(radius_x=quadrant - 100, center=Point(center + 100, center - 100), rotation=0, id="", label="", children=[], parents=[])
         ellipse3 = Ellipse(radius_x=quadrant - 150, center=Point(center - 100, center + 150), rotation=0, id="", label="", children=[], parents=[])
@@ -173,7 +200,7 @@ class TestEllipse(TestCase):
         size = 2072
         quadrant = int(size / 4)
         points = [Point(quadrant, quadrant), Point(quadrant, quadrant * 3), Point(quadrant * 3, quadrant * 3), Point(quadrant * 3, quadrant)]
-        mask = AnnotationManager([Polygon(points=points, id="", label="", children=[], parents=[])]).to_dict()[0]
+        mask = AnnotationManager([Polygon(points=points, id="", label="", children=[], parents=[])]).to_dict()
 
         ellipse1 = Ellipse(radius_x=quadrant, center=Point(center, center), rotation=0, id="", label="", children=[], parents=[])
         ellipse2 = Ellipse(radius_x=quadrant - 100, center=Point(center + 100, center - 100), rotation=0, id="", label="", children=[], parents=[])

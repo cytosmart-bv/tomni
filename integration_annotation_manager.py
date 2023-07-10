@@ -72,14 +72,7 @@ with open("temp.json", "w") as f:
 
 size = int(2072 / 2)
 rad = int(2072 / 3)
-mask_json = {
-    "type": "ellipse",
-    "center": {"x": size, "y": size},
-    "radiusX": rad,
-    "radiusY": rad,
-    "angleOfRotation": 0,
-    "name": "A1",
-}
+mask_json = [{"type": "ellipse", "center": {"x": size, "y": size}, "radiusX": rad, "radiusY": rad, "angleOfRotation": 0, "name": "A1"}]
 
 _dicts = manager.to_dict(mask_json=mask_json, min_overlap=0.9)
 print(_dicts)
@@ -89,7 +82,7 @@ if os.path.exists(img_path):
     for _dict in _dicts:
         CB.over_draw_json(img, _dict, stroke_width=3, color=(0, 255, 0))
 
-    CB.over_draw_json(img, mask_json, stroke_width=3, color=(255, 0, 0))
+    CB.over_draw_json(img, mask_json[0], stroke_width=3, color=(255, 0, 0))
     cv2.imwrite("to_dict_with_mask.png", img)
 
 # %%

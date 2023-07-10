@@ -40,6 +40,7 @@ class TestAnnotationManager(TestCase):
                     children=[],
                     parents=[],
                     label="star",
+                    accuracy=0.5,
                 ),
                 Polygon(
                     points=[
@@ -54,6 +55,7 @@ class TestAnnotationManager(TestCase):
                     children=[],
                     parents=[],
                     label="star",
+                    accuracy=0,
                 ),
             ]
         )
@@ -64,6 +66,20 @@ class TestAnnotationManager(TestCase):
     def test_filter_single(self):
         actual = self.manager.filter(feature="area", min_val=500, max_val=5000000)
         expected_n_items = 2
+
+        self.assertIsInstance(actual, list)
+        self.assertEqual(len(actual), expected_n_items)
+
+    def test_filter_accuracy_big_range(self):
+        actual = self.manager.filter(feature="accuracy", min_val=0, max_val=5)
+        expected_n_items = 5
+
+        self.assertIsInstance(actual, list)
+        self.assertEqual(len(actual), expected_n_items)
+
+    def test_filter_accuracy_tight_range(self):
+        actual = self.manager.filter(feature="accuracy", min_val=0.8, max_val=1)
+        expected_n_items = 3
 
         self.assertIsInstance(actual, list)
         self.assertEqual(len(actual), expected_n_items)
@@ -133,7 +149,7 @@ class TestAnnotationManager(TestCase):
         bin_mask = am.to_binary_mask(im_shape)
 
     def test_to_dict_with_polygon_mask(self):
-        mask = {"type": "polygon", "points": [{"x": 0, "y": 0}, {"x": 0, "y": 4000}, {"x": 4000, "y": 4000}, {"x": 4000, "y": 0}]}
+        mask = [{"type": "polygon", "points": [{"x": 0, "y": 0}, {"x": 0, "y": 4000}, {"x": 4000, "y": 4000}, {"x": 4000, "y": 0}]}]
         expected = [
             {
                 "id": "132132132123132",
@@ -147,6 +163,7 @@ class TestAnnotationManager(TestCase):
                 "roundness": 0.56,
                 "type": "polygon",
                 "points": [{"x": 1, "y": 3}, {"x": 2, "y": 3}, {"x": 3, "y": 5}, {"x": 5, "y": 3}, {"x": 3, "y": 1}],
+                "accuracy": 1,
             },
             {
                 "id": "132132132123132",
@@ -160,6 +177,7 @@ class TestAnnotationManager(TestCase):
                 "roundness": 0.56,
                 "type": "polygon",
                 "points": [{"x": 10, "y": 30}, {"x": 20, "y": 30}, {"x": 30, "y": 50}, {"x": 50, "y": 30}, {"x": 30, "y": 10}],
+                "accuracy": 1,
             },
             {
                 "id": "132132132123132",
@@ -173,6 +191,7 @@ class TestAnnotationManager(TestCase):
                 "roundness": 0.56,
                 "type": "polygon",
                 "points": [{"x": 100, "y": 300}, {"x": 200, "y": 300}, {"x": 300, "y": 500}, {"x": 500, "y": 300}, {"x": 300, "y": 100}],
+                "accuracy": 1,
             },
         ]
         actual = self.manager.to_dict(mask_json=mask)
@@ -180,7 +199,7 @@ class TestAnnotationManager(TestCase):
         self.assertEqual(expected, actual)
 
     def test_to_dict_with_ellipse_mask(self):
-        mask = AnnotationManager([Ellipse(center=Point(50, 50), radius_x=100, rotation=0, id="", label="", children=[], parents=[])]).to_dict()[0]
+        mask = AnnotationManager([Ellipse(center=Point(50, 50), radius_x=100, rotation=0, id="", label="", children=[], parents=[])]).to_dict()
 
         expected = [
             {
@@ -195,6 +214,7 @@ class TestAnnotationManager(TestCase):
                 "roundness": 0.56,
                 "type": "polygon",
                 "points": [{"x": 1, "y": 3}, {"x": 2, "y": 3}, {"x": 3, "y": 5}, {"x": 5, "y": 3}, {"x": 3, "y": 1}],
+                "accuracy": 1,
             },
             {
                 "id": "132132132123132",
@@ -208,6 +228,7 @@ class TestAnnotationManager(TestCase):
                 "roundness": 0.56,
                 "type": "polygon",
                 "points": [{"x": 10, "y": 30}, {"x": 20, "y": 30}, {"x": 30, "y": 50}, {"x": 50, "y": 30}, {"x": 30, "y": 10}],
+                "accuracy": 1,
             },
         ]
 
