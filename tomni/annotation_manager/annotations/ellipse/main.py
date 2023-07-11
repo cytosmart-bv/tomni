@@ -57,27 +57,27 @@ class Ellipse(Annotation):
         self._area: Union[float, None] = None
         self._perimeter: Union[float, None] = None
         self._aspect_ratio: Union[float, None] = None
+        self._major_axis: Union[float, None] = None
+        self._minor_axis: Union[float, None] = None
+        self._average_diameter: Union[float, None] = None
+        self._convex_hull_area: Union[float, None] = None
         self._feature_multiplier = feature_multiplier
-        # featues
-        all_features = [
-            "area",
-            "circularity",
-            "aspect_ratio",
-            "perimeter",
-        ]
+
+        # features
+        all_features = {'area': '','aspect_ratio': '','average_diameter': '','circularity': '', 'convex_hull_area': '', 'major_axis': '', 'minor_axis': '', 'perimeter': ''}
 
         # if features is None all features are returned
         if features is None:
             self._features = all_features
         else:
-            missing_features = set(features) - set(all_features)
+            missing_features = set(features.keys()).difference(set(all_features.keys()))
             if missing_features:
                 raise ValueError(
                     f"The following features are not compatible with the Annotation Manager: {', '.join(missing_features)}"
                 )
 
             self._features = features
-            
+
         self._circularity = None
         self._area = None
         self._perimeter = None
@@ -159,6 +159,58 @@ class Ellipse(Annotation):
         return
 
     @property
+    def convex_hull_area(self) -> Union[float, None]:
+        """Convex Hull Area by cv2 contour operations.
+
+        Returns:
+            Union[float, None]: Polygon's convex hull area or None.
+        """
+
+        if "convex_hull_area" in self._features:
+            self._calculate_convex_hull_area()
+            return self._convex_hull_area * self._feature_multiplier**2
+        return
+    
+
+    @property
+    def average_diameter(self) -> float:
+        """Area described by pi * radius_x * radius_y.
+
+        Returns:
+            float: Ellipse's area.
+        """
+        if "average_diameter" in self._features:
+            self._calculate_average_diameter()
+            return self._average_diameter * self._feature_multiplier
+        return
+
+    @property
+    def minor_axis(self) -> float:
+        """Area described by pi * radius_x * radius_y.
+
+        Returns:
+            float: Ellipse's area.
+        """
+        if "minor_axis" in self._features:
+            self._calculate_minor_axis()
+            return self._minor_axis * self._feature_multiplier
+        return
+
+    @property
+    def major_axis(self) -> float:
+        """Area described by pi * radius_x * radius_y.
+
+        Returns:
+            float: Ellipse's area.
+        """
+        if "major_axis" in self._features:
+            self._calculate_major_axis()
+            return self._major_axis * self._feature_multiplier
+        return
+
+
+
+    @property
     def perimeter(self) -> float:
         """Perimeter described by 2*pi*sqrt((radius_x**2 + radius_y**2) / 2).
 
@@ -192,10 +244,10 @@ class Ellipse(Annotation):
         }
 
         if self._features:
-            for feature in self._features:
-                dict_ellipse[feature] = round(getattr(self, feature), decimals)
+            for feature, suffix in self._features.items():
+                dict_ellipse[feature + suffix] = round(getattr(self, feature), decimals)
 
-        super_dict = super().to_dict(decimals=2)
+        super_dict = super().to_dict(decimals=decimals)
         dict_return_value = {**super_dict, **dict_ellipse}
         return dict_return_value
 
@@ -256,12 +308,23 @@ class Ellipse(Annotation):
         self._circularity = 4 * np.pi * self._area / self._perimeter**2
 
     def _calculate_perimeter(self) -> None:
-        self._perimeter = (
-            2 * np.pi * np.sqrt((self._radius_x**2 + self._radius_y**2) / 2)
-        )
+        self._perimeter = 2 * np.pi * np.sqrt((self._radius_x**2 + self._radius_y**2) / 2)
 
     def _calculate_area(self) -> None:
         self._area = np.pi * self._radius_x * self._radius_y
+
+    def _calculate_minor_axis(self) -> None:
+        self._minor_axis = min(self._radius_x, self._radius_y)
+
+    def _calculate_major_axis(self) -> None:
+        self._major_axis = max(self._radius_x, self._radius_y)
+
+    def _calculate_average_diameter(self) -> None:
+        self._average_diameter = (self._radius_x + self._radius_y) / 2
+
+    def _calculate_convex_hull_area(self) -> None:
+        convex_hull = cv2.convexHull(self._contour)
+        self._convex_hull_area = cv2.contourArea(convex_hull)
 
     def _calculate_aspect_ratio(self) -> None:
         if self._radius_x == self._radius_y:
