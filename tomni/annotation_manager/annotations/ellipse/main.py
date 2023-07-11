@@ -57,7 +57,7 @@ class Ellipse(Annotation):
         self._area: Union[float, None] = None
         self._perimeter: Union[float, None] = None
         self._aspect_ratio: Union[float, None] = None
-        self.feature_multiplier = feature_multiplier
+        self._feature_multiplier = feature_multiplier
         # featues
         all_features = [
             "area",
@@ -155,7 +155,7 @@ class Ellipse(Annotation):
         """
         if "area" in self._features:
             self._calculate_area()
-            return self._area
+            return self._area * self._feature_multiplier**2
         return
 
     @property
@@ -167,7 +167,7 @@ class Ellipse(Annotation):
         """
         if "perimeter" in self._features:
             self._calculate_perimeter()
-            return self._perimeter
+            return self._perimeter * self._feature_multiplier
         return
 
     @property
@@ -185,14 +185,10 @@ class Ellipse(Annotation):
     def to_dict(self, decimals: int = 2, **kwargs) -> dict:
         dict_ellipse = {
             "type": "ellipse",
-            "center": {key: value * self.feature_multiplier for key, value in asdict(self.center).items()},
-            "radiusX": self.radius_x * self.feature_multiplier,
-            "radiusY": self.radius_y * self.feature_multiplier,
+            "center": asdict(self.center),
+            "radiusX": self.radius_x,
+            "radiusY": self.radius_y,
             "angleOfRotation": self.rotation,
-            "aspect_ratio": round(self.aspect_ratio, decimals),
-            "area": (round(self.area, decimals) * self.feature_multiplier**2),
-            "circularity": round(self.circularity, decimals),
-            "perimeter": round(self.perimeter, decimals) * self.feature_multiplier,
         }
 
         if self._features:

@@ -66,11 +66,14 @@ class Polygon(Annotation):
 
             self._features = features
 
+        self._feature_multiplier = feature_multiplier
         self._area = None
         self._circularity = None
         self._convex_hull_area = None
         self._perimeter = None
         self._roundness = None
+
+
     @property
     def accuracy(self) -> float:
         """Accuracy of the model's polygon prediction.
@@ -92,7 +95,7 @@ class Polygon(Annotation):
 
         if "area" in self._features:
             self._calculate_area()
-            return self._area
+            return self._area * self._feature_multiplier**2
         return
 
     @property
@@ -119,7 +122,7 @@ class Polygon(Annotation):
 
         if "convex_hull_area" in self._features:
             self._calculate_convex_hull_area()
-            return self._convex_hull_area
+            return self._convex_hull_area * self._feature_multiplier**2
         return
 
     @property
@@ -140,7 +143,7 @@ class Polygon(Annotation):
 
         if "perimeter" in self._features:
             self._calculate_perimeter()
-            return self._perimeter
+            return self._perimeter * self._feature_multiplier
         return
 
     @property
