@@ -27,6 +27,7 @@ class Polygon(Annotation):
         parents: List[Annotation] = [],
         feature_multiplier: int = 1,
         features: Union[List[str], None] = None,
+        accuracy: float = 1
     ):
         """Initializes a Polygon object.
 
