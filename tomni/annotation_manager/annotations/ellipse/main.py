@@ -313,6 +313,9 @@ class Ellipse(Annotation):
     def _calculate_area(self) -> None:
         self._area = np.pi * self._radius_x * self._radius_y
 
+    def _calculate_convex_hull_area(self) -> None:
+        self._convex_hull_area = np.pi * self._radius_x * self._radius_y
+
     def _calculate_minor_axis(self) -> None:
         self._minor_axis = min(self._radius_x, self._radius_y)
 
@@ -321,10 +324,6 @@ class Ellipse(Annotation):
 
     def _calculate_average_diameter(self) -> None:
         self._average_diameter = (self._radius_x + self._radius_y) / 2
-
-    def _calculate_convex_hull_area(self) -> None:
-        convex_hull = cv2.convexHull(self._contour)
-        self._convex_hull_area = cv2.contourArea(convex_hull)
 
     def _calculate_aspect_ratio(self) -> None:
         if self._radius_x == self._radius_y:
