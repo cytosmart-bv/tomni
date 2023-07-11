@@ -21,7 +21,9 @@ manager = AnnotationManager.from_dicts(dicts=dicts)
 
 # %%
 pixels_per_mm = 742
-manager = AnnotationManager.from_dicts(dicts=dicts, feature_multiplier=742)
+pixels_per_um = 742/1000
+feature_multiplier = 1 / pixels_per_um
+manager = AnnotationManager.from_dicts(dicts=dicts, feature_multiplier=feature_multiplier)
 # %%
 manager = AnnotationManager.from_dicts(dicts=dicts, features=[])
 
