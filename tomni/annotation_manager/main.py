@@ -204,13 +204,7 @@ class AnnotationManager(object):
         else:
             raise StopIteration
 
-    def to_dict(
-        self,
-        decimals: int = 2,
-        mask_json: Union[dict, None] = None,
-        min_overlap: float = 0.9,
-        **kwargs,
-    ) -> List[Dict]:
+    def to_dict(self, decimals: int = 2, mask_json: Union[List[dict], None] = None, min_overlap: float = 0.9, **kwargs) -> List[Dict]:
         """Transform AM object to a collection of our format.
 
         Args:
