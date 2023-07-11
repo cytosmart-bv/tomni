@@ -20,6 +20,9 @@ with open(json_fp, "rb") as f:
 manager = AnnotationManager.from_dicts(dicts=dicts)
 
 # %%
+pixels_per_mm = 742
+manager = AnnotationManager.from_dicts(dicts=dicts, feature_multiplier=742)
+# %%
 manager = AnnotationManager.from_dicts(dicts=dicts, features=[])
 
 # %%
