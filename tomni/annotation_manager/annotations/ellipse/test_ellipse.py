@@ -17,9 +17,6 @@ class TestEllipse(TestCase):
         self.zero_ellipse = Ellipse(radius_x=0, radius_y=0, center=Point(0, 0), rotation=0, id=id_, children=children, parents=parents, label=label)
         self.circle = Ellipse(radius_x=1, radius_y=1, center=Point(0, 0), rotation=0, id=id_, children=children, parents=parents, label=label)
         self.oval = Ellipse(radius_x=1, radius_y=3, center=Point(0, 0), rotation=0, id=id_, children=children, parents=parents, label=label)
-        self.oval_accuracy = Ellipse(
-            radius_x=1, radius_y=3, center=Point(0, 0), rotation=0, id=id_, children=children, parents=parents, label=label, accuracy=0.5
-        )
 
     def test_zero_area(self):
         expected = 0.0
@@ -152,15 +149,15 @@ class TestEllipse(TestCase):
 
         self.assertDictEqual(expected, actual)
 
-    def test_oval_to_dict_accuracy(self):
+    def test_oval_to_dict_accuracy_05(self):
         expected = {
             "area": 9.42,
             "aspect_ratio": 0.33,
             "center": {"x": 0, "y": 0},
             "children": [],
             "circularity": 0.6,
-            "id": "1234-1234-2134-1321",
-            "label": "ellipse_test",
+            "id": "",
+            "label": "",
             "parents": [],
             "perimeter": 14.05,
             "radiusX": 1,
@@ -169,7 +166,34 @@ class TestEllipse(TestCase):
             "type": "ellipse",
             "accuracy": 0.5,
         }
-        actual = self.oval_accuracy.to_dict()
+        oval1 = Ellipse(
+            radius_x=1, radius_y=3, center=Point(0, 0), rotation=0, id="", children=[], parents=[], label="", accuracy=0.5
+        )
+        actual = oval1.to_dict()
+
+        self.assertDictEqual(expected, actual)
+
+    def test_oval_to_dict_accuracy_0(self):
+        expected = {
+            "area": 9.42,
+            "aspect_ratio": 0.33,
+            "center": {"x": 0, "y": 0},
+            "children": [],
+            "circularity": 0.6,
+            "id": "",
+            "label": "",
+            "parents": [],
+            "perimeter": 14.05,
+            "radiusX": 1,
+            "radiusY": 3,
+            "angleOfRotation": 0,
+            "type": "ellipse",
+            "accuracy": 0,
+        }
+        oval1 = Ellipse(
+            radius_x=1, radius_y=3, center=Point(0, 0), rotation=0, id="", children=[], parents=[], label="", accuracy=0
+        )
+        actual = oval1.to_dict()
 
         self.assertDictEqual(expected, actual)
 
