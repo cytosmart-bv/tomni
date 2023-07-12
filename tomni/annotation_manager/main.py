@@ -9,6 +9,8 @@ from tomni.transformers import labels2listsOfPoints, positions2contour
 from .annotations import Annotation, Ellipse, Point, Polygon
 from .utils import parse_points_to_contour
 
+MIN_NR_POINTS = 5
+
 
 class AnnotationManager(object):
     def __init__(self, annotations: List[Annotation]):
@@ -44,6 +46,8 @@ class AnnotationManager(object):
                     features=features,
                 )
             elif d[TYPE_KEY] == "polygon":
+                if len(d["points"]) < MIN_NR_POINTS:
+                    continue
                 annotation = Polygon(
                     label=d.get(LABEL_KEY, None),
                     id=d.get(ID_KEY, str(uuid.uuid4())),

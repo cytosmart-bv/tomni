@@ -33,17 +33,10 @@ class Polygon(Annotation):
             features (Union[List[str],None]): list of features that the user wants returned.
                                   Defaults to None
         """
-        MIN_NR_POINTS = 3
-
         super().__init__(id, label, children, parents, accuracy)
         self._points: List[Point] = simplify_line(points)
         self._contour: np.ndarray = parse_points_to_contour(points)
 
-        self._has_enough_points = len(points) >= MIN_NR_POINTS
-        if not self._has_enough_points:
-            warnings.warn(
-                f"Polygon has less than {MIN_NR_POINTS} points. Some features may not be available."
-            )
 
         # featues
         all_features = [
@@ -71,7 +64,6 @@ class Polygon(Annotation):
         self._convex_hull_area = None
         self._perimeter = None
         self._roundness = None
-
     @property
     def accuracy(self) -> float:
         """Accuracy of the model's polygon prediction.
@@ -177,14 +169,11 @@ class Polygon(Annotation):
 
         # if the user wants any features returned
         if self._features:
-            # Feature property is None if polygon has not enough points which results the round() to fail on a NoneType.
-            if self._has_enough_points:
-                # when the corresponding name occurs in the feature list, it is added to the dict polygon features
-                polygon_features = {}
-                for feature in self._features:
-                    polygon_features[feature] = round(getattr(self, feature), decimals)
+            polygon_features = {}
+            for feature in self._features:
+                polygon_features[feature] = round(getattr(self, feature), decimals)
 
-                polygon_dict = {**polygon_features, **polygon_dict}
+            polygon_dict = {**polygon_features, **polygon_dict}
 
         super_dict = super().to_dict(decimals=decimals)
         dict_return_value = {**super_dict, **polygon_dict}
@@ -233,13 +222,9 @@ class Polygon(Annotation):
         return mask
 
     def _calculate_area(self) -> None:
-        if self._has_enough_points:
-            self._area = cv2.contourArea(self._contour)
+        self._area = cv2.contourArea(self._contour)
 
     def _calculate_circularity(self):
-        if not self._has_enough_points:
-            return
-
         if not self._area:
             self._calculate_area()
 
@@ -249,9 +234,6 @@ class Polygon(Annotation):
         self._circularity = (4 * np.pi * self._area) / (self._perimeter**2)
 
     def _calculate_convex_hull_area(self) -> None:
-        if not self._has_enough_points:
-            return
-
         convex_hull = cv2.convexHull(self._contour)
         self._convex_hull_area = cv2.contourArea(convex_hull)
 
@@ -259,9 +241,6 @@ class Polygon(Annotation):
         self._perimeter = cv2.arcLength(self._contour, True)
 
     def _calculate_roundness(self) -> None:
-        if not self._has_enough_points:
-            return
-
         if not self._area:
             self._calculate_area()
 
