@@ -24,6 +24,7 @@ manager = AnnotationManager.from_dicts(dicts=dicts, features=[])
 
 # %%
 manager = AnnotationManager.from_dicts(dicts=dicts, features=["area", "circularity"])
+dicts_ = manager.to_dict()
 
 # %%
 contours = [json2contours(d) for d in dicts]
