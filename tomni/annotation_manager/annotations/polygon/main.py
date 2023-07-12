@@ -19,13 +19,7 @@ from ...utils import compress_polygon_points, parse_points_to_contour
 
 class Polygon(Annotation):
     def __init__(
-        self,
-        points: List[Point],
-        id: str,
-        label: str = "",
-        children: List[Annotation] = [],
-        parents: List[Annotation] = [],
-        features: Union[List[str], None] = None,
+        self, points: List[Point], id: str, label: str = "", children: List[Annotation] = [], parents: List[Annotation] = [], accuracy: float = 1, features: Union[List[str], None] = None,
     ):
         """Initializes a Polygon object.
 
@@ -35,12 +29,13 @@ class Polygon(Annotation):
             label (str): Class label of annotation.
             children (List[Annotation]): Tracking annotations. Refers to t+1.
             parents (List[Annotation]): Tracking annotations. Refers to t-1.
+            accuracy (float, optional): The confidence of the model's prediction. Defaults to 1.
             features (Union[List[str],None]): list of features that the user wants returned.
                                   Defaults to None
         """
         MIN_NR_POINTS = 3
 
-        super().__init__(id, label, children, parents)
+        super().__init__(id, label, children, parents, accuracy)
         self._points: List[Point] = simplify_line(points)
         self._contour: np.ndarray = parse_points_to_contour(points)
 
@@ -76,6 +71,16 @@ class Polygon(Annotation):
         self._convex_hull_area = None
         self._perimeter = None
         self._roundness = None
+
+    @property
+    def accuracy(self) -> float:
+        """Accuracy of the model's polygon prediction.
+
+        Returns:
+            float: Polygon´s accuracy.
+        """
+
+        return self._accuracy
 
     @property
     def area(self) -> Union[float, None]:

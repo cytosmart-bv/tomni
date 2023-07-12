@@ -22,6 +22,7 @@ class Ellipse(Annotation):
         parents: List[Annotation] = [],
         radius_y: Union[float, None] = None,
         features: Union[List[str], None] = None,
+        accuracy: float = 1,
     ):
         """Initializes a Ellipse object.
 
@@ -38,10 +39,11 @@ class Ellipse(Annotation):
             label (str): Class label of annotation.
             children (List[Annotation]): Tracking annotations. Refers to t+1.
             parents (List[Annotation]): Tracking annotations. Refers to t-1.
+            accuracy (float, optional): The confidence of the model's prediction. Defaults to 1.
             features (Union[List[str], None]): list of features that the user wants returned.
                                   Defaults to None
         """
-        super().__init__(id, label, children, parents)
+        super().__init__(id, label, children, parents, accuracy)
         self._center: Point = center
         self.radius_x: float = radius_x
         if radius_y:
@@ -74,6 +76,11 @@ class Ellipse(Annotation):
         self._area = None
         self._perimeter = None
         self._aspect_ratio = None
+
+    @property
+    def accuracy(self):
+        """Accuracy of ellipse."""
+        return self._accuracy
 
     @property
     def label(self):
