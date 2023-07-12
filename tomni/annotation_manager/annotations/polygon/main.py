@@ -25,10 +25,11 @@ class Polygon(Annotation):
         children: List[Annotation] = [],
         parents: List[Annotation] = [],
         pixel_density: int = 1,
-        features: Union[Dict, None] = None,
+        features: Union[List[str], None] = None,
         accuracy: float = 1,
         metric_unit: str = ""
     ):
+        
         """Initializes a Polygon object.
 
         Args:
@@ -39,40 +40,47 @@ class Polygon(Annotation):
             parents (List[Annotation]): Tracking annotations. Refers to t-1.
             accuracy (float, optional): The confidence of the model's prediction. Defaults to 1.
             features (Union[List[str],None]): list of features that the user wants returned.
-                                  Defaults to None
+                Defaults to None
+            metric_unit (str, optional): A suffix added to the name of the feature in the dict. Defaults to "".
+
         """
         super().__init__(id, label, children, parents, accuracy)
         self._points: List[Point] = simplify_line(points)
         self._contour: np.ndarray = parse_points_to_contour(points)
+        self._metric_unit = metric_unit
+        self._pixel_density = pixel_density
 
 
-        # features and their default variable name suffix
-        all_features = [
-            "area",
-            "circularity",
-            "convex_hull_area",
-            "perimeter",
-            "roundness",
-        ]
+        self._area: Union[float, None] = None
+        self._aspect_ratio: Union[float, None] = None
+        self._average_diameter: Union[float, None] = None
+        self._circularity: Union[float, None] = None
+        self._convex_hull_area: Union[float, None] = None
+        self._major_axis: Union[float, None] = None
+        self._minor_axis: Union[float, None] = None
+        self._perimeter: Union[float, None] = None
 
-        # if features is None all features are returned
+        self._all_features = {
+            "area": {"is_ratio": False},
+            "aspect_ratio": {"is_ratio": True},
+            "average_diameter": {"is_ratio": False},
+            "circularity": {"is_ratio": True},
+            "convex_hull_area": {"is_ratio": False},
+            "major_axis": {"is_ratio": False},
+            "minor_axis": {"is_ratio": False},
+            "perimeter": {"is_ratio": False},
+        }
+
         if features is None:
-            self._features = all_features
+            self._features = self._all_features
         else:
-            missing_features = set(features.keys()).difference(set(all_features.keys()))
+            missing_features = set(features).difference(set(self._all_features.keys()))
             if missing_features:
                 raise ValueError(
                     f"The following features are not compatible with the Annotation Manager: {', '.join(missing_features)}"
                 )
 
             self._features = features
-
-        self._pixel_density = pixel_density
-        self._area = None
-        self._circularity = None
-        self._convex_hull_area = None
-        self._perimeter = None
-        self._roundness = None
 
     @property
     def accuracy(self) -> float:
@@ -124,6 +132,20 @@ class Polygon(Annotation):
             self._calculate_convex_hull_area()
             return self._convex_hull_area * self._pixel_density**2
         return
+
+    @property
+    def average_diameter(self) -> float:
+        """Area described by pi * radius_x * radius_y.
+
+        Returns:
+            float: Ellipse's area.
+        """
+        if "average_diameter" in self._features:
+            self._calculate_average_diameter()
+            return self._average_diameter * self._pixel_density
+        return
+
+
 
     @property
     def label(self):
@@ -180,8 +202,9 @@ class Polygon(Annotation):
         # if the user wants any features returned
         if self._features:
             polygon_features = {}
-            for feature, suffix in self._features.items():
-                polygon_features[feature + suffix] = round(getattr(self, feature), decimals)
+            for feature in self._features:
+                feature_name = feature if self._all_features[feature]["is_ratio"] else feature + self._metric_unit
+                polygon_features[feature_name] = round(getattr(self, feature), decimals)
             polygon_dict = {**polygon_features, **polygon_dict}
 
         super_dict = super().to_dict(decimals=decimals)
@@ -256,6 +279,22 @@ class Polygon(Annotation):
         _, radius = cv2.minEnclosingCircle(self._contour)
         enclosing_circle_area = radius**2 * np.pi
         self._roundness = self._area / enclosing_circle_area
+
+    def _calculate_minor_axis(self) -> None:
+        self._minor_axis = min(self._radius_x, self._radius_y)
+
+    def _calculate_major_axis(self) -> None:
+        self._major_axis = max(self._radius_x, self._radius_y)
+
+    def _calculate_average_diameter(self) -> None:
+        _, (r1, r2), _ = cv2.fitEllipse(self._contour)
+
+        if not self._major_axis:
+            major_axis = max(r1, r2)
+        if not self._minor_axis:
+            minor_axis = min(r1, r2)
+
+        self._average_diameter = (self._major_axis + self._minor_axis) // 2
 
     def __eq__(self, other):
         if not isinstance(other, Polygon):

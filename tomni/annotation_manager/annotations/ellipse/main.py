@@ -24,7 +24,7 @@ class Ellipse(Annotation):
         pixel_density: int = 1,
         features: Union[List[str], None] = None,
         accuracy: float = 1,
-        metric_unit: str = ""
+        metric_unit: str = "",
     ):
         """Initializes a Ellipse object.
 
@@ -43,7 +43,9 @@ class Ellipse(Annotation):
             parents (List[Annotation]): Tracking annotations. Refers to t-1.
             accuracy (float, optional): The confidence of the model's prediction. Defaults to 1.
             features (Union[List[str], None]): list of features that the user wants returned.
-                                  Defaults to None
+                Defaults to None
+            metric_unit (str, optional): A suffix added to the name of the feature in the dict. Defaults to "".
+
         """
         super().__init__(id, label, children, parents, accuracy)
         self._center: Point = center
@@ -53,31 +55,34 @@ class Ellipse(Annotation):
         else:
             self.radius_y: float = radius_x
         self.rotation: float = rotation
+        self._pixel_density = pixel_density
+        self._metric_unit = metric_unit
 
-        self._circularity: Union[float, None] = None
         self._area: Union[float, None] = None
-        self._perimeter: Union[float, None] = None
         self._aspect_ratio: Union[float, None] = None
+        self._average_diameter: Union[float, None] = None
+        self._circularity: Union[float, None] = None
+        self._convex_hull_area: Union[float, None] = None
         self._major_axis: Union[float, None] = None
         self._minor_axis: Union[float, None] = None
-        self._average_diameter: Union[float, None] = None
-        self._convex_hull_area: Union[float, None] = None
-        self._pixel_density = pixel_density
+        self._perimeter: Union[float, None] = None
 
-        # features
-        all_features = [
-            "area",
-            "circularity",
-            "convex_hull_area",
-            "perimeter",
-            "roundness",
-        ]
-        
+        self._all_features = {
+            "area": {"is_ratio": False},
+            "aspect_ratio": {"is_ratio": True},
+            "average_diameter": {"is_ratio": False},
+            "circularity": {"is_ratio": True},
+            "convex_hull_area": {"is_ratio": False},
+            "major_axis": {"is_ratio": False},
+            "minor_axis": {"is_ratio": False},
+            "perimeter": {"is_ratio": False},
+        }
+
         # if features is None all features are returned
         if features is None:
-            self._features = all_features
+            self._features = self._all_features
         else:
-            missing_features = set(features.keys()).difference(set(all_features.keys()))
+            missing_features = set(features).difference(set(self._all_features.keys()))
             if missing_features:
                 raise ValueError(
                     f"The following features are not compatible with the Annotation Manager: {', '.join(missing_features)}"
@@ -85,10 +90,6 @@ class Ellipse(Annotation):
 
             self._features = features
 
-        self._circularity = None
-        self._area = None
-        self._perimeter = None
-        self._aspect_ratio = None
 
     @property
     def accuracy(self):
@@ -177,7 +178,6 @@ class Ellipse(Annotation):
             self._calculate_convex_hull_area()
             return self._convex_hull_area * self._pixel_density**2
         return
-    
 
     @property
     def average_diameter(self) -> float:
@@ -215,8 +215,6 @@ class Ellipse(Annotation):
             return self._major_axis * self._pixel_density
         return
 
-
-
     @property
     def perimeter(self) -> float:
         """Perimeter described by 2*pi*sqrt((radius_x**2 + radius_y**2) / 2).
@@ -251,8 +249,13 @@ class Ellipse(Annotation):
         }
 
         if self._features:
-            for feature, suffix in self._features.items():
-                dict_ellipse[feature + suffix] = round(getattr(self, feature), decimals)
+            for feature in self._features:
+                feature_name = (
+                    feature
+                    if self._all_features[feature]["is_ratio"]
+                    else feature + self._metric_unit
+                )
+                dict_ellipse[feature_name] = round(getattr(self, feature), decimals)
 
         super_dict = super().to_dict(decimals=decimals)
         dict_return_value = {**super_dict, **dict_ellipse}
@@ -330,7 +333,7 @@ class Ellipse(Annotation):
         self._major_axis = max(self._radius_x, self._radius_y)
 
     def _calculate_average_diameter(self) -> None:
-        self._average_diameter = (self._radius_x + self._radius_y) / 2
+        self._average_diameter = (self._radius_x + self._radius_y) // 2
 
     def _calculate_aspect_ratio(self) -> None:
         if self._radius_x == self._radius_y:

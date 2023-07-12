@@ -70,7 +70,7 @@ class AnnotationManager(object):
         return cls(annotations)
 
     @classmethod
-    def from_contours(cls, contours: List[np.ndarray], pixel_density: int = 1, features: List[str] = None, feature_suffix: str = "Um"):
+    def from_contours(cls, contours: List[np.ndarray], pixel_density: int = 1, features: List[str] = None, metric_unit: str = "Um"):
         """Initializes a AnnotationManager object from cv2 contours.
         Contours' shape must be [N, 1, 2] with dtype of np.int32.
 
@@ -86,13 +86,13 @@ class AnnotationManager(object):
             for i in range(contour.shape[0]):
                 points.append(Point(x=int(contour[i][0]), y=int(contour[i][1])))
 
-            annotations.append(Polygon(label="", id=str(uuid.uuid4()), children=[], parents=[], points=points, features=features, pixel_density=pixel_density))
+            annotations.append(Polygon(label="", id=str(uuid.uuid4()), children=[], parents=[], points=points, features=features, pixel_density=pixel_density), metric_unit=metric_unit)
 
 
         return cls(annotations)
 
     @classmethod
-    def from_binary_mask(cls, mask: np.ndarray, connectivity: int = 8, pixel_density: int = 1):
+    def from_binary_mask(cls, mask: np.ndarray, connectivity: int = 8, features: List[str] = None, pixel_density: int = 1, metric_unit: str = "Um"):
         """Initializes a AnnotationManager object from a binary mask.
         Binary mask can contain either 0 and 1 or 0 and 255.
 
@@ -138,10 +138,10 @@ class AnnotationManager(object):
 
         edged_mask = edges * labeled_mask
 
-        return AnnotationManager.from_labeled_mask(edged_mask, pixel_density=pixel_density)
+        return AnnotationManager.from_labeled_mask(edged_mask, pixel_density=pixel_density, features=features, metric_unit=metric_unit)
 
     @classmethod
-    def from_labeled_mask(cls, mask: np.ndarray, include_inner_contours: bool = False, pixel_density: int = 1):
+    def from_labeled_mask(cls, mask: np.ndarray, include_inner_contours: bool = False, pixel_density: int = 1, metric_unit: str = "Um"):
         """Initializes a AnnotationManager object from a labeled mask.
         A labeled mask contains components indicated by the same pixel values (see example below).
 
@@ -159,7 +159,7 @@ class AnnotationManager(object):
         """
         points = labels2listsOfPoints(mask)
         contours = [positions2contour(point, return_inner_contours=include_inner_contours) for point in points if len(point) > 0]
-        return AnnotationManager.from_contours(contours, pixel_density=pixel_density)
+        return AnnotationManager.from_contours(contours, pixel_density=pixel_density, metric_unit=metric_unit)
 
     @classmethod
     def from_darwin(cls, dicts: List[dict]):
