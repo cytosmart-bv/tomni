@@ -1,7 +1,6 @@
-import warnings
 from dataclasses import asdict
 from typing import List, Tuple, Union, Dict
-
+import quantiphy
 import cv2
 import numpy as np
 
@@ -25,9 +24,10 @@ class Polygon(Annotation):
         label: str = "",
         children: List[Annotation] = [],
         parents: List[Annotation] = [],
-        feature_multiplier: int = 1,
+        pixel_density: int = 1,
         features: Union[Dict, None] = None,
-        accuracy: float = 1
+        accuracy: float = 1,
+        metric_unit: str = ""
     ):
         """Initializes a Polygon object.
 
@@ -46,9 +46,14 @@ class Polygon(Annotation):
         self._contour: np.ndarray = parse_points_to_contour(points)
 
 
-        # features and its unit suffix
-        all_features = {'area': '', 'circularity': '', 'convex_hull_area': '', 'perimeter': '', 'roundness': ''}
-
+        # features and their default variable name suffix
+        all_features = [
+            "area",
+            "circularity",
+            "convex_hull_area",
+            "perimeter",
+            "roundness",
+        ]
 
         # if features is None all features are returned
         if features is None:
@@ -62,7 +67,7 @@ class Polygon(Annotation):
 
             self._features = features
 
-        self._feature_multiplier = feature_multiplier
+        self._pixel_density = pixel_density
         self._area = None
         self._circularity = None
         self._convex_hull_area = None
@@ -90,7 +95,7 @@ class Polygon(Annotation):
 
         if "area" in self._features:
             self._calculate_area()
-            return self._area * self._feature_multiplier**2
+            return self._area * self._pixel_density**2
         return
 
     @property
@@ -117,7 +122,7 @@ class Polygon(Annotation):
 
         if "convex_hull_area" in self._features:
             self._calculate_convex_hull_area()
-            return self._convex_hull_area * self._feature_multiplier**2
+            return self._convex_hull_area * self._pixel_density**2
         return
 
     @property
@@ -138,7 +143,7 @@ class Polygon(Annotation):
 
         if "perimeter" in self._features:
             self._calculate_perimeter()
-            return self._perimeter * self._feature_multiplier
+            return self._perimeter * self._pixel_density
         return
 
     @property

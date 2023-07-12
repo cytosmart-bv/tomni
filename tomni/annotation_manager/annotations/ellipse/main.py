@@ -21,9 +21,10 @@ class Ellipse(Annotation):
         children: List[Annotation] = [],
         parents: List[Annotation] = [],
         radius_y: Union[float, None] = None,
-        feature_multiplier: int = 1,
+        pixel_density: int = 1,
         features: Union[List[str], None] = None,
         accuracy: float = 1,
+        metric_unit: str = ""
     ):
         """Initializes a Ellipse object.
 
@@ -61,11 +62,17 @@ class Ellipse(Annotation):
         self._minor_axis: Union[float, None] = None
         self._average_diameter: Union[float, None] = None
         self._convex_hull_area: Union[float, None] = None
-        self._feature_multiplier = feature_multiplier
+        self._pixel_density = pixel_density
 
         # features
-        all_features = {'area': '','aspect_ratio': '','average_diameter': '','circularity': '', 'convex_hull_area': '', 'major_axis': '', 'minor_axis': '', 'perimeter': ''}
-
+        all_features = [
+            "area",
+            "circularity",
+            "convex_hull_area",
+            "perimeter",
+            "roundness",
+        ]
+        
         # if features is None all features are returned
         if features is None:
             self._features = all_features
@@ -155,7 +162,7 @@ class Ellipse(Annotation):
         """
         if "area" in self._features:
             self._calculate_area()
-            return self._area * self._feature_multiplier**2
+            return self._area * self._pixel_density**2
         return
 
     @property
@@ -168,7 +175,7 @@ class Ellipse(Annotation):
 
         if "convex_hull_area" in self._features:
             self._calculate_convex_hull_area()
-            return self._convex_hull_area * self._feature_multiplier**2
+            return self._convex_hull_area * self._pixel_density**2
         return
     
 
@@ -181,7 +188,7 @@ class Ellipse(Annotation):
         """
         if "average_diameter" in self._features:
             self._calculate_average_diameter()
-            return self._average_diameter * self._feature_multiplier
+            return self._average_diameter * self._pixel_density
         return
 
     @property
@@ -193,7 +200,7 @@ class Ellipse(Annotation):
         """
         if "minor_axis" in self._features:
             self._calculate_minor_axis()
-            return self._minor_axis * self._feature_multiplier
+            return self._minor_axis * self._pixel_density
         return
 
     @property
@@ -205,7 +212,7 @@ class Ellipse(Annotation):
         """
         if "major_axis" in self._features:
             self._calculate_major_axis()
-            return self._major_axis * self._feature_multiplier
+            return self._major_axis * self._pixel_density
         return
 
 
@@ -219,7 +226,7 @@ class Ellipse(Annotation):
         """
         if "perimeter" in self._features:
             self._calculate_perimeter()
-            return self._perimeter * self._feature_multiplier
+            return self._perimeter * self._pixel_density
         return
 
     @property
