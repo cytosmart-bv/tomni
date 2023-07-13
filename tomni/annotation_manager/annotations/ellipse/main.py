@@ -80,7 +80,7 @@ class Ellipse(Annotation):
 
         # if features is None all features are returned
         if features is None:
-            self._features = self._all_features
+            self._features = [feature for feature in self._all_features]
         else:
             missing_features = set(features).difference(set(self._all_features.keys()))
             if missing_features:
@@ -90,11 +90,14 @@ class Ellipse(Annotation):
 
             self._features = features
 
-
     @property
     def accuracy(self):
         """Accuracy of ellipse."""
         return self._accuracy
+
+    @accuracy.setter
+    def points(self, *arg, **kwargs) -> None:
+        raise SyntaxError("Points are Immutable")
 
     @property
     def label(self):
@@ -142,17 +145,6 @@ class Ellipse(Annotation):
         else:
             self._rotation = new_rotation
 
-    @property
-    def circularity(self) -> float:
-        """Circularity described by 4 * pi * Area / Perimeter**2.
-
-        Returns:
-            float: Ellipse's circularity.
-        """
-        if "circularity" in self._features:
-            self._calculate_circularity()
-            return self._circularity
-        return
 
     @property
     def area(self) -> float:
@@ -167,13 +159,28 @@ class Ellipse(Annotation):
         return
 
     @property
-    def convex_hull_area(self) -> Union[float, None]:
-        """Convex Hull Area by cv2 contour operations.
+    def circularity(self) -> float:
+        """Circularity described by 4 * pi * Area / Perimeter**2.
 
         Returns:
-            Union[float, None]: Polygon's convex hull area or None.
+            float: Ellipse's circularity.
         """
+        if "circularity" in self._features:
+            self._calculate_circularity()
+            return self._circularity
+        return
 
+
+    @property
+    def convex_hull_area(self) -> Union[float, None]:
+        """Calculate the convex hull area of an ellipse.
+
+        This property computes the area of the convex hull of the ellipse using the formula:
+        Area = π * radius_x * radius_y.
+        
+        Returns:
+            Union[float, None]: The convex hull area of the ellipse, or None if it cannot be calculated.
+        """
         if "convex_hull_area" in self._features:
             self._calculate_convex_hull_area()
             return self._convex_hull_area * self._pixel_density**2
@@ -181,10 +188,10 @@ class Ellipse(Annotation):
 
     @property
     def average_diameter(self) -> float:
-        """Area described by pi * radius_x * radius_y.
+        """Returns the average diameter of an ellipse.
 
         Returns:
-            float: Ellipse's area.
+            float: Average diameter.
         """
         if "average_diameter" in self._features:
             self._calculate_average_diameter()
@@ -193,10 +200,10 @@ class Ellipse(Annotation):
 
     @property
     def minor_axis(self) -> float:
-        """Area described by pi * radius_x * radius_y.
+        """Returns the minor axis of an ellipse.
 
         Returns:
-            float: Ellipse's area.
+            float: Minor axis length.
         """
         if "minor_axis" in self._features:
             self._calculate_minor_axis()
@@ -205,14 +212,26 @@ class Ellipse(Annotation):
 
     @property
     def major_axis(self) -> float:
-        """Area described by pi * radius_x * radius_y.
+        """Return the major axis of the polygon.
 
         Returns:
-            float: Ellipse's area.
+            float: major axis length.
         """
         if "major_axis" in self._features:
             self._calculate_major_axis()
             return self._major_axis * self._pixel_density
+        return
+
+    @property
+    def aspect_ratio(self) -> float:
+        """Ratio between minor and major axis.
+
+        Returns:
+            float: Ellipse's aspect ratio.
+        """
+        if "aspect_ratio" in self._features:
+            self._calculate_aspect_ratio()
+            return self._aspect_ratio
         return
 
     @property
@@ -225,18 +244,6 @@ class Ellipse(Annotation):
         if "perimeter" in self._features:
             self._calculate_perimeter()
             return self._perimeter * self._pixel_density
-        return
-
-    @property
-    def aspect_ratio(self) -> float:
-        """Ratio between minor and major axis in this case radius_x * 2 / radius_y * 2.
-
-        Returns:
-            float: Ellipse's aspect ratio.
-        """
-        if "aspect_ratio" in self._features:
-            self._calculate_aspect_ratio()
-            return self._aspect_ratio
         return
 
     def to_dict(self, decimals: int = 2, **kwargs) -> dict:
@@ -253,8 +260,13 @@ class Ellipse(Annotation):
                 feature_name = (
                     feature
                     if self._all_features[feature]["is_ratio"]
-                    else feature + self._metric_unit
+                    else feature + "_" + self._metric_unit
                 )
+
+                # Convert snake_casing to camelCasing
+                first_word, *remaining_words  = feature_name.split('_')
+                feature_name = ''.join([first_word.lower(), *map(str.title, remaining_words)])
+
                 dict_ellipse[feature_name] = round(getattr(self, feature), decimals)
 
         super_dict = super().to_dict(decimals=decimals)
@@ -324,7 +336,9 @@ class Ellipse(Annotation):
         self._area = np.pi * self._radius_x * self._radius_y
 
     def _calculate_convex_hull_area(self) -> None:
-        self._convex_hull_area = np.pi * self._radius_x * self._radius_y
+        if not self._area:
+            self._calculate_area()
+        self._convex_hull_area = self._area
 
     def _calculate_minor_axis(self) -> None:
         self._minor_axis = min(self._radius_x, self._radius_y)

@@ -27,9 +27,8 @@ class Polygon(Annotation):
         pixel_density: int = 1,
         features: Union[List[str], None] = None,
         accuracy: float = 1,
-        metric_unit: str = ""
+        metric_unit: str = "",
     ):
-        
         """Initializes a Polygon object.
 
         Args:
@@ -49,7 +48,6 @@ class Polygon(Annotation):
         self._contour: np.ndarray = parse_points_to_contour(points)
         self._metric_unit = metric_unit
         self._pixel_density = pixel_density
-
 
         self._area: Union[float, None] = None
         self._aspect_ratio: Union[float, None] = None
@@ -72,7 +70,7 @@ class Polygon(Annotation):
         }
 
         if features is None:
-            self._features = self._all_features
+            self._features = [feature for feature in self._all_features]
         else:
             missing_features = set(features).difference(set(self._all_features.keys()))
             if missing_features:
@@ -84,13 +82,28 @@ class Polygon(Annotation):
 
     @property
     def accuracy(self) -> float:
-        """Accuracy of the model's polygon prediction.
-
-        Returns:
-            float: Polygon´s accuracy.
-        """
-
+        """Accuracy of ellipse."""
         return self._accuracy
+
+    @accuracy.setter
+    def points(self, *arg, **kwargs) -> None:
+        raise SyntaxError("Points are Immutable")
+
+    @property
+    def label(self):
+        return super().label
+
+    @label.setter
+    def label(self, value) -> None:
+        super().label = value
+
+    @property
+    def points(self) -> List[Point]:
+        return self._points
+
+    @points.setter
+    def points(self, *arg, **kwargs) -> None:
+        raise SyntaxError("Points are Immutable")
 
     @property
     def area(self) -> Union[float, None]:
@@ -135,25 +148,51 @@ class Polygon(Annotation):
 
     @property
     def average_diameter(self) -> float:
-        """Area described by pi * radius_x * radius_y.
+        """Returns the average diameter of a polygon.
 
         Returns:
-            float: Ellipse's area.
+            float: Average diameter.
         """
         if "average_diameter" in self._features:
             self._calculate_average_diameter()
             return self._average_diameter * self._pixel_density
         return
 
+    @property
+    def minor_axis(self) -> float:
+        """Return the minor axis of the polygon.
 
+        Returns:
+            float: Minor axis length.
+        """
+        if "minor_axis" in self._features:
+            self._calculate_axes()
+            return self._minor_axis * self._pixel_density
+        return
 
     @property
-    def label(self):
-        return super().label
+    def major_axis(self) -> float:
+        """Return the major axis of the polygon.
 
-    @label.setter
-    def label(self, value) -> None:
-        super().label = value
+        Returns:
+            float: major axis length.
+        """
+        if "major_axis" in self._features:
+            self._calculate_axes()
+            return self._major_axis * self._pixel_density
+        return
+
+    @property
+    def aspect_ratio(self) -> float:
+        """Ratio between minor and major axis.
+
+        Returns:
+            float: Ellipse's aspect ratio.
+        """
+        if "aspect_ratio" in self._features:
+            self._calculate_aspect_ratio()
+            return self._aspect_ratio
+        return
 
     @property
     def perimeter(self) -> Union[float, None]:
@@ -165,16 +204,8 @@ class Polygon(Annotation):
 
         if "perimeter" in self._features:
             self._calculate_perimeter()
-            return self._perimeter * self._pixel_density
+            return self._perimeter
         return
-
-    @property
-    def points(self) -> List[Point]:
-        return self._points
-
-    @points.setter
-    def points(self, *arg, **kwargs) -> None:
-        raise SyntaxError("Points are Immutable")
 
     @property
     def roundness(self) -> Union[float, None]:
@@ -203,7 +234,16 @@ class Polygon(Annotation):
         if self._features:
             polygon_features = {}
             for feature in self._features:
-                feature_name = feature if self._all_features[feature]["is_ratio"] else feature + self._metric_unit
+                feature_name = (
+                    feature
+                    if self._all_features[feature]["is_ratio"]
+                    else feature + "_" + self._metric_unit
+                )
+            
+                # Convert snake_casing to camelCasing
+                first_word, *remaining_words  = feature_name.split('_')
+                feature_name = ''.join([first_word.lower(), *map(str.title, remaining_words)])
+                
                 polygon_features[feature_name] = round(getattr(self, feature), decimals)
             polygon_dict = {**polygon_features, **polygon_dict}
 
@@ -246,9 +286,7 @@ class Polygon(Annotation):
         """
         mask = np.zeros(shape, dtype=np.uint8)
         if len(self._points) > 0:
-            points = np.array(
-                [[point.x, point.y] for point in self._points], dtype=np.int32
-            )
+            points = np.array([[point.x, point.y] for point in self._points], dtype=np.int32)
             cv2.fillPoly(mask, [points], color=1)
 
         return mask
@@ -280,21 +318,22 @@ class Polygon(Annotation):
         enclosing_circle_area = radius**2 * np.pi
         self._roundness = self._area / enclosing_circle_area
 
-    def _calculate_minor_axis(self) -> None:
-        self._minor_axis = min(self._radius_x, self._radius_y)
-
-    def _calculate_major_axis(self) -> None:
-        self._major_axis = max(self._radius_x, self._radius_y)
+    def _calculate_axes(self) -> None:
+        _, (r1, r2), _ = cv2.fitEllipse(self._contour)
+        self._minor_axis = min(r1, r2)
+        self._major_axis = max(r1, r2)
 
     def _calculate_average_diameter(self) -> None:
-        _, (r1, r2), _ = cv2.fitEllipse(self._contour)
-
-        if not self._major_axis:
-            major_axis = max(r1, r2)
-        if not self._minor_axis:
-            minor_axis = min(r1, r2)
+        if self._minor_axis is None or self._major_axis is None:
+            self._calculate_axes()
 
         self._average_diameter = (self._major_axis + self._minor_axis) // 2
+
+    def _calculate_aspect_ratio(self) -> None:
+        if self._minor_axis is None or self._major_axis is None:
+            self._calculate_axes()
+
+        self._aspect_ratio = self._minor_axis / self._major_axis
 
     def __eq__(self, other):
         if not isinstance(other, Polygon):
@@ -304,7 +343,5 @@ class Polygon(Annotation):
         are_points_equal = are_lines_equal(self.points, other.points, is_enclosed=True)
         reverse_points = other.points
         reverse_points.reverse()
-        are_points_equal_mirrored = are_lines_equal(
-            self.points, reverse_points, is_enclosed=True
-        )
+        are_points_equal_mirrored = are_lines_equal(self.points, reverse_points, is_enclosed=True)
         return are_points_equal | are_points_equal_mirrored
