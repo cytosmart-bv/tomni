@@ -6,6 +6,7 @@
 - Changed Polygon and Ellipse classes to include the list of features initialized by AnnotationManager
 - to_dict function now only returns features in the dictionary that were asked for in the feature list
 - Added `pixel_density` and `metric_unit` as inputs to apply to the feature outputs.
+- Added all features to `ellipse` and `polygon`.
 
 2.0.0-b0 (2022-11-29)
 ------------------
