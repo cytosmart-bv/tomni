@@ -327,7 +327,7 @@ class Polygon(Annotation):
         if self._minor_axis is None or self._major_axis is None:
             self._calculate_axes()
 
-        self._average_diameter = (self._major_axis + self._minor_axis) // 2
+        self._average_diameter = (self._major_axis + self._minor_axis) / 2
 
     def _calculate_aspect_ratio(self) -> None:
         if self._minor_axis is None or self._major_axis is None:

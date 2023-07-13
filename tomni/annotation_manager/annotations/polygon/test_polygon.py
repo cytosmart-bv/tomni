@@ -55,9 +55,27 @@ class TestPolygon(TestCase):
 
         self.assertEqual(expected, actual)
 
-    def test_circular_roundness(self):
-        expected = 0.8911880248803259
-        actual = self.circular_polygon.roundness
+    def test_circular_minor_axis(self):
+        expected = 4.363824844360352
+        actual = self.circular_polygon.minor_axis
+
+        self.assertAlmostEqual(expected, actual)
+
+    def test_circular_major_axis(self):
+        expected = 4.526668071746826
+        actual = self.circular_polygon.major_axis
+
+        self.assertEqual(expected, actual)
+
+    def test_circular_average_diameter(self):
+        expected = 4.445246458053589
+        actual = self.circular_polygon.average_diameter
+
+        self.assertEqual(expected, actual)
+
+    def test_circular_aspect_ratio(self):
+        expected = 0.9640258077673378
+        actual = self.circular_polygon.aspect_ratio
 
         self.assertEqual(expected, actual)
 
