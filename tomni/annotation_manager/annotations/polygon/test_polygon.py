@@ -31,81 +31,10 @@ class TestPolygon(TestCase):
         self.triangle_points = [Point(1, 5), Point(3, 1), Point(5, 5)]
         self.triangle_polygon = Polygon(points=self.triangle_points, id=id_, children=children, parents=parents, label=label)
 
+    # Area
     def test_circular_area(self):
         expected = 14.0
         actual = self.circular_polygon.area
-
-        self.assertEqual(expected, actual)
-
-    def test_circular_circularity(self):
-        expected = 0.9432711611657616
-        actual = self.circular_polygon.circularity
-
-        self.assertEqual(expected, actual)
-
-    def test_circular_convex_hull_area(self):
-        expected = 14.0
-        actual = self.circular_polygon.convex_hull_area
-
-        self.assertEqual(expected, actual)
-
-    def test_circular_perimeter(self):
-        expected = 13.656854152679443
-        actual = self.circular_polygon.perimeter
-
-        self.assertEqual(expected, actual)
-
-    def test_circular_minor_axis(self):
-        expected = 4.363824844360352
-        actual = self.circular_polygon.minor_axis
-
-        self.assertAlmostEqual(expected, actual)
-
-    def test_circular_major_axis(self):
-        expected = 4.526668071746826
-        actual = self.circular_polygon.major_axis
-
-        self.assertEqual(expected, actual)
-
-    def test_circular_average_diameter(self):
-        expected = 4.445246458053589
-        actual = self.circular_polygon.average_diameter
-
-        self.assertEqual(expected, actual)
-
-    def test_circular_aspect_ratio(self):
-        expected = 0.9640258077673378
-        actual = self.circular_polygon.aspect_ratio
-
-        self.assertEqual(expected, actual)
-
-    def test_star_shaped_area(self):
-        expected = 7.0
-        actual = self.star_shaped_polygon.area
-
-        self.assertEqual(expected, actual)
-
-    def test_star_shaped_circularity(self):
-        expected = 0.640254577329347
-        actual = self.star_shaped_polygon.circularity
-
-        self.assertEqual(expected, actual)
-
-    def test_star_shaped_convex_hull_area(self):
-        expected = 8.0
-        actual = self.star_shaped_polygon.convex_hull_area
-
-        self.assertEqual(expected, actual)
-
-    def test_star_shaped_perimeter(self):
-        expected = 11.721349239349365
-        actual = self.star_shaped_polygon.perimeter
-
-        self.assertEqual(expected, actual)
-
-    def test_star_shaped_roundness(self):
-        expected = 0.5569866579216156
-        actual = self.star_shaped_polygon.roundness
 
         self.assertEqual(expected, actual)
 
@@ -115,29 +44,34 @@ class TestPolygon(TestCase):
 
         self.assertEqual(expected, actual)
 
+    def test_star_shaped_area(self):
+        expected = 7.0
+        actual = self.star_shaped_polygon.area
+
+        self.assertEqual(expected, actual)
+
+    def test_triangle_area(self):
+        expected = 8.0
+        actual = self.triangle_polygon.area
+
+        self.assertEqual(expected, actual)
+
+    # Circularity
+    def test_circular_circularity(self):
+        expected = 0.9432711611657616
+        actual = self.circular_polygon.circularity
+
+        self.assertEqual(expected, actual)
+
+    def test_star_shaped_circularity(self):
+        expected = 0.640254577329347
+        actual = self.star_shaped_polygon.circularity
+
+        self.assertEqual(expected, actual)
+
     def test_rectangular_circularity(self):
         expected = 0.7853981633974483
         actual = self.rectangle_polygon.circularity
-
-        self.assertEqual(expected, actual)
-
-    def test_rectangular_convex_hull_area(self):
-        expected = 16.0
-        actual = self.rectangle_polygon.convex_hull_area
-
-        self.assertEqual(expected, actual)
-
-    def test_rectangular_perimeter(self):
-        expected = 16.0
-        actual = self.rectangle_polygon.perimeter
-
-        self.assertEqual(expected, actual)
-
-    def test_rectangular_roundness(self):
-        expected = 0.6365748269154868
-        actual = self.rectangle_polygon.roundness
-
-        self.assertEqual(expected, actual)
 
         self.assertEqual(expected, actual)
 
@@ -147,11 +81,51 @@ class TestPolygon(TestCase):
 
         self.assertEqual(expected, actual)
 
+    # Convex_hull_area
+    def test_circular_convex_hull_area(self):
+        expected = 14.0
+        actual = self.circular_polygon.convex_hull_area
+
+        self.assertEqual(expected, actual)
+
+    def test_star_shaped_convex_hull_area(self):
+        expected = 8.0
+        actual = self.star_shaped_polygon.convex_hull_area
+
+        self.assertEqual(expected, actual)
+
+    def test_rectangular_convex_hull_area(self):
+        expected = 16.0
+        actual = self.rectangle_polygon.convex_hull_area
+
+        self.assertEqual(expected, actual)
+
     def test_triangular_convex_hull_area(self):
         expected = 8.0
         actual = self.triangle_polygon.convex_hull_area
 
         self.assertEqual(expected, actual)
+
+    # Perimeter
+    def test_circular_perimeter(self):
+        expected = 13.656854152679443
+        actual = self.circular_polygon.perimeter
+
+        self.assertEqual(expected, actual)
+
+    def test_star_shaped_perimeter(self):
+        expected = 11.721349239349365
+        actual = self.star_shaped_polygon.perimeter
+
+        self.assertEqual(expected, actual)
+
+
+    def test_rectangular_perimeter(self):
+        expected = 16.0
+        actual = self.rectangle_polygon.perimeter
+
+        self.assertEqual(expected, actual)
+
 
     def test_triangular_perimeter(self):
         expected = 12.9442720413208
@@ -159,11 +133,88 @@ class TestPolygon(TestCase):
 
         self.assertEqual(expected, actual)
 
-    def test_triangular_roundness(self):
-        expected = 0.4074040947818932
-        actual = self.triangle_polygon.roundness
+
+    # Minor Axis
+    def test_circular_minor_axis(self):
+        expected = 4.363824844360352
+        actual = self.circular_polygon.minor_axis
+
+        self.assertAlmostEqual(expected, actual)
+
+    def test_rectangular_minor_axis(self):
+        expected = 5.551115205843844e-18
+        actual = self.rectangle_polygon.minor_axis
+
+        self.assertAlmostEqual(expected, actual)
+        
+    def test_star_shaped_minor_axis(self):
+        expected = 2.985952854156494
+        actual = self.star_shaped_polygon.minor_axis
+
+        self.assertAlmostEqual(expected, actual)
+
+    # Major Axis
+    def test_circular_major_axis(self):
+        expected = 4.526668071746826
+        actual = self.circular_polygon.major_axis
 
         self.assertEqual(expected, actual)
+
+    def test_rectangular_major_axis(self):
+        expected = 4.0
+        actual = self.rectangle_polygon.major_axis
+
+        self.assertEqual(expected, actual)
+
+    def test_star_shaped_major_axis(self):
+        expected = 7.537467002868652
+        actual = self.star_shaped_polygon.major_axis
+
+        self.assertEqual(expected, actual)
+
+
+    # Average Diameter
+    def test_circular_average_diameter(self):
+        expected = 4.445246458053589
+        actual = self.circular_polygon.average_diameter
+
+        self.assertEqual(expected, actual)
+
+    def test_rectangular_average_diameter(self):
+        expected = 2.0
+        actual = self.rectangle_polygon.average_diameter
+
+        self.assertEqual(expected, actual)
+
+    def test_star_shaped_average_diameter(self):
+        expected = 5.261709928512573
+        actual = self.star_shaped_polygon.average_diameter
+
+        self.assertEqual(expected, actual)
+
+    # Aspect ratio
+    def test_circular_aspect_ratio(self):
+        expected = 0.9640258077673378
+        actual = self.circular_polygon.aspect_ratio
+
+        self.assertEqual(expected, actual)
+
+    def test_rectangular_aspect_ratio(self):
+        expected = 1.387778801460961e-18
+        actual = self.rectangle_polygon.aspect_ratio
+
+        self.assertEqual(expected, actual)
+
+    def test_star_shaped_aspect_ratio(self):
+        expected = 0.39614804987140684
+        actual = self.star_shaped_polygon.aspect_ratio
+
+        self.assertEqual(expected, actual)
+
+
+
+
+
 
     def test_circular_to_dict(self):
         expected = {

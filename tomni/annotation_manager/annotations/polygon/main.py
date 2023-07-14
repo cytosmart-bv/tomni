@@ -204,7 +204,7 @@ class Polygon(Annotation):
 
         if "perimeter" in self._features:
             self._calculate_perimeter()
-            return self._perimeter
+            return self._perimeter * self._pixel_density
         return
 
     @property
