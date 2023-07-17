@@ -1,9 +1,6 @@
 from dataclasses import asdict
 from unittest import TestCase
 
-import cv2
-import numpy as np
-
 from tomni.annotation_manager import Ellipse, Point, Polygon
 from tomni.annotation_manager.main import AnnotationManager
 
@@ -16,20 +13,88 @@ class TestPolygon(TestCase):
         label = "polygon_test"
 
         self.maxDiff = None
-        self.circular_points = [Point(1, 2), Point(1, 4), Point(2, 5), Point(4, 5), Point(5, 4), Point(5, 2), Point(4, 1), Point(3, 1), Point(2, 1)]
-        self.circular_polygon = Polygon(points=self.circular_points, id=id_, children=children, parents=parents, label=label)
-        self.circular_points_simplified = [Point(1, 2), Point(1, 4), Point(2, 5), Point(4, 5), Point(5, 4), Point(5, 2), Point(4, 1), Point(2, 1)]
+        self.circular_points = [
+            Point(1, 2),
+            Point(1, 4),
+            Point(2, 5),
+            Point(4, 5),
+            Point(5, 4),
+            Point(5, 2),
+            Point(4, 1),
+            Point(3, 1),
+            Point(2, 1),
+        ]
+        self.circular_polygon = Polygon(
+            points=self.circular_points,
+            id=id_,
+            children=children,
+            parents=parents,
+            label=label,
+        )
+        self.circular_points_simplified = [
+            Point(1, 2),
+            Point(1, 4),
+            Point(2, 5),
+            Point(4, 5),
+            Point(5, 4),
+            Point(5, 2),
+            Point(4, 1),
+            Point(2, 1),
+        ]
 
-        self.star_shaped_points = [Point(1, 3), Point(2, 3), Point(3, 5), Point(5, 3), Point(3, 1), Point(2, 2)]
-        self.star_shaped_polygon = Polygon(points=self.star_shaped_points, id=id_, children=children, parents=parents, label=label)
-        self.star_shaped_points_simplified = [Point(1, 3), Point(2, 3), Point(3, 5), Point(5, 3), Point(3, 1)]
+        self.star_shaped_points = [
+            Point(1, 3),
+            Point(2, 3),
+            Point(3, 5),
+            Point(5, 3),
+            Point(3, 1),
+            Point(2, 2),
+        ]
+        self.star_shaped_polygon = Polygon(
+            points=self.star_shaped_points,
+            id=id_,
+            children=children,
+            parents=parents,
+            label=label,
+        )
+        self.star_shaped_points_simplified = [
+            Point(1, 3),
+            Point(2, 3),
+            Point(3, 5),
+            Point(5, 3),
+            Point(3, 1),
+        ]
 
-        self.rectangle_points = [Point(1, 5), Point(3, 5), Point(5, 5), Point(5, 1), Point(3, 1), Point(1, 1)]
-        self.rectangle_polygon = Polygon(points=self.rectangle_points, id=id_, children=children, parents=parents, label=label)
-        self.rectangle_points_simplified = [Point(1, 5), Point(5, 5), Point(5, 1), Point(1, 1)]
+        self.rectangle_points = [
+            Point(1, 5),
+            Point(3, 5),
+            Point(5, 5),
+            Point(5, 1),
+            Point(3, 1),
+            Point(1, 1),
+        ]
+        self.rectangle_polygon = Polygon(
+            points=self.rectangle_points,
+            id=id_,
+            children=children,
+            parents=parents,
+            label=label,
+        )
+        self.rectangle_points_simplified = [
+            Point(1, 5),
+            Point(5, 5),
+            Point(5, 1),
+            Point(1, 1),
+        ]
 
         self.triangle_points = [Point(1, 5), Point(3, 1), Point(5, 5)]
-        self.triangle_polygon = Polygon(points=self.triangle_points, id=id_, children=children, parents=parents, label=label)
+        self.triangle_polygon = Polygon(
+            points=self.triangle_points,
+            id=id_,
+            children=children,
+            parents=parents,
+            label=label,
+        )
 
     # Area
     def test_circular_area(self):
@@ -119,20 +184,17 @@ class TestPolygon(TestCase):
 
         self.assertEqual(expected, actual)
 
-
     def test_rectangular_perimeter(self):
         expected = 16.0
         actual = self.rectangle_polygon.perimeter
 
         self.assertEqual(expected, actual)
 
-
     def test_triangular_perimeter(self):
         expected = 12.9442720413208
         actual = self.triangle_polygon.perimeter
 
         self.assertEqual(expected, actual)
-
 
     # Minor Axis
     def test_circular_minor_axis(self):
@@ -146,7 +208,7 @@ class TestPolygon(TestCase):
         actual = self.rectangle_polygon.minor_axis
 
         self.assertAlmostEqual(expected, actual)
-        
+
     def test_star_shaped_minor_axis(self):
         expected = 2.985952854156494
         actual = self.star_shaped_polygon.minor_axis
@@ -171,7 +233,6 @@ class TestPolygon(TestCase):
         actual = self.star_shaped_polygon.major_axis
 
         self.assertEqual(expected, actual)
-
 
     # Average Diameter
     def test_circular_average_diameter(self):
@@ -211,11 +272,6 @@ class TestPolygon(TestCase):
 
         self.assertEqual(expected, actual)
 
-
-
-
-
-
     def test_circular_to_dict(self):
         expected = {
             "id": "1234-1234-2134-1321",
@@ -224,11 +280,14 @@ class TestPolygon(TestCase):
             "parents": [],
             "type": "polygon",
             "area": 14.0,
+            "convexHullArea": 14.0,
+            "majorAxis": 4.53,
+            "minorAxis": 4.36,
+            "averageDiameter": 4.45,
+            "aspectRatio": 0.96,
             "circularity": 0.94,
-            "convex_hull_area": 14.0,
             "perimeter": 13.66,
             "points": [asdict(point) for point in self.circular_points_simplified],
-            "roundness": 0.89,
             "accuracy": 1,
         }
         actual = self.circular_polygon.to_dict()
@@ -243,11 +302,14 @@ class TestPolygon(TestCase):
             "parents": [],
             "type": "polygon",
             "area": 16.0,
+            "majorAxis": 4.0,
+            "minorAxis": 0.0,
+            "averageDiameter": 2.0,
+            "aspectRatio": 0.0,
             "circularity": 0.79,
-            "convex_hull_area": 16.0,
+            "ConvexHullArea": 16.0,
             "perimeter": 16.0,
             "points": [asdict(point) for point in self.rectangle_points_simplified],
-            "roundness": 0.64,
             "accuracy": 1,
         }
         actual = self.rectangle_polygon.to_dict()
@@ -312,7 +374,14 @@ class TestPolygon(TestCase):
             "accuracy": 0.5,
         }
 
-        triangle_polygon_accuracy = Polygon(points=self.triangle_points, id="", children=[], parents=[], label="", accuracy=0.5)
+        triangle_polygon_accuracy = Polygon(
+            points=self.triangle_points,
+            id="",
+            children=[],
+            parents=[],
+            label="",
+            accuracy=0.5,
+        )
         actual = triangle_polygon_accuracy.to_dict()
         self.assertDictEqual(expected, actual)
 
@@ -332,31 +401,75 @@ class TestPolygon(TestCase):
             "accuracy": 0,
         }
 
-        triangle_polygon_accuracy = Polygon(points=self.triangle_points, id="", children=[], parents=[], label="", accuracy=0)
+        triangle_polygon_accuracy = Polygon(
+            points=self.triangle_points,
+            id="",
+            children=[],
+            parents=[],
+            label="",
+            accuracy=0,
+        )
         actual = triangle_polygon_accuracy.to_dict()
         self.assertDictEqual(expected, actual)
-
 
     def test_to_dict_with_ellipse_mask(self):
         center = int(2072 / 2)
         rad = int(2072 / 3)
 
         mask = AnnotationManager(
-            [Ellipse(center=Point(center, center), radius_x=rad, rotation=0, id="", label="", children=[], parents=[])]
+            [
+                Ellipse(
+                    center=Point(center, center),
+                    radius_x=rad,
+                    rotation=0,
+                    id="",
+                    label="",
+                    children=[],
+                    parents=[],
+                )
+            ]
         ).to_dict()
 
         polygon1 = Polygon(
-            points=[Point(center, center), Point(center + 200, center + 200), Point(center, center + 200)], id="", label="", children=[], parents=[]
+            points=[
+                Point(center, center),
+                Point(center + 200, center + 200),
+                Point(center, center + 200),
+            ],
+            id="",
+            label="",
+            children=[],
+            parents=[],
         )
         polygon2 = Polygon(
-            points=[Point(center, center), Point(center - 300, center - 200), Point(center, center + 200)], id="", label="", children=[], parents=[]
+            points=[
+                Point(center, center),
+                Point(center - 300, center - 200),
+                Point(center, center + 200),
+            ],
+            id="",
+            label="",
+            children=[],
+            parents=[],
         )
         polygon3 = Polygon(
-            points=[Point(center, center), Point(center + 500, center + 500), Point(center + 200, center)], id="", label="", children=[], parents=[]
+            points=[
+                Point(center, center),
+                Point(center + 500, center + 500),
+                Point(center + 200, center),
+            ],
+            id="",
+            label="",
+            children=[],
+            parents=[],
         )
 
         polygons_inside = [polygon1, polygon2, polygon3]
-        polygons_outside = [self.star_shaped_polygon, self.rectangle_polygon, self.triangle_polygon]
+        polygons_outside = [
+            self.star_shaped_polygon,
+            self.rectangle_polygon,
+            self.triangle_polygon,
+        ]
 
         for polygon in polygons_inside:
             self.assertTrue(polygon.is_in_mask(mask, 0.9))
@@ -368,21 +481,56 @@ class TestPolygon(TestCase):
         center = 2072 / 2
         size = 2072
         quadrant = size / 4
-        points = [Point(quadrant, quadrant), Point(quadrant, quadrant * 3), Point(quadrant * 3, quadrant * 3), Point(quadrant * 3, quadrant)]
-        mask = AnnotationManager([Polygon(points, id="", label="", children=[], parents=[])]).to_dict()
+        points = [
+            Point(quadrant, quadrant),
+            Point(quadrant, quadrant * 3),
+            Point(quadrant * 3, quadrant * 3),
+            Point(quadrant * 3, quadrant),
+        ]
+        mask = AnnotationManager(
+            [Polygon(points, id="", label="", children=[], parents=[])]
+        ).to_dict()
 
         polygon1 = Polygon(
-            points=[Point(center, center), Point(center + 200, center + 200), Point(center, center + 200)], id="", label="", children=[], parents=[]
+            points=[
+                Point(center, center),
+                Point(center + 200, center + 200),
+                Point(center, center + 200),
+            ],
+            id="",
+            label="",
+            children=[],
+            parents=[],
         )
         polygon2 = Polygon(
-            points=[Point(center, center), Point(center - 300, center - 200), Point(center, center + 200)], id="", label="", children=[], parents=[]
+            points=[
+                Point(center, center),
+                Point(center - 300, center - 200),
+                Point(center, center + 200),
+            ],
+            id="",
+            label="",
+            children=[],
+            parents=[],
         )
         polygon3 = Polygon(
-            points=[Point(center, center), Point(center + 500, center + 500), Point(center + 200, center)], id="", label="", children=[], parents=[]
+            points=[
+                Point(center, center),
+                Point(center + 500, center + 500),
+                Point(center + 200, center),
+            ],
+            id="",
+            label="",
+            children=[],
+            parents=[],
         )
 
         polygons_inside = [polygon1, polygon2, polygon3]
-        polygons_outside = [self.star_shaped_polygon, self.rectangle_polygon, self.triangle_polygon]
+        polygons_outside = [
+            self.star_shaped_polygon,
+            self.rectangle_polygon,
+            self.triangle_polygon,
+        ]
 
         for polygon in polygons_inside:
             self.assertTrue(polygon.is_in_mask(mask, 0.9))

@@ -1,6 +1,5 @@
 from dataclasses import asdict
 from typing import List, Tuple, Union, Dict
-import quantiphy
 import cv2
 import numpy as np
 
@@ -239,11 +238,13 @@ class Polygon(Annotation):
                     if self._all_features[feature]["is_ratio"]
                     else feature + "_" + self._metric_unit
                 )
-            
+
                 # Convert snake_casing to camelCasing
-                first_word, *remaining_words  = feature_name.split('_')
-                feature_name = ''.join([first_word.lower(), *map(str.title, remaining_words)])
-                
+                first_word, *remaining_words = feature_name.split("_")
+                feature_name = "".join(
+                    [first_word.lower(), *map(str.title, remaining_words)]
+                )
+
                 polygon_features[feature_name] = round(getattr(self, feature), decimals)
             polygon_dict = {**polygon_features, **polygon_dict}
 
@@ -286,7 +287,9 @@ class Polygon(Annotation):
         """
         mask = np.zeros(shape, dtype=np.uint8)
         if len(self._points) > 0:
-            points = np.array([[point.x, point.y] for point in self._points], dtype=np.int32)
+            points = np.array(
+                [[point.x, point.y] for point in self._points], dtype=np.int32
+            )
             cv2.fillPoly(mask, [points], color=1)
 
         return mask
@@ -343,5 +346,7 @@ class Polygon(Annotation):
         are_points_equal = are_lines_equal(self.points, other.points, is_enclosed=True)
         reverse_points = other.points
         reverse_points.reverse()
-        are_points_equal_mirrored = are_lines_equal(self.points, reverse_points, is_enclosed=True)
+        are_points_equal_mirrored = are_lines_equal(
+            self.points, reverse_points, is_enclosed=True
+        )
         return are_points_equal | are_points_equal_mirrored
