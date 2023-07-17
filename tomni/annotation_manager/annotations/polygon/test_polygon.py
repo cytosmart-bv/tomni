@@ -31,16 +31,6 @@ class TestPolygon(TestCase):
             parents=parents,
             label=label,
         )
-        self.circular_points_simplified = [
-            Point(1, 2),
-            Point(1, 4),
-            Point(2, 5),
-            Point(4, 5),
-            Point(5, 4),
-            Point(5, 2),
-            Point(4, 1),
-            Point(2, 1),
-        ]
 
         self.star_shaped_points = [
             Point(1, 3),
@@ -57,13 +47,6 @@ class TestPolygon(TestCase):
             parents=parents,
             label=label,
         )
-        self.star_shaped_points_simplified = [
-            Point(1, 3),
-            Point(2, 3),
-            Point(3, 5),
-            Point(5, 3),
-            Point(3, 1),
-        ]
 
         self.rectangle_points = [
             Point(1, 5),
@@ -75,21 +58,6 @@ class TestPolygon(TestCase):
         ]
         self.rectangle_polygon = Polygon(
             points=self.rectangle_points,
-            id=id_,
-            children=children,
-            parents=parents,
-            label=label,
-        )
-        self.rectangle_points_simplified = [
-            Point(1, 5),
-            Point(5, 5),
-            Point(5, 1),
-            Point(1, 1),
-        ]
-
-        self.triangle_points = [Point(1, 5), Point(3, 1), Point(5, 5)]
-        self.triangle_polygon = Polygon(
-            points=self.triangle_points,
             id=id_,
             children=children,
             parents=parents,
@@ -115,12 +83,6 @@ class TestPolygon(TestCase):
 
         self.assertEqual(expected, actual)
 
-    def test_triangle_area(self):
-        expected = 8.0
-        actual = self.triangle_polygon.area
-
-        self.assertEqual(expected, actual)
-
     # Circularity
     def test_circular_circularity(self):
         expected = 0.9432711611657616
@@ -137,12 +99,6 @@ class TestPolygon(TestCase):
     def test_rectangular_circularity(self):
         expected = 0.7853981633974483
         actual = self.rectangle_polygon.circularity
-
-        self.assertEqual(expected, actual)
-
-    def test_triangular_circularity(self):
-        expected = 0.5999907952581642
-        actual = self.triangle_polygon.circularity
 
         self.assertEqual(expected, actual)
 
@@ -165,12 +121,6 @@ class TestPolygon(TestCase):
 
         self.assertEqual(expected, actual)
 
-    def test_triangular_convex_hull_area(self):
-        expected = 8.0
-        actual = self.triangle_polygon.convex_hull_area
-
-        self.assertEqual(expected, actual)
-
     # Perimeter
     def test_circular_perimeter(self):
         expected = 13.656854152679443
@@ -187,12 +137,6 @@ class TestPolygon(TestCase):
     def test_rectangular_perimeter(self):
         expected = 16.0
         actual = self.rectangle_polygon.perimeter
-
-        self.assertEqual(expected, actual)
-
-    def test_triangular_perimeter(self):
-        expected = 12.9442720413208
-        actual = self.triangle_polygon.perimeter
 
         self.assertEqual(expected, actual)
 
@@ -287,7 +231,7 @@ class TestPolygon(TestCase):
             "aspectRatio": 0.96,
             "circularity": 0.94,
             "perimeter": 13.66,
-            "points": [asdict(point) for point in self.circular_points_simplified],
+            "points": [asdict(point) for point in self.circular_points],
             "accuracy": 1,
         }
         actual = self.circular_polygon.to_dict()
@@ -307,14 +251,11 @@ class TestPolygon(TestCase):
             "averageDiameter": 2.0,
             "aspectRatio": 0.0,
             "circularity": 0.79,
-            "ConvexHullArea": 16.0,
+            "convexHullArea": 16.0,
             "perimeter": 16.0,
-            "points": [asdict(point) for point in self.rectangle_points_simplified],
+            "points": [asdict(point) for point in self.rectangle_points],
             "accuracy": 1,
         }
-        actual = self.rectangle_polygon.to_dict()
-
-        self.assertDictEqual(expected, actual)
         actual = self.rectangle_polygon.to_dict()
 
         self.assertDictEqual(expected, actual)
@@ -327,11 +268,14 @@ class TestPolygon(TestCase):
             "parents": [],
             "type": "polygon",
             "area": 7.0,
+            "minorAxis": 2.99,
+            "majorAxis": 7.54,
+            "averageDiameter": 5.26,
+            "aspectRatio": 0.40,
             "circularity": 0.64,
-            "convex_hull_area": 8.0,
+            "convexHullArea": 8.0,
             "perimeter": 11.72,
-            "points": [asdict(point) for point in self.star_shaped_points_simplified],
-            "roundness": 0.56,
+            "points": [asdict(point) for point in self.star_shaped_points],
             "accuracy": 1,
         }
         actual = self.star_shaped_polygon.to_dict()
@@ -339,77 +283,76 @@ class TestPolygon(TestCase):
         self.assertDictEqual(expected, actual)
 
     def test_triangle_to_dict(self):
+        self.triangle_points = [Point(1, 5), Point(3, 1), Point(5, 5)]
+        with self.assertRaises(ValueError):
+            Polygon(
+                points=self.triangle_points,
+                id="id",
+                children=[],
+                parents=[],
+                label="label",
+            )
+
+    def test_accuracy_to_dict(self):
         expected = {
             "id": "1234-1234-2134-1321",
             "label": "polygon_test",
             "children": [],
             "parents": [],
             "type": "polygon",
-            "area": 8.0,
-            "circularity": 0.6,
-            "convex_hull_area": 8.0,
-            "perimeter": 12.94,
-            "points": [asdict(point) for point in self.triangle_points],
-            "roundness": 0.41,
-            "accuracy": 1,
-        }
-        actual = self.triangle_polygon.to_dict()
-        print(expected)
-        print(actual)
-        self.assertDictEqual(expected, actual)
-
-    def test_triangle_accuracy_to_dict(self):
-        expected = {
-            "id": "",
-            "label": "",
-            "children": [],
-            "parents": [],
-            "type": "polygon",
-            "area": 8.0,
-            "circularity": 0.6,
-            "convex_hull_area": 8.0,
-            "perimeter": 12.94,
-            "points": [asdict(point) for point in self.triangle_points],
-            "roundness": 0.41,
+            "area": 14.0,
+            "convexHullArea": 14.0,
+            "majorAxis": 4.53,
+            "minorAxis": 4.36,
+            "averageDiameter": 4.45,
+            "aspectRatio": 0.96,
+            "circularity": 0.94,
+            "perimeter": 13.66,
+            "points": [asdict(point) for point in self.circular_points],
             "accuracy": 0.5,
         }
 
-        triangle_polygon_accuracy = Polygon(
-            points=self.triangle_points,
-            id="",
+        accuracy_test_object = Polygon(
+            points=self.circular_points,
+            id="1234-1234-2134-1321",
             children=[],
             parents=[],
-            label="",
+            label="polygon_test",
             accuracy=0.5,
         )
-        actual = triangle_polygon_accuracy.to_dict()
+
+        actual = accuracy_test_object.to_dict()
         self.assertDictEqual(expected, actual)
 
-    def test_triangle_accuracy_0_to_dict(self):
+    def test_accuracy_to_dict2(self):
         expected = {
-            "id": "",
-            "label": "",
+            "id": "1234-1234-2134-1321",
+            "label": "polygon_test",
             "children": [],
             "parents": [],
             "type": "polygon",
-            "area": 8.0,
-            "circularity": 0.6,
-            "convex_hull_area": 8.0,
-            "perimeter": 12.94,
-            "points": [asdict(point) for point in self.triangle_points],
-            "roundness": 0.41,
+            "area": 14.0,
+            "convexHullArea": 14.0,
+            "majorAxis": 4.53,
+            "minorAxis": 4.36,
+            "averageDiameter": 4.45,
+            "aspectRatio": 0.96,
+            "circularity": 0.94,
+            "perimeter": 13.66,
+            "points": [asdict(point) for point in self.circular_points],
             "accuracy": 0,
         }
 
-        triangle_polygon_accuracy = Polygon(
-            points=self.triangle_points,
-            id="",
+        accuracy_test_object = Polygon(
+            points=self.circular_points,
+            id="1234-1234-2134-1321",
             children=[],
             parents=[],
-            label="",
+            label="polygon_test",
             accuracy=0,
         )
-        actual = triangle_polygon_accuracy.to_dict()
+
+        actual = accuracy_test_object.to_dict()
         self.assertDictEqual(expected, actual)
 
     def test_to_dict_with_ellipse_mask(self):
@@ -435,6 +378,8 @@ class TestPolygon(TestCase):
                 Point(center, center),
                 Point(center + 200, center + 200),
                 Point(center, center + 200),
+                Point(center - 199, center + 200),
+                Point(center - 200, center + 200),
             ],
             id="",
             label="",
@@ -445,6 +390,8 @@ class TestPolygon(TestCase):
             points=[
                 Point(center, center),
                 Point(center - 300, center - 200),
+                Point(center, center + 198),
+                Point(center, center + 199),
                 Point(center, center + 200),
             ],
             id="",
@@ -456,6 +403,8 @@ class TestPolygon(TestCase):
             points=[
                 Point(center, center),
                 Point(center + 500, center + 500),
+                Point(center + 198, center),
+                Point(center + 199, center),
                 Point(center + 200, center),
             ],
             id="",
@@ -468,7 +417,6 @@ class TestPolygon(TestCase):
         polygons_outside = [
             self.star_shaped_polygon,
             self.rectangle_polygon,
-            self.triangle_polygon,
         ]
 
         for polygon in polygons_inside:
@@ -486,6 +434,7 @@ class TestPolygon(TestCase):
             Point(quadrant, quadrant * 3),
             Point(quadrant * 3, quadrant * 3),
             Point(quadrant * 3, quadrant),
+            Point(quadrant * 3, quadrant + 1),
         ]
         mask = AnnotationManager(
             [Polygon(points, id="", label="", children=[], parents=[])]
@@ -495,6 +444,8 @@ class TestPolygon(TestCase):
             points=[
                 Point(center, center),
                 Point(center + 200, center + 200),
+                Point(center, center + 198),
+                Point(center, center + 199),
                 Point(center, center + 200),
             ],
             id="",
@@ -506,6 +457,8 @@ class TestPolygon(TestCase):
             points=[
                 Point(center, center),
                 Point(center - 300, center - 200),
+                Point(center, center + 198),
+                Point(center, center + 199),
                 Point(center, center + 200),
             ],
             id="",
@@ -517,6 +470,8 @@ class TestPolygon(TestCase):
             points=[
                 Point(center, center),
                 Point(center + 500, center + 500),
+                Point(center + 200, 198),
+                Point(center + 200, 199),
                 Point(center + 200, center),
             ],
             id="",
@@ -529,7 +484,6 @@ class TestPolygon(TestCase):
         polygons_outside = [
             self.star_shaped_polygon,
             self.rectangle_polygon,
-            self.triangle_polygon,
         ]
 
         for polygon in polygons_inside:
@@ -540,4 +494,4 @@ class TestPolygon(TestCase):
 
     def test_raises(self):
         with self.assertRaises(SyntaxError):
-            self.triangle_polygon.points = self.circular_points
+            self.rectangle_polygon.points = self.circular_points

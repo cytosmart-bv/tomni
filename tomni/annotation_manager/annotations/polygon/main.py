@@ -43,7 +43,9 @@ class Polygon(Annotation):
 
         """
         super().__init__(id, label, children, parents, accuracy)
-        self._points: List[Point] = simplify_line(points)
+        self._points = points
+        if len(self._points) < 5:
+            raise ValueError("Polygon must have atleast 5 points.")
         self._contour: np.ndarray = parse_points_to_contour(points)
         self._metric_unit = metric_unit
         self._pixel_density = pixel_density
