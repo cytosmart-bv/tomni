@@ -66,6 +66,7 @@ class Ellipse(Annotation):
         self._major_axis: Union[float, None] = None
         self._minor_axis: Union[float, None] = None
         self._perimeter: Union[float, None] = None
+        self._roundness: Union[float, None] = None
 
         self._all_features = {
             "area": {"is_ratio": False},
@@ -76,6 +77,7 @@ class Ellipse(Annotation):
             "major_axis": {"is_ratio": False},
             "minor_axis": {"is_ratio": False},
             "perimeter": {"is_ratio": False},
+            "roundness": {"is_ratio": True},
         }
 
         # if features is None all features are returned
@@ -244,6 +246,19 @@ class Ellipse(Annotation):
             return self._perimeter * self._pixel_density
         return
 
+    @property
+    def roundness(self) -> Union[float, None]:
+        """Roundness: Area / (radius_enclosing_circle**2 * pi).
+
+        Returns:
+            Union[float, None]: Polygon's roundness in [0, 1] or None.
+        """
+
+        if "roundness" in self._features:
+            self._calculate_roundness()
+            return self._roundness
+        return
+
     def to_dict(self, decimals: int = 2, **kwargs) -> dict:
         dict_ellipse = {
             "type": "ellipse",
@@ -333,6 +348,16 @@ class Ellipse(Annotation):
         self._perimeter = (
             2 * np.pi * np.sqrt((self._radius_x**2 + self._radius_y**2) / 2)
         )
+
+    def _calculate_roundness(self) -> None:
+        if not self._area:
+            self._calculate_area()
+
+        if not self._major_axis:
+            self._calculate_major_axis()
+
+        enclosing_circle_area = self.major_axis**2 * np.pi
+        self._roundness = self._area / enclosing_circle_area
 
     def _calculate_area(self) -> None:
         self._area = np.pi * self._radius_x * self._radius_y

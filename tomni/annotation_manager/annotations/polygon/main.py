@@ -58,6 +58,7 @@ class Polygon(Annotation):
         self._major_axis: Union[float, None] = None
         self._minor_axis: Union[float, None] = None
         self._perimeter: Union[float, None] = None
+        self._roundness: Union[float, None] = None
 
         self._all_features = {
             "area": {"is_ratio": False},
@@ -68,6 +69,7 @@ class Polygon(Annotation):
             "major_axis": {"is_ratio": False},
             "minor_axis": {"is_ratio": False},
             "perimeter": {"is_ratio": False},
+            "roundness": {"is_ratio": True},
         }
 
         if features is None:
