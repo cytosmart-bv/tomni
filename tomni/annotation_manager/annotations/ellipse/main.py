@@ -97,7 +97,7 @@ class Ellipse(Annotation):
 
     @accuracy.setter
     def points(self, *arg, **kwargs) -> None:
-        raise SyntaxError("Points are Immutable")
+        raise SyntaxError("Accuracy is Immutable")
 
     @property
     def label(self):
@@ -145,7 +145,6 @@ class Ellipse(Annotation):
         else:
             self._rotation = new_rotation
 
-
     @property
     def area(self) -> float:
         """Area described by pi * radius_x * radius_y.
@@ -170,14 +169,13 @@ class Ellipse(Annotation):
             return self._circularity
         return
 
-
     @property
     def convex_hull_area(self) -> Union[float, None]:
         """Calculate the convex hull area of an ellipse.
 
         This property computes the area of the convex hull of the ellipse using the formula:
         Area = π * radius_x * radius_y.
-        
+
         Returns:
             Union[float, None]: The convex hull area of the ellipse, or None if it cannot be calculated.
         """
@@ -264,8 +262,10 @@ class Ellipse(Annotation):
                 )
 
                 # Convert snake_casing to camelCasing
-                first_word, *remaining_words  = feature_name.split('_')
-                feature_name = ''.join([first_word.lower(), *map(str.title, remaining_words)])
+                first_word, *remaining_words = feature_name.split("_")
+                feature_name = "".join(
+                    [first_word.lower(), *map(str.title, remaining_words)]
+                )
 
                 dict_ellipse[feature_name] = round(getattr(self, feature), decimals)
 
@@ -330,7 +330,9 @@ class Ellipse(Annotation):
         self._circularity = 4 * np.pi * self._area / self._perimeter**2
 
     def _calculate_perimeter(self) -> None:
-        self._perimeter = 2 * np.pi * np.sqrt((self._radius_x**2 + self._radius_y**2) / 2)
+        self._perimeter = (
+            2 * np.pi * np.sqrt((self._radius_x**2 + self._radius_y**2) / 2)
+        )
 
     def _calculate_area(self) -> None:
         self._area = np.pi * self._radius_x * self._radius_y

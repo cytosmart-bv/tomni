@@ -88,7 +88,7 @@ class Polygon(Annotation):
 
     @accuracy.setter
     def points(self, *arg, **kwargs) -> None:
-        raise SyntaxError("Points are Immutable")
+        raise SyntaxError("Accuracy is Immutable")
 
     @property
     def label(self):
