@@ -8,6 +8,7 @@ from tomni.annotation_manager.annotations.point import Point
 from tomni.annotation_manager.utils import (
     are_lines_equal,
     parse_points_to_contour,
+    parse_points_to_inner_contour,
     simplify_line,
     overlap_object,
 )
@@ -20,6 +21,7 @@ class Polygon(Annotation):
         self,
         points: List[Point],
         id: str,
+        inner_points: Union[List[List[Point]], List] = [],
         label: str = "",
         children: List[Annotation] = [],
         parents: List[Annotation] = [],
@@ -33,6 +35,7 @@ class Polygon(Annotation):
         Args:
             points (List[Point]): Collection of edges describing the polygon.
             id (str): UUID identifier.
+            inner_points (Union[List[List[Point]], List]): Collection of edges describing the inner contours or an empty list when there are no inner contours.
             label (str): Class label of annotation.
             children (List[Annotation]): Tracking annotations. Refers to t+1.
             parents (List[Annotation]): Tracking annotations. Refers to t-1.
@@ -44,13 +47,16 @@ class Polygon(Annotation):
         """
         super().__init__(id, label, children, parents, accuracy)
         self._points = points
+        self._inner_points = inner_points
         if len(self._points) < 5:
             raise ValueError("Polygon must have atleast 5 points.")
         self._contour: np.ndarray = parse_points_to_contour(points)
+        self._inner_contour: np.ndarray = parse_points_to_inner_contour(inner_points)
         self._metric_unit = metric_unit
         self._pixel_density = pixel_density
 
         self._area: Union[float, None] = None
+        self._area_outer: Union[float, None] = None
         self._aspect_ratio: Union[float, None] = None
         self._average_diameter: Union[float, None] = None
         self._circularity: Union[float, None] = None
@@ -132,7 +138,6 @@ class Polygon(Annotation):
             self._calculate_circularity()
             return self._circularity
         return
-        # return self._circularity
 
     @property
     def convex_hull_area(self) -> Union[float, None]:
@@ -223,12 +228,20 @@ class Polygon(Annotation):
 
     def to_dict(self, decimals: int = 2, **kwargs) -> dict:
         points = self._points.copy()
+        inner_points = self._inner_points.copy()
         if kwargs.get("do_compress", False):
             points = compress_polygon_points(points, kwargs.get("epsilon", 3))
+
+        inner_contours = []
+        for inner_contour in inner_points:
+            inner_contours.append(
+                [asdict(inner_point) for inner_point in inner_contour]
+            )
 
         polygon_dict = {
             "type": "polygon",
             "points": [asdict(point) for point in points],
+            "inner_points": inner_contours,
         }
 
         # if the user wants any features returned
@@ -297,16 +310,21 @@ class Polygon(Annotation):
         return mask
 
     def _calculate_area(self) -> None:
-        self._area = cv2.contourArea(self._contour)
+        # outer area for calculating circularity f.e.
+        self._outer_area = cv2.contourArea(self._contour)
+        self._area = self._outer_area
+        for contour in self._inner_contour:
+            area_inner = cv2.contourArea(contour)
+            self._area -= area_inner
 
     def _calculate_circularity(self):
-        if not self._area:
+        if not self._outer_area:
             self._calculate_area()
 
         if not self._perimeter:
             self._calculate_perimeter()
 
-        self._circularity = (4 * np.pi * self._area) / (self._perimeter**2)
+        self._circularity = (4 * np.pi * self._outer_area) / (self._perimeter**2)
 
     def _calculate_convex_hull_area(self) -> None:
         convex_hull = cv2.convexHull(self._contour)
@@ -316,12 +334,12 @@ class Polygon(Annotation):
         self._perimeter = cv2.arcLength(self._contour, True)
 
     def _calculate_roundness(self) -> None:
-        if not self._area:
+        if not self._outer_area:
             self._calculate_area()
 
         _, radius = cv2.minEnclosingCircle(self._contour)
         enclosing_circle_area = radius**2 * np.pi
-        self._roundness = self._area / enclosing_circle_area
+        self._roundness = self._outer_area / enclosing_circle_area
 
     def _calculate_axes(self) -> None:
         _, (r1, r2), _ = cv2.fitEllipse(self._contour)

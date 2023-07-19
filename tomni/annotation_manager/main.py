@@ -22,7 +22,13 @@ class AnnotationManager(object):
         self._annotations = annotations
 
     @classmethod
-    def from_dicts(cls, dicts: List[dict], pixel_density: int = 1, features: List[str] = None, metric_unit: str = ""):
+    def from_dicts(
+        cls,
+        dicts: List[dict],
+        pixel_density: int = 1,
+        features: List[str] = None,
+        metric_unit: str = "",
+    ):
         TYPE_KEY = "type"
         LABEL_KEY = "label"
         CHILDREN_KEY = "children"
@@ -45,21 +51,28 @@ class AnnotationManager(object):
                     accuracy=d.get("accuracy", 1),
                     pixel_density=pixel_density,
                     features=features,
-                    metric_unit=metric_unit
+                    metric_unit=metric_unit,
                 )
             elif d[TYPE_KEY] == "polygon":
                 if len(d["points"]) < MIN_NR_POINTS:
                     continue
+                inner_points = []
+                if "inner_points" in d:
+                    for inner_contour in d["inner_points"]:
+                        inner_points.append(
+                            [Point(x=pi["x"], y=pi["y"]) for pi in inner_contour]
+                        )
                 annotation = Polygon(
                     label=d.get(LABEL_KEY, None),
                     id=d.get(ID_KEY, str(uuid.uuid4())),
                     children=d.get(CHILDREN_KEY, []),
                     parents=d.get(PARENTS_KEY, []),
                     points=[Point(x=p["x"], y=p["y"]) for p in d["points"]],
+                    inner_points=inner_points,
                     accuracy=d.get("accuracy", 1),
                     pixel_density=pixel_density,
                     features=features,
-                    metric_unit=metric_unit
+                    metric_unit=metric_unit,
                 )
             else:
                 raise ValueError(
@@ -70,7 +83,13 @@ class AnnotationManager(object):
         return cls(annotations)
 
     @classmethod
-    def from_contours(cls, contours: List[np.ndarray], pixel_density: int = 1, features: List[str] = None, metric_unit: str = "Um"):
+    def from_contours(
+        cls,
+        contours: List[np.ndarray],
+        pixel_density: int = 1,
+        features: List[str] = None,
+        metric_unit: str = "Um",
+    ):
         """Initializes a AnnotationManager object from cv2 contours.
         Contours' shape must be [N, 1, 2] with dtype of np.int32.
 
@@ -86,13 +105,30 @@ class AnnotationManager(object):
             for i in range(contour.shape[0]):
                 points.append(Point(x=int(contour[i][0]), y=int(contour[i][1])))
 
-            annotations.append(Polygon(label="", id=str(uuid.uuid4()), children=[], parents=[], points=points, features=features, pixel_density=pixel_density), metric_unit=metric_unit)
-
+            annotations.append(
+                Polygon(
+                    label="",
+                    id=str(uuid.uuid4()),
+                    children=[],
+                    parents=[],
+                    points=points,
+                    features=features,
+                    pixel_density=pixel_density,
+                ),
+                metric_unit=metric_unit,
+            )
 
         return cls(annotations)
 
     @classmethod
-    def from_binary_mask(cls, mask: np.ndarray, connectivity: int = 8, features: List[str] = None, pixel_density: int = 1, metric_unit: str = "Um"):
+    def from_binary_mask(
+        cls,
+        mask: np.ndarray,
+        connectivity: int = 8,
+        features: List[str] = None,
+        pixel_density: int = 1,
+        metric_unit: str = "Um",
+    ):
         """Initializes a AnnotationManager object from a binary mask.
         Binary mask can contain either 0 and 1 or 0 and 255.
 
@@ -138,10 +174,21 @@ class AnnotationManager(object):
 
         edged_mask = edges * labeled_mask
 
-        return AnnotationManager.from_labeled_mask(edged_mask, pixel_density=pixel_density, features=features, metric_unit=metric_unit)
+        return AnnotationManager.from_labeled_mask(
+            edged_mask,
+            pixel_density=pixel_density,
+            features=features,
+            metric_unit=metric_unit,
+        )
 
     @classmethod
-    def from_labeled_mask(cls, mask: np.ndarray, include_inner_contours: bool = False, pixel_density: int = 1, metric_unit: str = "Um"):
+    def from_labeled_mask(
+        cls,
+        mask: np.ndarray,
+        include_inner_contours: bool = False,
+        pixel_density: int = 1,
+        metric_unit: str = "Um",
+    ):
         """Initializes a AnnotationManager object from a labeled mask.
         A labeled mask contains components indicated by the same pixel values (see example below).
 
@@ -158,8 +205,14 @@ class AnnotationManager(object):
             AnnotationManager: A new AnnotationManager object.
         """
         points = labels2listsOfPoints(mask)
-        contours = [positions2contour(point, return_inner_contours=include_inner_contours) for point in points if len(point) > 0]
-        return AnnotationManager.from_contours(contours, pixel_density=pixel_density, metric_unit=metric_unit)
+        contours = [
+            positions2contour(point, return_inner_contours=include_inner_contours)
+            for point in points
+            if len(point) > 0
+        ]
+        return AnnotationManager.from_contours(
+            contours, pixel_density=pixel_density, metric_unit=metric_unit
+        )
 
     @classmethod
     def from_darwin(cls, dicts: List[dict]):
@@ -202,7 +255,13 @@ class AnnotationManager(object):
         else:
             raise StopIteration
 
-    def to_dict(self, decimals: int = 2, mask_json: Union[List[dict], None] = None, min_overlap: float = 0.9, **kwargs) -> List[Dict]:
+    def to_dict(
+        self,
+        decimals: int = 2,
+        mask_json: Union[List[dict], None] = None,
+        min_overlap: float = 0.9,
+        **kwargs,
+    ) -> List[Dict]:
         """Transform AM object to a collection of our format.
 
         Args:
