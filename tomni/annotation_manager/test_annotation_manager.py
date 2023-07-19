@@ -181,6 +181,7 @@ class TestAnnotationManager(TestCase):
                     {"x": 3, "y": 5},
                     {"x": 5, "y": 3},
                     {"x": 3, "y": 1},
+                    {"x": 2, "y": 2},
                 ],
                 "accuracy": 1,
             },
@@ -199,6 +200,7 @@ class TestAnnotationManager(TestCase):
                     {"x": 30, "y": 50},
                     {"x": 50, "y": 30},
                     {"x": 30, "y": 10},
+                    {"x": 20, "y": 20},
                 ],
                 "accuracy": 1,
             },
@@ -217,6 +219,7 @@ class TestAnnotationManager(TestCase):
                     {"x": 300, "y": 500},
                     {"x": 500, "y": 300},
                     {"x": 300, "y": 100},
+                    {"x": 200, "y": 200},
                 ],
                 "accuracy": 1,
             },
@@ -235,8 +238,9 @@ class TestAnnotationManager(TestCase):
                     {"x": 30, "y": 50},
                     {"x": 50, "y": 30},
                     {"x": 30, "y": 10},
+                    {"x": 20, "y": 20},
                 ],
-                "accuracy": 1,
+                "accuracy": 0,
             },
         ]
         actual = self.manager.to_dict(mask_json=mask)
@@ -266,9 +270,7 @@ class TestAnnotationManager(TestCase):
                 "parents": [],
                 "area": 7.0,
                 "circularity": 0.64,
-                "convex_hull_area": 8.0,
-                "perimeter": 11.72,
-                "roundness": 0.56,
+                "convexHullArea": 8.0,
                 "type": "polygon",
                 "points": [
                     {"x": 1, "y": 3},
@@ -276,6 +278,7 @@ class TestAnnotationManager(TestCase):
                     {"x": 3, "y": 5},
                     {"x": 5, "y": 3},
                     {"x": 3, "y": 1},
+                    {"x": 2, "y": 2},
                 ],
                 "accuracy": 1,
             },
@@ -286,9 +289,7 @@ class TestAnnotationManager(TestCase):
                 "parents": [],
                 "area": 700.0,
                 "circularity": 0.64,
-                "convex_hull_area": 800.0,
-                "perimeter": 117.21,
-                "roundness": 0.56,
+                "convexHullArea": 800.0,
                 "type": "polygon",
                 "points": [
                     {"x": 10, "y": 30},
@@ -296,8 +297,28 @@ class TestAnnotationManager(TestCase):
                     {"x": 30, "y": 50},
                     {"x": 50, "y": 30},
                     {"x": 30, "y": 10},
+                    {"x": 20, "y": 20},
                 ],
                 "accuracy": 1,
+            },
+            {
+                "id": "132132132123132",
+                "label": "star",
+                "children": [],
+                "parents": [],
+                "areaUm": 700.0,
+                "circularity": 0.64,
+                "convexHullAreaUm": 800.0,
+                "type": "polygon",
+                "points": [
+                    {"x": 10, "y": 30},
+                    {"x": 20, "y": 30},
+                    {"x": 30, "y": 50},
+                    {"x": 50, "y": 30},
+                    {"x": 30, "y": 10},
+                    {"x": 20, "y": 20},
+                ],
+                "accuracy": 0,
             },
         ]
 
@@ -317,10 +338,45 @@ class TestAnnotationManager(TestCase):
                 [0, 2, 2, 2, 2, 0],
             ]
         )
+
+        expected = np.array(
+            [
+                [0, 0, 0, 0, 0, 0],
+                [0, 0, 0, 0, 0, 0],
+                [0, 0, 0, 0, 0, 0],
+                [0, 0, 0, 0, 0, 0],
+                [0, 0, 0, 0, 0, 0],
+                [0, 0, 0, 0, 0, 0],
+                [0, 0, 0, 0, 0, 0],
+            ]
+        )
+
+        shape = data.shape
+        manager = AnnotationManager.from_labeled_mask(data, features=["major_axis"])
+
+        n_labels = 0
+        self.assertEqual(len(manager), n_labels)
+
+        actual = manager.to_labeled_mask(shape)
+
+        np.testing.assert_array_equal(actual, expected)
+
+    def test_init_from_labeled_to_labeled_mask_big_contours(self):
+        data = np.array(
+            [
+                [2, 2, 2, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1],
+                [2, 2, 2, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1],
+                [2, 2, 2, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1],
+                [2, 2, 2, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1],
+                [2, 2, 2, 2, 2, 0, 1, 1, 1, 1, 1, 1, 1],
+                [2, 2, 2, 2, 2, 0, 0, 0, 0, 0, 0, 0, 0],
+                [2, 2, 2, 2, 2, 0, 0, 0, 0, 0, 0, 0, 0],
+            ]
+        )
         shape = data.shape
         manager = AnnotationManager.from_labeled_mask(data)
 
-        n_labels = 3
+        n_labels = 2
         self.assertEqual(len(manager), n_labels)
 
         actual = manager.to_labeled_mask(shape)
@@ -343,8 +399,8 @@ class TestAnnotationManager(TestCase):
         shape = data.shape
         manager = AnnotationManager.from_binary_mask(data)
 
-        # n_labels = 1
-        # self.assertEqual(len(manager), n_labels)
+        n_labels = 1
+        self.assertEqual(len(manager), n_labels)
 
         actual = manager.to_labeled_mask(shape)
         cv2.imwrite("actual.png", actual)
@@ -368,31 +424,31 @@ class TestAnnotationManager(TestCase):
     def test_init_from_labeled_mask_to_binary_mask(self):
         data = np.array(
             [
-                [0, 3, 3, 0, 0, 0],
-                [0, 3, 3, 0, 0, 0],
-                [1, 1, 1, 0, 0, 0],
-                [0, 2, 0, 0, 0, 0],
-                [0, 2, 2, 0, 0, 0],
-                [0, 2, 2, 2, 0, 0],
-                [0, 2, 2, 2, 2, 0],
+                [2, 2, 2, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1],
+                [2, 2, 2, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1],
+                [2, 2, 2, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1],
+                [2, 2, 2, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1],
+                [2, 2, 2, 2, 2, 0, 1, 1, 1, 1, 1, 1, 1],
+                [2, 2, 2, 2, 2, 0, 0, 0, 0, 0, 0, 0, 0],
+                [2, 2, 2, 2, 2, 0, 0, 0, 0, 0, 0, 0, 0],
             ]
         )
         expected = np.array(
             [
-                [0, 1, 1, 0, 0, 0],
-                [0, 1, 1, 0, 0, 0],
-                [1, 1, 1, 0, 0, 0],
-                [0, 1, 0, 0, 0, 0],
-                [0, 1, 1, 0, 0, 0],
-                [0, 1, 1, 1, 0, 0],
-                [0, 1, 1, 1, 1, 0],
+                [1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1],
+                [1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1],
+                [1, 1, 1, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1],
+                [1, 1, 1, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1],
+                [1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1],
+                [1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0],
+                [1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0],
             ]
         )
 
         shape = data.shape
         manager = AnnotationManager.from_labeled_mask(data)
 
-        n_labels = 3
+        n_labels = 2
         self.assertEqual(len(manager), n_labels)
 
         actual = manager.to_binary_mask(shape)
@@ -437,14 +493,26 @@ class TestAnnotationManager(TestCase):
     def test_to_labeled_mask(self):
         polygons = [
             Polygon(
-                points=[Point(1, 1), Point(1, 2), Point(2, 2), Point(2, 1)],
+                points=[
+                    Point(1, 1),
+                    Point(2, 3),
+                    Point(1, 3),
+                    Point(2, 3),
+                    Point(2, 1),
+                ],
                 id="132132132123132",
                 children=[],
                 parents=[],
                 label="star",
             ),
             Polygon(
-                points=[Point(3, 3), Point(3, 5), Point(5, 5), Point(5, 3)],
+                points=[
+                    Point(3, 3),
+                    Point(3, 5),
+                    Point(5, 5),
+                    Point(5, 4),
+                    Point(5, 3),
+                ],
                 id="132132132123132",
                 children=[],
                 parents=[],
@@ -457,7 +525,7 @@ class TestAnnotationManager(TestCase):
                 [0, 0, 0, 0, 0, 0, 0],
                 [0, 1, 1, 0, 0, 0, 0],
                 [0, 1, 1, 0, 0, 0, 0],
-                [0, 0, 0, 2, 2, 2, 0],
+                [0, 1, 1, 2, 2, 2, 0],
                 [0, 0, 0, 2, 2, 2, 0],
                 [0, 0, 0, 2, 2, 2, 0],
                 [0, 0, 0, 0, 0, 0, 0],
@@ -473,7 +541,7 @@ class TestAnnotationManager(TestCase):
         input_mask = np.array(
             [
                 [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                [0, 0, 1, 1, 0, 0, 0, 0, 0, 0],
                 [0, 0, 1, 1, 1, 1, 1, 1, 1, 0],
                 [0, 0, 1, 0, 0, 1, 0, 0, 1, 0],
                 [0, 0, 1, 0, 0, 1, 0, 0, 1, 0],
@@ -489,7 +557,7 @@ class TestAnnotationManager(TestCase):
         expected = np.array(
             [
                 [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                [0, 0, 1, 1, 0, 0, 0, 0, 0, 0],
                 [0, 0, 1, 1, 1, 1, 1, 1, 1, 0],
                 [0, 0, 1, 1, 1, 1, 1, 1, 1, 0],
                 [0, 0, 1, 1, 1, 1, 1, 1, 1, 0],
@@ -523,13 +591,27 @@ class TestAnnotationManager(TestCase):
             ],
             dtype=np.uint8,
         )
-
+        expected = np.array(
+            [
+                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+            ],
+            dtype=np.uint8,
+        )
         manager = AnnotationManager.from_binary_mask(input_mask)
         actual = manager.to_binary_mask(input_mask.shape)
 
-        np.testing.assert_array_equal(input_mask, actual)
+        np.testing.assert_array_equal(expected, actual)
 
-    def test_binary_mask_multiple_objects_not_connected_to_labeled_mask_connectivity_4(
+    def test_binary_mask_multiple_objects_not_connected_to_labeled_mask_connectivity_4_small_objects(
         self,
     ):
         connectivity = 4
@@ -553,11 +635,54 @@ class TestAnnotationManager(TestCase):
             [
                 [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
                 [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+            ],
+            dtype=np.uint8,
+        )
+
+        manager = AnnotationManager.from_binary_mask(
+            input_mask, connectivity=connectivity
+        )
+        actual = manager.to_labeled_mask(input_mask.shape)
+
+        np.testing.assert_array_equal(expected, actual)
+
+    def test_binary_mask_multiple_objects_not_connected_to_labeled_mask_connectivity_4(
+        self,
+    ):
+        connectivity = 4
+        input_mask = np.array(
+            [
+                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                [0, 1, 1, 1, 0, 0, 0, 0, 0, 0],
+                [0, 1, 1, 1, 1, 0, 0, 0, 0, 0],
+                [0, 1, 1, 1, 1, 0, 0, 0, 0, 0],
                 [0, 0, 1, 1, 1, 0, 0, 0, 0, 0],
+                [0, 0, 0, 0, 0, 1, 1, 1, 1, 0],
+                [0, 0, 0, 0, 0, 1, 1, 1, 1, 0],
+                [0, 0, 0, 0, 0, 1, 1, 1, 0, 0],
+                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+            ],
+            dtype=np.uint8,
+        )
+
+        expected = np.array(
+            [
+                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                [0, 1, 1, 1, 0, 0, 0, 0, 0, 0],
+                [0, 1, 1, 1, 1, 0, 0, 0, 0, 0],
+                [0, 1, 1, 1, 1, 0, 0, 0, 0, 0],
                 [0, 0, 1, 1, 1, 0, 0, 0, 0, 0],
-                [0, 0, 1, 1, 1, 0, 0, 0, 0, 0],
-                [0, 0, 0, 0, 0, 2, 2, 2, 0, 0],
-                [0, 0, 0, 0, 0, 2, 2, 2, 0, 0],
+                [0, 0, 0, 0, 0, 2, 2, 2, 2, 0],
+                [0, 0, 0, 0, 0, 2, 2, 2, 2, 0],
                 [0, 0, 0, 0, 0, 2, 2, 2, 0, 0],
                 [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
                 [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
@@ -579,12 +704,12 @@ class TestAnnotationManager(TestCase):
         input_mask = np.array(
             [
                 [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                [0, 1, 1, 1, 0, 0, 0, 0, 0, 0],
+                [0, 1, 1, 1, 1, 0, 0, 0, 0, 0],
+                [0, 1, 1, 1, 1, 0, 0, 0, 0, 0],
                 [0, 0, 1, 1, 1, 0, 0, 0, 0, 0],
-                [0, 0, 1, 1, 1, 0, 0, 0, 0, 0],
-                [0, 0, 1, 1, 1, 0, 0, 0, 0, 0],
-                [0, 0, 0, 0, 0, 1, 1, 1, 0, 0],
-                [0, 0, 0, 0, 0, 1, 1, 1, 0, 0],
+                [0, 0, 0, 0, 0, 1, 1, 1, 1, 0],
+                [0, 0, 0, 0, 0, 1, 1, 1, 1, 0],
                 [0, 0, 0, 0, 0, 1, 1, 1, 0, 0],
                 [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
                 [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
@@ -595,12 +720,12 @@ class TestAnnotationManager(TestCase):
         expected = np.array(
             [
                 [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                [0, 1, 1, 1, 0, 0, 0, 0, 0, 0],
+                [0, 1, 1, 1, 1, 0, 0, 0, 0, 0],
+                [0, 1, 1, 1, 1, 0, 0, 0, 0, 0],
                 [0, 0, 1, 1, 1, 0, 0, 0, 0, 0],
-                [0, 0, 1, 1, 1, 0, 0, 0, 0, 0],
-                [0, 0, 1, 1, 1, 0, 0, 0, 0, 0],
-                [0, 0, 0, 0, 0, 1, 1, 1, 0, 0],
-                [0, 0, 0, 0, 0, 1, 1, 1, 0, 0],
+                [0, 0, 0, 0, 0, 1, 1, 1, 1, 0],
+                [0, 0, 0, 0, 0, 1, 1, 1, 1, 0],
                 [0, 0, 0, 0, 0, 1, 1, 1, 0, 0],
                 [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
                 [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
