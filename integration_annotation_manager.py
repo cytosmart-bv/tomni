@@ -20,10 +20,10 @@ with open(json_fp, "rb") as f:
 manager = AnnotationManager.from_dicts(dicts=dicts)
 
 # %%
-pixels_per_mm = 742
-pixels_per_um = 742/1000
-feature_multiplier = 1 / pixels_per_um
-manager = AnnotationManager.from_dicts(dicts=dicts, feature_multiplier=feature_multiplier)
+feature_multiplier = 2
+manager = AnnotationManager.from_dicts(
+    dicts=dicts, feature_multiplier=feature_multiplier
+)
 # %%
 manager = AnnotationManager.from_dicts(dicts=dicts, features=[])
 
@@ -78,7 +78,16 @@ with open("temp.json", "w") as f:
 
 size = int(2072 / 2)
 rad = int(2072 / 3)
-mask_json = [{"type": "ellipse", "center": {"x": size, "y": size}, "radiusX": rad, "radiusY": rad, "angleOfRotation": 0, "name": "A1"}]
+mask_json = [
+    {
+        "type": "ellipse",
+        "center": {"x": size, "y": size},
+        "radiusX": rad,
+        "radiusY": rad,
+        "angleOfRotation": 0,
+        "name": "A1",
+    }
+]
 
 _dicts = manager.to_dict(mask_json=mask_json, min_overlap=0.9)
 print(_dicts)
@@ -124,4 +133,3 @@ annotations = manager.filter(
     feature="roundness", min_val=0.5, max_val=1.0, inplace=False
 )
 print(type(annotations))
-
