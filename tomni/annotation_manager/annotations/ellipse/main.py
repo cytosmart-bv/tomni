@@ -45,7 +45,7 @@ class Ellipse(Annotation):
             features (Union[List[str], None]): list of features that the user wants returned.
                 Defaults to None
             metric_unit (str, optional): A suffix added to the name of the feature in the dict. Defaults to "".
-
+            pixel_density (int, optional): Pixel density of the image. Defaults to 1.
         """
         super().__init__(id, label, children, parents, accuracy)
         self._center: Point = center
