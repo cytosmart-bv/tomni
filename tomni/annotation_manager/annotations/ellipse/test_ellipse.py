@@ -203,6 +203,21 @@ class TestEllipse(TestCase):
         actual = self.oval.convex_hull_area
         self.assertEqual(expected, actual)
 
+    def test_circle_roundness(self):
+        expected = 1
+        actual = self.circle.roundness
+        self.assertEqual(expected, actual)
+
+    def test_oval_roundness(self):
+        expected = 1 / 3
+        actual = self.oval.roundness
+        self.assertEqual(expected, actual)
+
+    def test_zero_ellipse_roundness(self):
+        expected = 0
+        actual = self.zero_ellipse.roundness
+        self.assertEqual(expected, actual)
+
     def test_zero_ellipse_to_dict(self):
         expected = {
             "area": 0.0,
