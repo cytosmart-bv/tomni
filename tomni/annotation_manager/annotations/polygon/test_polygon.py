@@ -216,6 +216,25 @@ class TestPolygon(TestCase):
 
         self.assertEqual(expected, actual)
 
+    # Roundness
+    def test_circular_roundness(self):
+        expected = 0.8911880248803259
+        actual = self.circular_polygon.roundness
+
+        self.assertEqual(expected, actual)
+
+    def test_rectangular_roundness(self):
+        expected = 0.6365748269154868
+        actual = self.rectangle_polygon.roundness
+
+        self.assertEqual(expected, actual)
+
+    def test_star_shaped_roundness(self):
+        expected = 0.5569866579216156
+        actual = self.star_shaped_polygon.roundness
+
+        self.assertEqual(expected, actual)
+
     def test_circular_to_dict(self):
         expected = {
             "id": "1234-1234-2134-1321",
