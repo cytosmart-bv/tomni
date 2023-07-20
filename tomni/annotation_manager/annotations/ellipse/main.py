@@ -356,8 +356,11 @@ class Ellipse(Annotation):
         if not self._major_axis:
             self._calculate_major_axis()
 
-        enclosing_circle_area = self.major_axis**2 * np.pi
-        self._roundness = self._area / enclosing_circle_area
+        if self.major_axis == 0:
+            self._roundness = 0
+        else:
+            enclosing_circle_area = self._major_axis**2 * np.pi
+            self._roundness = self._area / enclosing_circle_area
 
     def _calculate_area(self) -> None:
         self._area = np.pi * self._radius_x * self._radius_y

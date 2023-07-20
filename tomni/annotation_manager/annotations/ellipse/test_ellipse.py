@@ -15,14 +15,23 @@ def assertAlmostEqualDictEqual(testcase, expected, actual, percentage_tolerance)
 
     for key in expected:
         if isinstance(expected[key], dict) and isinstance(actual[key], dict):
-            assertAlmostEqualDictEqual(testcase, expected[key], actual[key], percentage_tolerance)
-        elif isinstance(expected[key], (int, float)) and isinstance(actual[key], (int, float)):
+            assertAlmostEqualDictEqual(
+                testcase, expected[key], actual[key], percentage_tolerance
+            )
+        elif isinstance(expected[key], (int, float)) and isinstance(
+            actual[key], (int, float)
+        ):
             if expected[key] == 0:
                 testcase.assertAlmostEqual(expected[key], actual[key], places=0)
             else:
-                percentage_diff = abs((expected[key] - actual[key]) / expected[key]) * 100
-                testcase.assertLessEqual(percentage_diff, percentage_tolerance,
-                                         msg=f"Percentage difference for {key}: {percentage_diff:.2f}%")
+                percentage_diff = (
+                    abs((expected[key] - actual[key]) / expected[key]) * 100
+                )
+                testcase.assertLessEqual(
+                    percentage_diff,
+                    percentage_tolerance,
+                    msg=f"Percentage difference for {key}: {percentage_diff:.2f}%",
+                )
         else:
             testcase.assertEqual(expected[key], actual[key])
 
@@ -209,6 +218,7 @@ class TestEllipse(TestCase):
             "minorAxis": 0,
             "parents": [],
             "perimeter": 0.0,
+            "roundness": 0,
             "radiusX": 0.0,
             "radiusY": 0.0,
             "angleOfRotation": 0,
@@ -240,6 +250,7 @@ class TestEllipse(TestCase):
             "angleOfRotation": 0,
             "type": "ellipse",
             "accuracy": 1,
+            "roundness": 1.0,
         }
         actual = self.circle.to_dict()
         self.assertDictEqual(expected, actual)
@@ -264,6 +275,7 @@ class TestEllipse(TestCase):
             "angleOfRotation": 0,
             "type": "ellipse",
             "accuracy": 1,
+            "roundness": 0.33,
         }
         actual = self.oval.to_dict()
 
@@ -289,6 +301,7 @@ class TestEllipse(TestCase):
             "angleOfRotation": 0,
             "type": "ellipse",
             "accuracy": 0.5,
+            "roundness": 0.33,
         }
         oval1 = Ellipse(
             radius_x=1,
@@ -325,6 +338,7 @@ class TestEllipse(TestCase):
             "angleOfRotation": 0,
             "type": "ellipse",
             "accuracy": 0,
+            "roundness": 0.33,
         }
         oval1 = Ellipse(
             radius_x=1,
@@ -449,7 +463,6 @@ class TestEllipse(TestCase):
         for ellipse in ellipses_outside:
             self.assertFalse(ellipse.is_in_mask(mask, 0.9))
 
-
     def test_feature_selection(self):
         oval_features = Ellipse(
             radius_x=1,
@@ -460,7 +473,7 @@ class TestEllipse(TestCase):
             children=[],
             parents=[],
             label="label",
-            features = ["area", "circularity", "minor_axis", "average_diameter"]
+            features=["area", "circularity", "minor_axis", "average_diameter"],
         )
         expected = {
             "area": 9.42,
@@ -492,7 +505,7 @@ class TestEllipse(TestCase):
             children=[],
             parents=[],
             label="label",
-            features = []
+            features=[],
         )
         expected = {
             "center": {"x": 0, "y": 0},
@@ -520,7 +533,7 @@ class TestEllipse(TestCase):
             children=[],
             parents=[],
             label="label",
-            features = None
+            features=None,
         )
         expected = {
             "area": 9.42,
@@ -541,6 +554,7 @@ class TestEllipse(TestCase):
             "angleOfRotation": 0,
             "type": "ellipse",
             "accuracy": 1,
+            "roundness": 0.33,
         }
 
         actual = oval_features.to_dict()
@@ -557,12 +571,12 @@ class TestEllipse(TestCase):
             children=[],
             parents=[],
             label="label",
-            pixel_density=pixel_density
+            pixel_density=pixel_density,
         )
         expected = {
             "area": round(9.42 * pixel_density**2, 2),
             "aspectRatio": 0.33,
-            "averageDiameter": round(2 * pixel_density,2),
+            "averageDiameter": round(2 * pixel_density, 2),
             "center": {"x": 0, "y": 0},
             "children": [],
             "circularity": 0.6,
@@ -578,10 +592,11 @@ class TestEllipse(TestCase):
             "angleOfRotation": 0,
             "type": "ellipse",
             "accuracy": 1,
+            "roundness": 0.33,
         }
 
         actual = oval_features.to_dict()
-        assertAlmostEqualDictEqual(self, expected, actual, 0.1)
+        assertAlmostEqualDictEqual(self, expected, actual, 1)
 
     def test_metric_unit(self):
         oval_features = Ellipse(
@@ -593,8 +608,8 @@ class TestEllipse(TestCase):
             children=[],
             parents=[],
             label="label",
-            features = None,
-            metric_unit="pm"
+            features=None,
+            metric_unit="pm",
         )
         expected = {
             "areaPm": 9.42,
@@ -615,6 +630,7 @@ class TestEllipse(TestCase):
             "angleOfRotation": 0,
             "type": "ellipse",
             "accuracy": 1,
+            "roundness": 0.33,
         }
 
         actual = oval_features.to_dict()

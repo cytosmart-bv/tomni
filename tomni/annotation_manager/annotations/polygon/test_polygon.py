@@ -231,6 +231,7 @@ class TestPolygon(TestCase):
             "aspectRatio": 0.96,
             "circularity": 0.94,
             "perimeter": 13.66,
+            "roundness": 0.89,
             "points": [asdict(point) for point in self.circular_points],
             "accuracy": 1,
         }
@@ -253,6 +254,7 @@ class TestPolygon(TestCase):
             "circularity": 0.79,
             "convexHullArea": 16.0,
             "perimeter": 16.0,
+            "roundness": 0.64,
             "points": [asdict(point) for point in self.rectangle_points],
             "accuracy": 1,
         }
@@ -275,6 +277,7 @@ class TestPolygon(TestCase):
             "circularity": 0.64,
             "convexHullArea": 8.0,
             "perimeter": 11.72,
+            "roundness": 0.56,
             "points": [asdict(point) for point in self.star_shaped_points],
             "accuracy": 1,
         }
@@ -308,6 +311,7 @@ class TestPolygon(TestCase):
             "aspectRatio": 0.96,
             "circularity": 0.94,
             "perimeter": 13.66,
+            "roundness": 0.89,
             "points": [asdict(point) for point in self.circular_points],
             "accuracy": 0.5,
         }
@@ -339,6 +343,7 @@ class TestPolygon(TestCase):
             "aspectRatio": 0.96,
             "circularity": 0.94,
             "perimeter": 13.66,
+            "roundness": 0.89,
             "points": [asdict(point) for point in self.circular_points],
             "accuracy": 0,
         }
