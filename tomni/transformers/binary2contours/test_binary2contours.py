@@ -7,9 +7,9 @@ from .main import binary2contours
 
 
 class TestColony(TestCase):
-    def test_calculate_colony_edges_happy_flow(self):
+    def test_contours_with_inner_contour(self):
         """
-        Test the behaviour edge detector module for colony
+        Test the behaviour binary2contours when return_inner_contours is False with inner contour present.
         """
 
         conf_result = np.array(
@@ -34,13 +34,12 @@ class TestColony(TestCase):
                 [[[1, 1]], [[1, 8]], [[9, 8]], [[9, 1]]],
             ]
         )
-        # result = algorithm._binary2contours(conf_result)
 
         np.testing.assert_equal(expected, result)
 
-    def test_calculate_colony_edges_2_objects(self):
+    def test_contours_2_objects(self):
         """
-        Test the behaviour edge detector module for colony
+        Test the behaviour binary2contours when return_inner_contours is False.
         """
 
         conf_result = np.array(
@@ -75,7 +74,7 @@ class TestColony(TestCase):
 
     def test_inner_contour(self):
         """
-        Test the behaviour edge detector module for colony
+        Test the behaviour of binary2contours when an inner contour is present and return_inner_contours is True.
         """
 
         conf_result = np.array(
@@ -119,7 +118,7 @@ class TestColony(TestCase):
 
     def test_inner_contour_no_inner(self):
         """
-        Test the behaviour edge detector module for colony
+        Test the behaviour of binary2contours when no inner contours are given but return_inner_contours is True.
         """
 
         conf_result = np.array(
