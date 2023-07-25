@@ -26,7 +26,6 @@ class TestAnnotationManager(TestCase):
                     children=[],
                     parents=[],
                     label="star",
-                    features=["circularity", "area", "convex_hull_area"],
                 ),
                 Polygon(
                     points=[
@@ -41,7 +40,6 @@ class TestAnnotationManager(TestCase):
                     children=[],
                     parents=[],
                     label="star",
-                    features=["circularity", "area", "convex_hull_area"],
                 ),
                 Polygon(
                     points=[
@@ -56,7 +54,6 @@ class TestAnnotationManager(TestCase):
                     children=[],
                     parents=[],
                     label="star",
-                    features=["circularity", "area", "convex_hull_area"],
                 ),
                 Polygon(
                     points=[
@@ -72,7 +69,6 @@ class TestAnnotationManager(TestCase):
                     parents=[],
                     label="star",
                     accuracy=0.5,
-                    features=["circularity", "area", "convex_hull_area"],
                 ),
                 Polygon(
                     points=[
@@ -88,7 +84,6 @@ class TestAnnotationManager(TestCase):
                     parents=[],
                     label="star",
                     accuracy=0,
-                    features=["circularity", "area", "convex_hull_area"],
                 ),
                 Polygon(
                     points=[
@@ -104,8 +99,6 @@ class TestAnnotationManager(TestCase):
                     parents=[],
                     label="star",
                     accuracy=0,
-                    metric_unit="Um",
-                    features=["area", "circularity", "convex_hull_area"],
                 ),
             ]
         )
@@ -152,6 +145,44 @@ class TestAnnotationManager(TestCase):
         self.assertIsInstance(actual, AnnotationManager)
         self.assertEqual(len(self.manager), expected_n_items)
 
+    def test_filter_feature_multiplier(self):
+        temp_manager = AnnotationManager(
+            [
+                Polygon(
+                    points=[
+                        Point(0, 0),
+                        Point(0, 5),
+                        Point(0, 10),
+                        Point(10, 10),
+                        Point(10, 5),
+                        Point(10, 0),
+                    ],
+                    id="132132132123132",
+                    children=[],
+                    parents=[],
+                    label="star",
+                )
+            ]
+        )
+        manager1 = temp_manager.filter(
+            feature="area", min_val=0, max_val=500, inplace=True, feature_multiplier=1
+        )
+        expected_n_items1 = 1
+
+        self.assertIsInstance(manager1, AnnotationManager)
+        self.assertEqual(len(manager1), expected_n_items1)
+
+        manager2 = temp_manager.filter(
+            feature="area",
+            min_val=0,
+            max_val=500,
+            inplace=True,
+            feature_multiplier=742,
+        )
+        expected_n_items2 = 0
+        self.assertIsInstance(manager2, AnnotationManager)
+        self.assertEqual(len(manager2), expected_n_items2)
+
     def test_to_dict_with_polygon_mask(self):
         mask = [
             {
@@ -171,9 +202,9 @@ class TestAnnotationManager(TestCase):
                 "label": "star",
                 "children": [],
                 "parents": [],
-                "area": 7.0,
+                "areaUm": 7.0,
                 "circularity": 0.64,
-                "convexHullArea": 8.0,
+                "convexHullAreaUm": 8.0,
                 "type": "polygon",
                 "points": [
                     {"x": 1, "y": 3},
@@ -190,9 +221,9 @@ class TestAnnotationManager(TestCase):
                 "label": "star",
                 "children": [],
                 "parents": [],
-                "area": 700.0,
+                "areaUm": 700.0,
                 "circularity": 0.64,
-                "convexHullArea": 800.0,
+                "convexHullAreaUm": 800.0,
                 "type": "polygon",
                 "points": [
                     {"x": 10, "y": 30},
@@ -209,9 +240,9 @@ class TestAnnotationManager(TestCase):
                 "label": "star",
                 "children": [],
                 "parents": [],
-                "area": 70000.0,
+                "areaUm": 70000.0,
                 "circularity": 0.64,
-                "convexHullArea": 80000.0,
+                "convexHullAreaUm": 80000.0,
                 "type": "polygon",
                 "points": [
                     {"x": 100, "y": 300},
@@ -243,7 +274,11 @@ class TestAnnotationManager(TestCase):
                 "accuracy": 0,
             },
         ]
-        actual = self.manager.to_dict(mask_json=mask)
+        actual = self.manager.to_dict(
+            mask_json=mask,
+            features=["area", "convex_hull_area", "circularity"],
+            metric_unit="Um",
+        )
 
         self.assertEqual(expected, actual)
 
@@ -268,9 +303,9 @@ class TestAnnotationManager(TestCase):
                 "label": "star",
                 "children": [],
                 "parents": [],
-                "area": 7.0,
+                "areaUm": 7.0,
                 "circularity": 0.64,
-                "convexHullArea": 8.0,
+                "convexHullAreaUm": 8.0,
                 "type": "polygon",
                 "points": [
                     {"x": 1, "y": 3},
@@ -287,9 +322,9 @@ class TestAnnotationManager(TestCase):
                 "label": "star",
                 "children": [],
                 "parents": [],
-                "area": 700.0,
+                "areaUm": 700.0,
                 "circularity": 0.64,
-                "convexHullArea": 800.0,
+                "convexHullAreaUm": 800.0,
                 "type": "polygon",
                 "points": [
                     {"x": 10, "y": 30},
@@ -322,7 +357,11 @@ class TestAnnotationManager(TestCase):
             },
         ]
 
-        actual = self.manager.to_dict(mask_json=mask)
+        actual = self.manager.to_dict(
+            mask_json=mask,
+            features=["area", "convex_hull_area", "circularity"],
+            metric_unit="Um",
+        )
 
         self.assertEqual(expected, actual)
 
@@ -352,7 +391,7 @@ class TestAnnotationManager(TestCase):
         )
 
         shape = data.shape
-        manager = AnnotationManager.from_labeled_mask(data, features=["major_axis"])
+        manager = AnnotationManager.from_labeled_mask(data)
 
         n_labels = 0
         self.assertEqual(len(manager), n_labels)

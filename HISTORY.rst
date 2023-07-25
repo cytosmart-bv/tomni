@@ -5,7 +5,7 @@
 - AnnotationManager function from_dict is called with an optional list of features
 - Changed Polygon and Ellipse classes to include the list of features initialized by AnnotationManager
 - to_dict function now only returns features in the dictionary that were asked for in the feature list
-- Added `pixel_density` and `metric_unit` as inputs to apply to the features' name and value outputs.
+- Added `feature_multiplier` and `metric_unit` as inputs to apply to the features' name and value outputs.
 - Added all features to `ellipse` and `polygon`.
 - Features are now in camelCasing when output `to_dict`
 

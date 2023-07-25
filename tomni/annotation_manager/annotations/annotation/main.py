@@ -3,7 +3,9 @@ from typing import List
 
 
 class Annotation(ABC):
-    def __init__(self, id: str, label: str, children: List, parents: List, accuracy: float) -> None:
+    def __init__(
+        self, id: str, label: str, children: List, parents: List, accuracy: float
+    ) -> None:
         self._id: str = id
         self._label: str = label
         self._children: List[Annotation] = children
@@ -19,7 +21,13 @@ class Annotation(ABC):
         Returns:
             dict: CytoSmart Data Format dict.
         """
-        return {"id": self._id, "label": self._label, "children": self._children, "parents": self._parents, "accuracy": self._accuracy}
+        return {
+            "id": self._id,
+            "label": self._label,
+            "children": self._children,
+            "parents": self._parents,
+            "accuracy": self._accuracy,
+        }
 
     @property
     @abstractmethod

@@ -478,7 +478,6 @@ class TestEllipse(TestCase):
         for ellipse in ellipses_outside:
             self.assertFalse(ellipse.is_in_mask(mask, 0.9))
 
-    def test_feature_selection(self):
         oval_features = Ellipse(
             radius_x=1,
             radius_y=3,
@@ -488,7 +487,6 @@ class TestEllipse(TestCase):
             children=[],
             parents=[],
             label="label",
-            features=["area", "circularity", "minor_axis", "average_diameter"],
         )
         expected = {
             "area": 9.42,
@@ -507,7 +505,9 @@ class TestEllipse(TestCase):
             "accuracy": 1,
         }
 
-        actual = oval_features.to_dict()
+        actual = oval_features.to_dict(
+            features=["area", "circularity", "minor_axis", "average_diameter"]
+        )
         self.assertDictEqual(expected, actual)
 
     def test_feature_selection_empty(self):
@@ -520,7 +520,6 @@ class TestEllipse(TestCase):
             children=[],
             parents=[],
             label="label",
-            features=[],
         )
         expected = {
             "center": {"x": 0, "y": 0},
@@ -535,7 +534,7 @@ class TestEllipse(TestCase):
             "accuracy": 1,
         }
 
-        actual = oval_features.to_dict()
+        actual = oval_features.to_dict(features=[])
         self.assertDictEqual(expected, actual)
 
     def test_feature_selection_None(self):
@@ -548,7 +547,6 @@ class TestEllipse(TestCase):
             children=[],
             parents=[],
             label="label",
-            features=None,
         )
         expected = {
             "area": 9.42,
@@ -572,11 +570,11 @@ class TestEllipse(TestCase):
             "roundness": 0.33,
         }
 
-        actual = oval_features.to_dict()
+        actual = oval_features.to_dict(features=None)
         self.assertDictEqual(expected, actual)
 
-    def test_pixel_density(self):
-        pixel_density = 742
+    def test_feature_multiplier(self):
+        feature_multiplier = 742
         oval_features = Ellipse(
             radius_x=1,
             radius_y=3,
@@ -586,22 +584,21 @@ class TestEllipse(TestCase):
             children=[],
             parents=[],
             label="label",
-            pixel_density=pixel_density,
         )
         expected = {
-            "area": round(9.42 * pixel_density**2, 2),
+            "area": round(9.42 * feature_multiplier**2, 2),
             "aspectRatio": 0.33,
-            "averageDiameter": round(2 * pixel_density, 2),
+            "averageDiameter": round(2 * feature_multiplier, 2),
             "center": {"x": 0, "y": 0},
             "children": [],
             "circularity": 0.6,
-            "convexHullArea": round(9.42 * pixel_density**2, 2),
+            "convexHullArea": round(9.42 * feature_multiplier**2, 2),
             "id": "id",
             "label": "label",
-            "majorAxis": round(3 * pixel_density, 2),
-            "minorAxis": round(1 * pixel_density, 2),
+            "majorAxis": round(3 * feature_multiplier, 2),
+            "minorAxis": round(1 * feature_multiplier, 2),
             "parents": [],
-            "perimeter": round(14.05 * pixel_density, 2),
+            "perimeter": round(14.05 * feature_multiplier, 2),
             "radiusX": 1,
             "radiusY": 3,
             "angleOfRotation": 0,
@@ -610,7 +607,7 @@ class TestEllipse(TestCase):
             "roundness": 0.33,
         }
 
-        actual = oval_features.to_dict()
+        actual = oval_features.to_dict(feature_multiplier=742)
         assertAlmostEqualDictEqual(self, expected, actual, 1)
 
     def test_metric_unit(self):
@@ -623,8 +620,6 @@ class TestEllipse(TestCase):
             children=[],
             parents=[],
             label="label",
-            features=None,
-            metric_unit="pm",
         )
         expected = {
             "areaPm": 9.42,
@@ -648,5 +643,5 @@ class TestEllipse(TestCase):
             "roundness": 0.33,
         }
 
-        actual = oval_features.to_dict()
+        actual = oval_features.to_dict(features=None, metric_unit="pm")
         self.assertDictEqual(expected, actual)

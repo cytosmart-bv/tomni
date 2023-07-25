@@ -21,10 +21,7 @@ class Ellipse(Annotation):
         children: List[Annotation] = [],
         parents: List[Annotation] = [],
         radius_y: Union[float, None] = None,
-        pixel_density: int = 1,
-        features: Union[List[str], None] = None,
         accuracy: float = 1,
-        metric_unit: str = "",
     ):
         """Initializes a Ellipse object.
 
@@ -42,10 +39,6 @@ class Ellipse(Annotation):
             children (List[Annotation]): Tracking annotations. Refers to t+1.
             parents (List[Annotation]): Tracking annotations. Refers to t-1.
             accuracy (float, optional): The confidence of the model's prediction. Defaults to 1.
-            features (Union[List[str], None]): list of features that the user wants returned.
-                Defaults to None
-            metric_unit (str, optional): A suffix added to the name of the feature in the dict. Defaults to "".
-            pixel_density (int, optional): Pixel density of the image. Defaults to 1.
         """
         super().__init__(id, label, children, parents, accuracy)
         self._center: Point = center
@@ -55,9 +48,8 @@ class Ellipse(Annotation):
         else:
             self.radius_y: float = radius_x
         self.rotation: float = rotation
-        self._pixel_density = pixel_density
-        self._metric_unit = metric_unit
 
+        self._feature_multiplier: float = 1
         self._area: Union[float, None] = None
         self._aspect_ratio: Union[float, None] = None
         self._average_diameter: Union[float, None] = None
@@ -79,18 +71,6 @@ class Ellipse(Annotation):
             "perimeter": {"is_ratio": False},
             "roundness": {"is_ratio": True},
         }
-
-        # if features is None all features are returned
-        if features is None:
-            self._features = [feature for feature in self._all_features]
-        else:
-            missing_features = set(features).difference(set(self._all_features.keys()))
-            if missing_features:
-                raise ValueError(
-                    f"The following features are not compatible with the Annotation Manager: {', '.join(missing_features)}"
-                )
-
-            self._features = features
 
     @property
     def accuracy(self):
@@ -154,10 +134,9 @@ class Ellipse(Annotation):
         Returns:
             float: Ellipse's area.
         """
-        if "area" in self._features:
+        if self._area is None:
             self._calculate_area()
-            return self._area * self._pixel_density**2
-        return
+        return self._area * self._feature_multiplier**2
 
     @property
     def circularity(self) -> float:
@@ -166,10 +145,9 @@ class Ellipse(Annotation):
         Returns:
             float: Ellipse's circularity.
         """
-        if "circularity" in self._features:
+        if self._circularity is None:
             self._calculate_circularity()
-            return self._circularity
-        return
+        return self._circularity
 
     @property
     def convex_hull_area(self) -> Union[float, None]:
@@ -181,10 +159,9 @@ class Ellipse(Annotation):
         Returns:
             Union[float, None]: The convex hull area of the ellipse, or None if it cannot be calculated.
         """
-        if "convex_hull_area" in self._features:
+        if self._convex_hull_area is None:
             self._calculate_convex_hull_area()
-            return self._convex_hull_area * self._pixel_density**2
-        return
+        return self._convex_hull_area * self._feature_multiplier**2
 
     @property
     def average_diameter(self) -> float:
@@ -193,10 +170,9 @@ class Ellipse(Annotation):
         Returns:
             float: Average diameter.
         """
-        if "average_diameter" in self._features:
+        if self._average_diameter is None:
             self._calculate_average_diameter()
-            return self._average_diameter * self._pixel_density
-        return
+        return self._average_diameter * self._feature_multiplier
 
     @property
     def minor_axis(self) -> float:
@@ -205,10 +181,9 @@ class Ellipse(Annotation):
         Returns:
             float: Minor axis length.
         """
-        if "minor_axis" in self._features:
+        if self._minor_axis is None:
             self._calculate_minor_axis()
-            return self._minor_axis * self._pixel_density
-        return
+        return self._minor_axis * self._feature_multiplier
 
     @property
     def major_axis(self) -> float:
@@ -217,10 +192,9 @@ class Ellipse(Annotation):
         Returns:
             float: major axis length.
         """
-        if "major_axis" in self._features:
+        if self._major_axis is None:
             self._calculate_major_axis()
-            return self._major_axis * self._pixel_density
-        return
+        return self._major_axis * self._feature_multiplier
 
     @property
     def aspect_ratio(self) -> float:
@@ -229,10 +203,9 @@ class Ellipse(Annotation):
         Returns:
             float: Ellipse's aspect ratio.
         """
-        if "aspect_ratio" in self._features:
+        if self._aspect_ratio is None:
             self._calculate_aspect_ratio()
-            return self._aspect_ratio
-        return
+        return self._aspect_ratio
 
     @property
     def perimeter(self) -> float:
@@ -241,10 +214,9 @@ class Ellipse(Annotation):
         Returns:
             float: Ellipse's perimeter.
         """
-        if "perimeter" in self._features:
+        if self._perimeter is None:
             self._calculate_perimeter()
-            return self._perimeter * self._pixel_density
-        return
+        return self._perimeter * self._feature_multiplier
 
     @property
     def roundness(self) -> Union[float, None]:
@@ -254,12 +226,46 @@ class Ellipse(Annotation):
             Union[float, None]: Polygon's roundness in [0, 1] or None.
         """
 
-        if "roundness" in self._features:
+        if self._roundness is None:
             self._calculate_roundness()
-            return self._roundness
-        return
+        return self._roundness
 
-    def to_dict(self, decimals: int = 2, **kwargs) -> dict:
+    def to_dict(
+        self,
+        decimals: int = 2,
+        features: Union[List[str], None] = None,
+        metric_unit="",
+        feature_multiplier: int = 1,
+        **kwargs,
+    ) -> dict:
+        """Returns a dictionary of the annotation in cytosmart format.
+
+        Args:
+            decimals (int, optional): The number of decimals to use when rounding. Defaults to 2.
+            features (Union[List[str], None], optional): The features that are calculated and returned in the dict.
+                Defaults to None, which means all features are calculated and returned.
+            metric_unit (str, optional): The suffic added to the dict key names in camelCasing. Defaults to "".
+                For example: "area" with suffix "um" becomes "areaUm"
+            feature_multiplier (int, optional): A multiplier used during feature calculations. For example; 1/742. Defaults to 1.
+
+        Raises:
+            ValueError: It raises and error if any of the features are not compatible with the Annotation Manager.
+
+        Returns:
+            dict: a dictionary of the annotation in cytosmart format with the calculated features.
+        """
+        self._feature_multiplier = feature_multiplier
+
+        # Check if features list is provided; otherwise, return all features
+        if features is None:
+            features = list(self._all_features.keys())
+        else:
+            missing_features = set(features).difference(set(self._all_features.keys()))
+            if missing_features:
+                raise ValueError(
+                    f"The following features are not compatible with the Annotation Manager: {', '.join(missing_features)}"
+                )
+
         dict_ellipse = {
             "type": "ellipse",
             "center": asdict(self.center),
@@ -268,21 +274,20 @@ class Ellipse(Annotation):
             "angleOfRotation": self.rotation,
         }
 
-        if self._features:
-            for feature in self._features:
-                feature_name = (
-                    feature
-                    if self._all_features[feature]["is_ratio"]
-                    else feature + "_" + self._metric_unit
-                )
+        for feature in features:
+            feature_name = (
+                feature
+                if self._all_features[feature]["is_ratio"]
+                else feature + "_" + metric_unit
+            )
 
-                # Convert snake_casing to camelCasing
-                first_word, *remaining_words = feature_name.split("_")
-                feature_name = "".join(
-                    [first_word.lower(), *map(str.title, remaining_words)]
-                )
+            # Convert snake_casing to camelCasing
+            first_word, *remaining_words = feature_name.split("_")
+            feature_name = "".join(
+                [first_word.lower(), *map(str.title, remaining_words)]
+            )
 
-                dict_ellipse[feature_name] = round(getattr(self, feature), decimals)
+            dict_ellipse[feature_name] = round(getattr(self, feature), decimals)
 
         super_dict = super().to_dict(decimals=decimals)
         dict_return_value = {**super_dict, **dict_ellipse}
