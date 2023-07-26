@@ -60,6 +60,7 @@ The name Tomni is a combination of creator (Tom) and other CytoSMART product he 
   - Json 2 bbox
   - Labels 2 contours
   - Labels 2 lists of points
+  - Binary 2 contours
 
 ## Credits
 

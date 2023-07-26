@@ -1,4 +1,7 @@
 # History
+1.17.0 (2023-07-26)
+- Add binary2contours
+
 1.16.1 (2023-05-10)
 - make it possible to set n_iter to 0. 
 
