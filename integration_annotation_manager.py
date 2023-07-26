@@ -16,20 +16,19 @@ with open(json_fp, "rb") as f:
     dicts = json.load(f)
     print(f"Found {len(dicts)} dictionaries in json file.")
 
+
 # %%
 manager = AnnotationManager.from_dicts(dicts=dicts)
-
-# %%
-manager = AnnotationManager.from_dicts(dicts=dicts, features=[])
-
-# %%
-manager = AnnotationManager.from_dicts(dicts=dicts, features=["area", "circularity"])
-dicts_ = manager.to_dict()
+dicts_ = manager.to_dict(
+    features=["area", "circularity", "major_axis", "average_diameter"],
+    feature_multiplier=1 / 742,
+    metric_unit="mm",
+)
+print(dicts_[0])
 
 # %%
 contours = [json2contours(d) for d in dicts]
 manager = AnnotationManager.from_contours(contours=contours)
-
 
 # %%
 shape = (2072, 2072)
@@ -73,7 +72,16 @@ with open("temp.json", "w") as f:
 
 size = int(2072 / 2)
 rad = int(2072 / 3)
-mask_json = [{"type": "ellipse", "center": {"x": size, "y": size}, "radiusX": rad, "radiusY": rad, "angleOfRotation": 0, "name": "A1"}]
+mask_json = [
+    {
+        "type": "ellipse",
+        "center": {"x": size, "y": size},
+        "radiusX": rad,
+        "radiusY": rad,
+        "angleOfRotation": 0,
+        "name": "A1",
+    }
+]
 
 _dicts = manager.to_dict(mask_json=mask_json, min_overlap=0.9)
 print(_dicts)
@@ -119,4 +127,3 @@ annotations = manager.filter(
     feature="roundness", min_val=0.5, max_val=1.0, inplace=False
 )
 print(type(annotations))
-

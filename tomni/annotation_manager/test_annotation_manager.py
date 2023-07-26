@@ -14,28 +14,56 @@ class TestAnnotationManager(TestCase):
         self.manager = AnnotationManager(
             [
                 Polygon(
-                    points=[Point(1, 3), Point(2, 3), Point(3, 5), Point(5, 3), Point(3, 1), Point(2, 2)],
+                    points=[
+                        Point(1, 3),
+                        Point(2, 3),
+                        Point(3, 5),
+                        Point(5, 3),
+                        Point(3, 1),
+                        Point(2, 2),
+                    ],
                     id="132132132123132",
                     children=[],
                     parents=[],
                     label="star",
                 ),
                 Polygon(
-                    points=[Point(10, 30), Point(20, 30), Point(30, 50), Point(50, 30), Point(30, 10), Point(20, 20)],
+                    points=[
+                        Point(10, 30),
+                        Point(20, 30),
+                        Point(30, 50),
+                        Point(50, 30),
+                        Point(30, 10),
+                        Point(20, 20),
+                    ],
                     id="132132132123132",
                     children=[],
                     parents=[],
                     label="star",
                 ),
                 Polygon(
-                    points=[Point(100, 300), Point(200, 300), Point(300, 500), Point(500, 300), Point(300, 100), Point(200, 200)],
+                    points=[
+                        Point(100, 300),
+                        Point(200, 300),
+                        Point(300, 500),
+                        Point(500, 300),
+                        Point(300, 100),
+                        Point(200, 200),
+                    ],
                     id="132132132123132",
                     children=[],
                     parents=[],
                     label="star",
                 ),
                 Polygon(
-                    points=[Point(1000, 3000), Point(2000, 3000), Point(3000, 5000), Point(5000, 3000), Point(3000, 1000), Point(2000, 2000)],
+                    points=[
+                        Point(1000, 3000),
+                        Point(2000, 3000),
+                        Point(3000, 5000),
+                        Point(5000, 3000),
+                        Point(3000, 1000),
+                        Point(2000, 2000),
+                    ],
                     id="132132132123132",
                     children=[],
                     parents=[],
@@ -57,6 +85,21 @@ class TestAnnotationManager(TestCase):
                     label="star",
                     accuracy=0,
                 ),
+                Polygon(
+                    points=[
+                        Point(10, 30),
+                        Point(20, 30),
+                        Point(30, 50),
+                        Point(50, 30),
+                        Point(30, 10),
+                        Point(20, 20),
+                    ],
+                    id="132132132123132",
+                    children=[],
+                    parents=[],
+                    label="star",
+                    accuracy=0,
+                ),
             ]
         )
 
@@ -65,14 +108,14 @@ class TestAnnotationManager(TestCase):
 
     def test_filter_single(self):
         actual = self.manager.filter(feature="area", min_val=500, max_val=5000000)
-        expected_n_items = 2
+        expected_n_items = 3
 
         self.assertIsInstance(actual, list)
         self.assertEqual(len(actual), expected_n_items)
 
     def test_filter_accuracy_big_range(self):
         actual = self.manager.filter(feature="accuracy", min_val=0, max_val=5)
-        expected_n_items = 5
+        expected_n_items = 6
 
         self.assertIsInstance(actual, list)
         self.assertEqual(len(actual), expected_n_items)
@@ -85,84 +128,92 @@ class TestAnnotationManager(TestCase):
         self.assertEqual(len(actual), expected_n_items)
 
     def test_filter_single_inplace(self):
-        actual = self.manager.filter(feature="area", min_val=500, max_val=5000000, inplace=True)
-        expected_n_items = 2
+        actual = self.manager.filter(
+            feature="area", min_val=500, max_val=5000000, inplace=True
+        )
+        expected_n_items = 3
 
         self.assertIsInstance(actual, AnnotationManager)
         self.assertEqual(len(self.manager), expected_n_items)
-        self.assertEqual(len(self.manager), expected_n_items)
 
     def test_filter_chained(self):
-        actual = self.manager.filter(feature="area", min_val=0, max_val=500, inplace=True).filter(
-            feature="perimeter", min_val=11, max_val=12, inplace=True
-        )
+        actual = self.manager.filter(
+            feature="area", min_val=0, max_val=500, inplace=True
+        ).filter(feature="circularity", min_val=0.5, max_val=1, inplace=True)
         expected_n_items = 1
 
         self.assertIsInstance(actual, AnnotationManager)
         self.assertEqual(len(self.manager), expected_n_items)
 
-    def test_from_json_to_bin_mask_back_to_json(self):
-        im_shape = (2072, 2072)
-        quadrant_size = im_shape[0] / 4
-
-        am = AnnotationManager(
+    def test_filter_feature_multiplier(self):
+        temp_manager = AnnotationManager(
             [
                 Polygon(
                     points=[
-                        Point(quadrant_size, quadrant_size),
-                        Point(quadrant_size, 2 * quadrant_size),
-                        Point(2 * quadrant_size, quadrant_size),
-                        Point(2 * quadrant_size, 2 * quadrant_size),
+                        Point(0, 0),
+                        Point(0, 5),
+                        Point(0, 10),
+                        Point(10, 10),
+                        Point(10, 5),
+                        Point(10, 0),
                     ],
                     id="132132132123132",
                     children=[],
                     parents=[],
                     label="star",
-                ),
-                Polygon(
-                    points=[
-                        Point(3 * quadrant_size, quadrant_size),
-                        Point(3 * quadrant_size, 2 * quadrant_size),
-                        Point(4 * quadrant_size, 3 * quadrant_size),
-                        Point(4 * quadrant_size, 2 * quadrant_size),
-                    ],
-                    id="132132132123132",
-                    children=[],
-                    parents=[],
-                    label="star",
-                ),
-                Polygon(
-                    points=[
-                        Point(quadrant_size, 3 * quadrant_size),
-                        Point(quadrant_size, 4 * quadrant_size),
-                        Point(2 * quadrant_size, 4 * quadrant_size),
-                        Point(2 * quadrant_size, 3 * quadrant_size),
-                    ],
-                    id="132132132123132",
-                    children=[],
-                    parents=[],
-                    label="star",
-                ),
+                )
             ]
         )
+        manager1 = temp_manager.filter(
+            feature="area", min_val=0, max_val=500, inplace=True, feature_multiplier=1
+        )
+        expected_n_items1 = 1
 
-        bin_mask = am.to_binary_mask(im_shape)
+        self.assertIsInstance(manager1, AnnotationManager)
+        self.assertEqual(len(manager1), expected_n_items1)
+
+        manager2 = temp_manager.filter(
+            feature="area",
+            min_val=0,
+            max_val=500,
+            inplace=True,
+            feature_multiplier=742,
+        )
+        expected_n_items2 = 0
+        self.assertIsInstance(manager2, AnnotationManager)
+        self.assertEqual(len(manager2), expected_n_items2)
 
     def test_to_dict_with_polygon_mask(self):
-        mask = [{"type": "polygon", "points": [{"x": 0, "y": 0}, {"x": 0, "y": 4000}, {"x": 4000, "y": 4000}, {"x": 4000, "y": 0}]}]
+        mask = [
+            {
+                "type": "polygon",
+                "points": [
+                    {"x": 0, "y": 0},
+                    {"x": 0, "y": 4000},
+                    {"x": 4000, "y": 4000},
+                    {"x": 4000, "y": 2000},
+                    {"x": 4000, "y": 0},
+                ],
+            }
+        ]
         expected = [
             {
                 "id": "132132132123132",
                 "label": "star",
                 "children": [],
                 "parents": [],
-                "area": 7.0,
+                "areaUm": 7.0,
                 "circularity": 0.64,
-                "convex_hull_area": 8.0,
-                "perimeter": 11.72,
-                "roundness": 0.56,
+                "convexHullAreaUm": 8.0,
                 "type": "polygon",
-                "points": [{"x": 1, "y": 3}, {"x": 2, "y": 3}, {"x": 3, "y": 5}, {"x": 5, "y": 3}, {"x": 3, "y": 1}],
+                "points": [
+                    {"x": 1, "y": 3},
+                    {"x": 2, "y": 3},
+                    {"x": 3, "y": 5},
+                    {"x": 5, "y": 3},
+                    {"x": 3, "y": 1},
+                    {"x": 2, "y": 2},
+                ],
                 "accuracy": 1,
             },
             {
@@ -170,13 +221,18 @@ class TestAnnotationManager(TestCase):
                 "label": "star",
                 "children": [],
                 "parents": [],
-                "area": 700.0,
+                "areaUm": 700.0,
                 "circularity": 0.64,
-                "convex_hull_area": 800.0,
-                "perimeter": 117.21,
-                "roundness": 0.56,
+                "convexHullAreaUm": 800.0,
                 "type": "polygon",
-                "points": [{"x": 10, "y": 30}, {"x": 20, "y": 30}, {"x": 30, "y": 50}, {"x": 50, "y": 30}, {"x": 30, "y": 10}],
+                "points": [
+                    {"x": 10, "y": 30},
+                    {"x": 20, "y": 30},
+                    {"x": 30, "y": 50},
+                    {"x": 50, "y": 30},
+                    {"x": 30, "y": 10},
+                    {"x": 20, "y": 20},
+                ],
                 "accuracy": 1,
             },
             {
@@ -184,22 +240,62 @@ class TestAnnotationManager(TestCase):
                 "label": "star",
                 "children": [],
                 "parents": [],
-                "area": 70000.0,
+                "areaUm": 70000.0,
                 "circularity": 0.64,
-                "convex_hull_area": 80000.0,
-                "perimeter": 1172.13,
-                "roundness": 0.56,
+                "convexHullAreaUm": 80000.0,
                 "type": "polygon",
-                "points": [{"x": 100, "y": 300}, {"x": 200, "y": 300}, {"x": 300, "y": 500}, {"x": 500, "y": 300}, {"x": 300, "y": 100}],
+                "points": [
+                    {"x": 100, "y": 300},
+                    {"x": 200, "y": 300},
+                    {"x": 300, "y": 500},
+                    {"x": 500, "y": 300},
+                    {"x": 300, "y": 100},
+                    {"x": 200, "y": 200},
+                ],
                 "accuracy": 1,
+            },
+            {
+                "id": "132132132123132",
+                "label": "star",
+                "children": [],
+                "parents": [],
+                "areaUm": 700.0,
+                "circularity": 0.64,
+                "convexHullAreaUm": 800.0,
+                "type": "polygon",
+                "points": [
+                    {"x": 10, "y": 30},
+                    {"x": 20, "y": 30},
+                    {"x": 30, "y": 50},
+                    {"x": 50, "y": 30},
+                    {"x": 30, "y": 10},
+                    {"x": 20, "y": 20},
+                ],
+                "accuracy": 0,
             },
         ]
-        actual = self.manager.to_dict(mask_json=mask)
+        actual = self.manager.to_dict(
+            mask_json=mask,
+            features=["area", "convex_hull_area", "circularity"],
+            metric_unit="Um",
+        )
 
         self.assertEqual(expected, actual)
 
     def test_to_dict_with_ellipse_mask(self):
-        mask = AnnotationManager([Ellipse(center=Point(50, 50), radius_x=100, rotation=0, id="", label="", children=[], parents=[])]).to_dict()
+        mask = AnnotationManager(
+            [
+                Ellipse(
+                    center=Point(50, 50),
+                    radius_x=100,
+                    rotation=0,
+                    id="",
+                    label="",
+                    children=[],
+                    parents=[],
+                )
+            ]
+        ).to_dict()
 
         expected = [
             {
@@ -207,13 +303,18 @@ class TestAnnotationManager(TestCase):
                 "label": "star",
                 "children": [],
                 "parents": [],
-                "area": 7.0,
+                "areaUm": 7.0,
                 "circularity": 0.64,
-                "convex_hull_area": 8.0,
-                "perimeter": 11.72,
-                "roundness": 0.56,
+                "convexHullAreaUm": 8.0,
                 "type": "polygon",
-                "points": [{"x": 1, "y": 3}, {"x": 2, "y": 3}, {"x": 3, "y": 5}, {"x": 5, "y": 3}, {"x": 3, "y": 1}],
+                "points": [
+                    {"x": 1, "y": 3},
+                    {"x": 2, "y": 3},
+                    {"x": 3, "y": 5},
+                    {"x": 5, "y": 3},
+                    {"x": 3, "y": 1},
+                    {"x": 2, "y": 2},
+                ],
                 "accuracy": 1,
             },
             {
@@ -221,18 +322,46 @@ class TestAnnotationManager(TestCase):
                 "label": "star",
                 "children": [],
                 "parents": [],
-                "area": 700.0,
+                "areaUm": 700.0,
                 "circularity": 0.64,
-                "convex_hull_area": 800.0,
-                "perimeter": 117.21,
-                "roundness": 0.56,
+                "convexHullAreaUm": 800.0,
                 "type": "polygon",
-                "points": [{"x": 10, "y": 30}, {"x": 20, "y": 30}, {"x": 30, "y": 50}, {"x": 50, "y": 30}, {"x": 30, "y": 10}],
+                "points": [
+                    {"x": 10, "y": 30},
+                    {"x": 20, "y": 30},
+                    {"x": 30, "y": 50},
+                    {"x": 50, "y": 30},
+                    {"x": 30, "y": 10},
+                    {"x": 20, "y": 20},
+                ],
                 "accuracy": 1,
+            },
+            {
+                "id": "132132132123132",
+                "label": "star",
+                "children": [],
+                "parents": [],
+                "areaUm": 700.0,
+                "circularity": 0.64,
+                "convexHullAreaUm": 800.0,
+                "type": "polygon",
+                "points": [
+                    {"x": 10, "y": 30},
+                    {"x": 20, "y": 30},
+                    {"x": 30, "y": 50},
+                    {"x": 50, "y": 30},
+                    {"x": 30, "y": 10},
+                    {"x": 20, "y": 20},
+                ],
+                "accuracy": 0,
             },
         ]
 
-        actual = self.manager.to_dict(mask_json=mask)
+        actual = self.manager.to_dict(
+            mask_json=mask,
+            features=["area", "convex_hull_area", "circularity"],
+            metric_unit="Um",
+        )
 
         self.assertEqual(expected, actual)
 
@@ -248,10 +377,45 @@ class TestAnnotationManager(TestCase):
                 [0, 2, 2, 2, 2, 0],
             ]
         )
+
+        expected = np.array(
+            [
+                [0, 0, 0, 0, 0, 0],
+                [0, 0, 0, 0, 0, 0],
+                [0, 0, 0, 0, 0, 0],
+                [0, 0, 0, 0, 0, 0],
+                [0, 0, 0, 0, 0, 0],
+                [0, 0, 0, 0, 0, 0],
+                [0, 0, 0, 0, 0, 0],
+            ]
+        )
+
         shape = data.shape
         manager = AnnotationManager.from_labeled_mask(data)
 
-        n_labels = 3
+        n_labels = 0
+        self.assertEqual(len(manager), n_labels)
+
+        actual = manager.to_labeled_mask(shape)
+
+        np.testing.assert_array_equal(actual, expected)
+
+    def test_init_from_labeled_to_labeled_mask_big_contours(self):
+        data = np.array(
+            [
+                [2, 2, 2, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1],
+                [2, 2, 2, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1],
+                [2, 2, 2, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1],
+                [2, 2, 2, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1],
+                [2, 2, 2, 2, 2, 0, 1, 1, 1, 1, 1, 1, 1],
+                [2, 2, 2, 2, 2, 0, 0, 0, 0, 0, 0, 0, 0],
+                [2, 2, 2, 2, 2, 0, 0, 0, 0, 0, 0, 0, 0],
+            ]
+        )
+        shape = data.shape
+        manager = AnnotationManager.from_labeled_mask(data)
+
+        n_labels = 2
         self.assertEqual(len(manager), n_labels)
 
         actual = manager.to_labeled_mask(shape)
@@ -274,8 +438,8 @@ class TestAnnotationManager(TestCase):
         shape = data.shape
         manager = AnnotationManager.from_binary_mask(data)
 
-        # n_labels = 1
-        # self.assertEqual(len(manager), n_labels)
+        n_labels = 1
+        self.assertEqual(len(manager), n_labels)
 
         actual = manager.to_labeled_mask(shape)
         cv2.imwrite("actual.png", actual)
@@ -299,31 +463,31 @@ class TestAnnotationManager(TestCase):
     def test_init_from_labeled_mask_to_binary_mask(self):
         data = np.array(
             [
-                [0, 3, 3, 0, 0, 0],
-                [0, 3, 3, 0, 0, 0],
-                [1, 1, 1, 0, 0, 0],
-                [0, 2, 0, 0, 0, 0],
-                [0, 2, 2, 0, 0, 0],
-                [0, 2, 2, 2, 0, 0],
-                [0, 2, 2, 2, 2, 0],
+                [2, 2, 2, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1],
+                [2, 2, 2, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1],
+                [2, 2, 2, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1],
+                [2, 2, 2, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1],
+                [2, 2, 2, 2, 2, 0, 1, 1, 1, 1, 1, 1, 1],
+                [2, 2, 2, 2, 2, 0, 0, 0, 0, 0, 0, 0, 0],
+                [2, 2, 2, 2, 2, 0, 0, 0, 0, 0, 0, 0, 0],
             ]
         )
         expected = np.array(
             [
-                [0, 1, 1, 0, 0, 0],
-                [0, 1, 1, 0, 0, 0],
-                [1, 1, 1, 0, 0, 0],
-                [0, 1, 0, 0, 0, 0],
-                [0, 1, 1, 0, 0, 0],
-                [0, 1, 1, 1, 0, 0],
-                [0, 1, 1, 1, 1, 0],
+                [1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1],
+                [1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1],
+                [1, 1, 1, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1],
+                [1, 1, 1, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1],
+                [1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1],
+                [1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0],
+                [1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0],
             ]
         )
 
         shape = data.shape
         manager = AnnotationManager.from_labeled_mask(data)
 
-        n_labels = 3
+        n_labels = 2
         self.assertEqual(len(manager), n_labels)
 
         actual = manager.to_binary_mask(shape)
@@ -333,7 +497,14 @@ class TestAnnotationManager(TestCase):
     def test_to_binary_mask(self):
         polygons = [
             Polygon(
-                points=[Point(1, 3), Point(2, 3), Point(3, 5), Point(5, 3), Point(3, 1), Point(2, 2)],
+                points=[
+                    Point(1, 3),
+                    Point(2, 3),
+                    Point(3, 5),
+                    Point(5, 3),
+                    Point(3, 1),
+                    Point(2, 2),
+                ],
                 id="132132132123132",
                 children=[],
                 parents=[],
@@ -360,8 +531,32 @@ class TestAnnotationManager(TestCase):
 
     def test_to_labeled_mask(self):
         polygons = [
-            Polygon(points=[Point(1, 1), Point(1, 2), Point(2, 2), Point(2, 1)], id="132132132123132", children=[], parents=[], label="star"),
-            Polygon(points=[Point(3, 3), Point(3, 5), Point(5, 5), Point(5, 3)], id="132132132123132", children=[], parents=[], label="star"),
+            Polygon(
+                points=[
+                    Point(1, 1),
+                    Point(2, 3),
+                    Point(1, 3),
+                    Point(2, 3),
+                    Point(2, 1),
+                ],
+                id="132132132123132",
+                children=[],
+                parents=[],
+                label="star",
+            ),
+            Polygon(
+                points=[
+                    Point(3, 3),
+                    Point(3, 5),
+                    Point(5, 5),
+                    Point(5, 4),
+                    Point(5, 3),
+                ],
+                id="132132132123132",
+                children=[],
+                parents=[],
+                label="star",
+            ),
         ]
 
         expected = np.array(
@@ -369,7 +564,7 @@ class TestAnnotationManager(TestCase):
                 [0, 0, 0, 0, 0, 0, 0],
                 [0, 1, 1, 0, 0, 0, 0],
                 [0, 1, 1, 0, 0, 0, 0],
-                [0, 0, 0, 2, 2, 2, 0],
+                [0, 1, 1, 2, 2, 2, 0],
                 [0, 0, 0, 2, 2, 2, 0],
                 [0, 0, 0, 2, 2, 2, 0],
                 [0, 0, 0, 0, 0, 0, 0],
@@ -385,7 +580,7 @@ class TestAnnotationManager(TestCase):
         input_mask = np.array(
             [
                 [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                [0, 0, 1, 1, 0, 0, 0, 0, 0, 0],
                 [0, 0, 1, 1, 1, 1, 1, 1, 1, 0],
                 [0, 0, 1, 0, 0, 1, 0, 0, 1, 0],
                 [0, 0, 1, 0, 0, 1, 0, 0, 1, 0],
@@ -401,7 +596,7 @@ class TestAnnotationManager(TestCase):
         expected = np.array(
             [
                 [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                [0, 0, 1, 1, 0, 0, 0, 0, 0, 0],
                 [0, 0, 1, 1, 1, 1, 1, 1, 1, 0],
                 [0, 0, 1, 1, 1, 1, 1, 1, 1, 0],
                 [0, 0, 1, 1, 1, 1, 1, 1, 1, 0],
@@ -435,13 +630,29 @@ class TestAnnotationManager(TestCase):
             ],
             dtype=np.uint8,
         )
-
+        expected = np.array(
+            [
+                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+            ],
+            dtype=np.uint8,
+        )
         manager = AnnotationManager.from_binary_mask(input_mask)
         actual = manager.to_binary_mask(input_mask.shape)
 
-        np.testing.assert_array_equal(input_mask, actual)
+        np.testing.assert_array_equal(expected, actual)
 
-    def test_binary_mask_multiple_objects_not_connected_to_labeled_mask_connectivity_4(self):
+    def test_binary_mask_multiple_objects_not_connected_to_labeled_mask_connectivity_4_small_objects(
+        self,
+    ):
         connectivity = 4
         input_mask = np.array(
             [
@@ -463,34 +674,38 @@ class TestAnnotationManager(TestCase):
             [
                 [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
                 [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-                [0, 0, 1, 1, 1, 0, 0, 0, 0, 0],
-                [0, 0, 1, 1, 1, 0, 0, 0, 0, 0],
-                [0, 0, 1, 1, 1, 0, 0, 0, 0, 0],
-                [0, 0, 0, 0, 0, 2, 2, 2, 0, 0],
-                [0, 0, 0, 0, 0, 2, 2, 2, 0, 0],
-                [0, 0, 0, 0, 0, 2, 2, 2, 0, 0],
+                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
                 [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
                 [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
             ],
             dtype=np.uint8,
         )
 
-        manager = AnnotationManager.from_binary_mask(input_mask, connectivity=connectivity)
+        manager = AnnotationManager.from_binary_mask(
+            input_mask, connectivity=connectivity
+        )
         actual = manager.to_labeled_mask(input_mask.shape)
 
         np.testing.assert_array_equal(expected, actual)
 
-    def test_binary_mask_multiple_objects_not_connected_to_labeled_mask_connectivity_8(self):
-        connectivity = 8
+    def test_binary_mask_multiple_objects_not_connected_to_labeled_mask_connectivity_4(
+        self,
+    ):
+        connectivity = 4
         input_mask = np.array(
             [
                 [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                [0, 1, 1, 1, 0, 0, 0, 0, 0, 0],
+                [0, 1, 1, 1, 1, 0, 0, 0, 0, 0],
+                [0, 1, 1, 1, 1, 0, 0, 0, 0, 0],
                 [0, 0, 1, 1, 1, 0, 0, 0, 0, 0],
-                [0, 0, 1, 1, 1, 0, 0, 0, 0, 0],
-                [0, 0, 1, 1, 1, 0, 0, 0, 0, 0],
-                [0, 0, 0, 0, 0, 1, 1, 1, 0, 0],
-                [0, 0, 0, 0, 0, 1, 1, 1, 0, 0],
+                [0, 0, 0, 0, 0, 1, 1, 1, 1, 0],
+                [0, 0, 0, 0, 0, 1, 1, 1, 1, 0],
                 [0, 0, 0, 0, 0, 1, 1, 1, 0, 0],
                 [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
                 [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
@@ -501,12 +716,39 @@ class TestAnnotationManager(TestCase):
         expected = np.array(
             [
                 [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                [0, 1, 1, 1, 0, 0, 0, 0, 0, 0],
+                [0, 1, 1, 1, 1, 0, 0, 0, 0, 0],
+                [0, 1, 1, 1, 1, 0, 0, 0, 0, 0],
+                [0, 0, 1, 1, 1, 0, 0, 0, 0, 0],
+                [0, 0, 0, 0, 0, 2, 2, 2, 2, 0],
+                [0, 0, 0, 0, 0, 2, 2, 2, 2, 0],
+                [0, 0, 0, 0, 0, 2, 2, 2, 0, 0],
                 [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+            ],
+            dtype=np.uint8,
+        )
+
+        manager = AnnotationManager.from_binary_mask(
+            input_mask, connectivity=connectivity
+        )
+        actual = manager.to_labeled_mask(input_mask.shape)
+
+        np.testing.assert_array_equal(expected, actual)
+
+    def test_binary_mask_multiple_objects_not_connected_to_labeled_mask_connectivity_8(
+        self,
+    ):
+        connectivity = 8
+        input_mask = np.array(
+            [
+                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                [0, 1, 1, 1, 0, 0, 0, 0, 0, 0],
+                [0, 1, 1, 1, 1, 0, 0, 0, 0, 0],
+                [0, 1, 1, 1, 1, 0, 0, 0, 0, 0],
                 [0, 0, 1, 1, 1, 0, 0, 0, 0, 0],
-                [0, 0, 1, 1, 1, 0, 0, 0, 0, 0],
-                [0, 0, 1, 1, 1, 0, 0, 0, 0, 0],
-                [0, 0, 0, 0, 0, 1, 1, 1, 0, 0],
-                [0, 0, 0, 0, 0, 1, 1, 1, 0, 0],
+                [0, 0, 0, 0, 0, 1, 1, 1, 1, 0],
+                [0, 0, 0, 0, 0, 1, 1, 1, 1, 0],
                 [0, 0, 0, 0, 0, 1, 1, 1, 0, 0],
                 [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
                 [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
@@ -514,7 +756,25 @@ class TestAnnotationManager(TestCase):
             dtype=np.uint8,
         )
 
-        manager = AnnotationManager.from_binary_mask(input_mask, connectivity=connectivity)
+        expected = np.array(
+            [
+                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                [0, 1, 1, 1, 0, 0, 0, 0, 0, 0],
+                [0, 1, 1, 1, 1, 0, 0, 0, 0, 0],
+                [0, 1, 1, 1, 1, 0, 0, 0, 0, 0],
+                [0, 0, 1, 1, 1, 0, 0, 0, 0, 0],
+                [0, 0, 0, 0, 0, 1, 1, 1, 1, 0],
+                [0, 0, 0, 0, 0, 1, 1, 1, 1, 0],
+                [0, 0, 0, 0, 0, 1, 1, 1, 0, 0],
+                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+            ],
+            dtype=np.uint8,
+        )
+
+        manager = AnnotationManager.from_binary_mask(
+            input_mask, connectivity=connectivity
+        )
         actual = manager.to_labeled_mask(input_mask.shape)
 
         np.testing.assert_array_equal(expected, actual)

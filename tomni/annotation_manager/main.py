@@ -22,7 +22,10 @@ class AnnotationManager(object):
         self._annotations = annotations
 
     @classmethod
-    def from_dicts(cls, dicts: List[dict], features: List[str] = None):
+    def from_dicts(
+        cls,
+        dicts: List[dict],
+    ):
         TYPE_KEY = "type"
         LABEL_KEY = "label"
         CHILDREN_KEY = "children"
@@ -43,7 +46,6 @@ class AnnotationManager(object):
                     center=Point(x=d[CENTER_KEY]["x"], y=d[CENTER_KEY]["y"]),
                     rotation=d["angleOfRotation"],
                     accuracy=d.get("accuracy", 1),
-                    features=features,
                 )
             elif d[TYPE_KEY] == "polygon":
                 if len(d["points"]) < MIN_NR_POINTS:
@@ -55,7 +57,6 @@ class AnnotationManager(object):
                     parents=d.get(PARENTS_KEY, []),
                     points=[Point(x=p["x"], y=p["y"]) for p in d["points"]],
                     accuracy=d.get("accuracy", 1),
-                    features=features,
                 )
             else:
                 raise ValueError(
@@ -66,7 +67,10 @@ class AnnotationManager(object):
         return cls(annotations)
 
     @classmethod
-    def from_contours(cls, contours: List[np.ndarray], features: List[str] = None):
+    def from_contours(
+        cls,
+        contours: List[np.ndarray],
+    ):
         """Initializes a AnnotationManager object from cv2 contours.
         Contours' shape must be [N, 1, 2] with dtype of np.int32.
 
@@ -75,6 +79,8 @@ class AnnotationManager(object):
         """
         annotations = []
         for contour in contours:
+            if len(contour) < MIN_NR_POINTS:
+                continue
             # change shape from [N, 1, 2] to [N, 2]
             contour = np.vstack(contour)
 
@@ -89,14 +95,17 @@ class AnnotationManager(object):
                     children=[],
                     parents=[],
                     points=points,
-                    features=features
-                )
+                ),
             )
 
         return cls(annotations)
 
     @classmethod
-    def from_binary_mask(cls, mask: np.ndarray, connectivity: int = 8, features: List[str] = None):
+    def from_binary_mask(
+        cls,
+        mask: np.ndarray,
+        connectivity: int = 8,
+    ):
         """Initializes a AnnotationManager object from a binary mask.
         Binary mask can contain either 0 and 1 or 0 and 255.
 
@@ -142,10 +151,16 @@ class AnnotationManager(object):
 
         edged_mask = edges * labeled_mask
 
-        return AnnotationManager.from_labeled_mask(edged_mask, features=features)
+        return AnnotationManager.from_labeled_mask(
+            edged_mask,
+        )
 
     @classmethod
-    def from_labeled_mask(cls, mask: np.ndarray, include_inner_contours: bool = False, features: List[str] = None):
+    def from_labeled_mask(
+        cls,
+        mask: np.ndarray,
+        include_inner_contours: bool = False,
+    ):
         """Initializes a AnnotationManager object from a labeled mask.
         A labeled mask contains components indicated by the same pixel values (see example below).
 
@@ -167,7 +182,9 @@ class AnnotationManager(object):
             for point in points
             if len(point) > 0
         ]
-        return AnnotationManager.from_contours(contours, features=features)
+        return AnnotationManager.from_contours(
+            contours,
+        )
 
     @classmethod
     def from_darwin(cls, dicts: List[dict]):
@@ -210,18 +227,33 @@ class AnnotationManager(object):
         else:
             raise StopIteration
 
-    def to_dict(self, decimals: int = 2, mask_json: Union[List[dict], None] = None, min_overlap: float = 0.9, **kwargs) -> List[Dict]:
+    def to_dict(
+        self,
+        decimals: int = 2,
+        mask_json: Union[List[dict], None] = None,
+        min_overlap: float = 0.9,
+        features: Union[List[str], None] = None,
+        metric_unit: str = "",
+        feature_multiplier: int = 1,
+        **kwargs,
+    ) -> List[Dict]:
         """Transform AM object to a collection of our format.
 
         Args:
             decimals (int, optional): The number of decimals to use when rounding. Defaults to 2.
             mask_json (Union[dict, None], optional): The dict mask that indicates what area to include in the output dict.
-            Defaults to None.
+                Defaults to None.
             min_overlap (float, optional): Minimum overlap required between the polygon and the mask, expressed as a value between 0 and 1
-            Defaults to 0.9.
+                Defaults to 0.9.
+            features (Union[List[str], None], optional): The features that you want to calculate and add to the dict objects.
+                Defaults to None, which returns all features.
+            metric_unit (str, optional): The suffix you want to add to the dict keys' names in camelCasing. Defaults to "".
+            feature_multiplier (int, optional): A multiplier used during feature calculation. For example 1/742. Defaults to 1.
+
         Returns:
-            List[Dict]: Collection of dicts.
+            List[Dict]: Output is a list of dicts in cytosmart format.
         """
+
         if mask_json is not None:
             filtered_annotations = self._annotations.copy()
             filtered_annotations = [
@@ -231,12 +263,24 @@ class AnnotationManager(object):
             ]
 
             return [
-                annotation.to_dict(decimals=decimals, **kwargs)
+                annotation.to_dict(
+                    decimals=decimals,
+                    features=features,
+                    metric_unit=metric_unit,
+                    feature_multiplier=feature_multiplier,
+                    **kwargs,
+                )
                 for annotation in filtered_annotations
             ]
 
         return [
-            annotation.to_dict(decimals=decimals, **kwargs)
+            annotation.to_dict(
+                decimals=decimals,
+                features=features,
+                metric_unit=metric_unit,
+                feature_multiplier=feature_multiplier,
+                **kwargs,
+            )
             for annotation in self._annotations
         ]
 
@@ -348,7 +392,12 @@ class AnnotationManager(object):
         pass
 
     def filter(
-        self, feature: str, min_val: float, max_val: float, inplace: bool = False
+        self,
+        feature: str,
+        min_val: float,
+        max_val: float,
+        feature_multiplier: int = 1,
+        inplace: bool = False,
     ):
         """Filter annotations by feature.
 
@@ -356,6 +405,7 @@ class AnnotationManager(object):
             feature (str): Feature name, i.e. `roundness` or `area`.
             min_val (float): Minimum value to threshold.
             max_val (float): Maximum value to threshold
+            feature_multiplier (int, optional): A multiplier used in the feature calculations. For example 1/742. Defaults to 1.
             inplace (bool, optional): If True, filter in-place. Modifies the object internally. If False, return collection of annotations. Defaults to False.
 
         Returns:
@@ -364,6 +414,7 @@ class AnnotationManager(object):
         filtered_annotations = []
 
         for annotation in self._annotations:
+            annotation._feature_multiplier = feature_multiplier
             feature_value = getattr(annotation, feature)
             if min_val <= feature_value <= max_val:
                 filtered_annotations.append(annotation)
