@@ -216,6 +216,25 @@ class TestPolygon(TestCase):
 
         self.assertEqual(expected, actual)
 
+    # Roundness
+    def test_circular_roundness(self):
+        expected = 0.8911880248803259
+        actual = self.circular_polygon.roundness
+
+        self.assertEqual(expected, actual)
+
+    def test_rectangular_roundness(self):
+        expected = 0.6365748269154868
+        actual = self.rectangle_polygon.roundness
+
+        self.assertEqual(expected, actual)
+
+    def test_star_shaped_roundness(self):
+        expected = 0.5569866579216156
+        actual = self.star_shaped_polygon.roundness
+
+        self.assertEqual(expected, actual)
+
     def test_circular_to_dict(self):
         expected = {
             "id": "1234-1234-2134-1321",
@@ -231,6 +250,7 @@ class TestPolygon(TestCase):
             "aspectRatio": 0.96,
             "circularity": 0.94,
             "perimeter": 13.66,
+            "roundness": 0.89,
             "points": [asdict(point) for point in self.circular_points],
             "accuracy": 1,
         }
@@ -253,6 +273,7 @@ class TestPolygon(TestCase):
             "circularity": 0.79,
             "convexHullArea": 16.0,
             "perimeter": 16.0,
+            "roundness": 0.64,
             "points": [asdict(point) for point in self.rectangle_points],
             "accuracy": 1,
         }
@@ -275,6 +296,7 @@ class TestPolygon(TestCase):
             "circularity": 0.64,
             "convexHullArea": 8.0,
             "perimeter": 11.72,
+            "roundness": 0.56,
             "points": [asdict(point) for point in self.star_shaped_points],
             "accuracy": 1,
         }
@@ -308,6 +330,7 @@ class TestPolygon(TestCase):
             "aspectRatio": 0.96,
             "circularity": 0.94,
             "perimeter": 13.66,
+            "roundness": 0.89,
             "points": [asdict(point) for point in self.circular_points],
             "accuracy": 0.5,
         }
@@ -339,6 +362,7 @@ class TestPolygon(TestCase):
             "aspectRatio": 0.96,
             "circularity": 0.94,
             "perimeter": 13.66,
+            "roundness": 0.89,
             "points": [asdict(point) for point in self.circular_points],
             "accuracy": 0,
         }
@@ -353,6 +377,38 @@ class TestPolygon(TestCase):
         )
 
         actual = accuracy_test_object.to_dict()
+        self.assertDictEqual(expected, actual)
+
+    def test_feasture_multiplier_to_dict(self):
+        expected = {
+            "id": "1234-1234-2134-1321",
+            "label": "polygon_test",
+            "children": [],
+            "parents": [],
+            "type": "polygon",
+            "area": 56.0,
+            "convexHullArea": 56.0,
+            "majorAxis": 9.05,
+            "minorAxis": 8.73,
+            "averageDiameter": 8.89,
+            "aspectRatio": 0.96,
+            "circularity": 0.94,
+            "perimeter": 27.31,
+            "roundness": 0.89,
+            "points": [asdict(point) for point in self.circular_points],
+            "accuracy": 0.5,
+        }
+
+        accuracy_test_object = Polygon(
+            points=self.circular_points,
+            id="1234-1234-2134-1321",
+            children=[],
+            parents=[],
+            label="polygon_test",
+            accuracy=0.5,
+        )
+
+        actual = accuracy_test_object.to_dict(feature_multiplier=2)
         self.assertDictEqual(expected, actual)
 
     def test_to_dict_with_ellipse_mask(self):

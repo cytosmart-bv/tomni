@@ -16,27 +16,19 @@ with open(json_fp, "rb") as f:
     dicts = json.load(f)
     print(f"Found {len(dicts)} dictionaries in json file.")
 
+
 # %%
 manager = AnnotationManager.from_dicts(dicts=dicts)
-
-# %%
-pixels_per_mm = 742
-pixels_per_um = 742 / 1000
-feature_multiplier = 1 / pixels_per_um
-manager = AnnotationManager.from_dicts(
-    dicts=dicts, feature_multiplier=feature_multiplier
+dicts_ = manager.to_dict(
+    features=["area", "circularity", "major_axis", "average_diameter"],
+    feature_multiplier=1 / 742,
+    metric_unit="mm",
 )
-# %%
-manager = AnnotationManager.from_dicts(dicts=dicts, features=[])
+print(dicts_[0])
 
-# %%
-manager = AnnotationManager.from_dicts(dicts=dicts, features=["area", "circularity"])
-dicts_ = manager.to_dict()
-print(dicts_)
 # %%
 contours = [json2contours(d) for d in dicts]
 manager = AnnotationManager.from_contours(contours=contours)
-
 
 # %%
 shape = (2072, 2072)
