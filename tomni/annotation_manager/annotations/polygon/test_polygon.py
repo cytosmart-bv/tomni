@@ -253,6 +253,7 @@ class TestPolygon(TestCase):
             "roundness": 0.89,
             "points": [asdict(point) for point in self.circular_points],
             "accuracy": 1,
+            "inner_points": [],
         }
         actual = self.circular_polygon.to_dict()
 
@@ -276,6 +277,7 @@ class TestPolygon(TestCase):
             "roundness": 0.64,
             "points": [asdict(point) for point in self.rectangle_points],
             "accuracy": 1,
+            "inner_points": [],
         }
         actual = self.rectangle_polygon.to_dict()
 
@@ -299,6 +301,7 @@ class TestPolygon(TestCase):
             "roundness": 0.56,
             "points": [asdict(point) for point in self.star_shaped_points],
             "accuracy": 1,
+            "inner_points": [],
         }
         actual = self.star_shaped_polygon.to_dict()
 
@@ -333,6 +336,7 @@ class TestPolygon(TestCase):
             "roundness": 0.89,
             "points": [asdict(point) for point in self.circular_points],
             "accuracy": 0.5,
+            "inner_points": [],
         }
 
         accuracy_test_object = Polygon(
@@ -365,6 +369,7 @@ class TestPolygon(TestCase):
             "roundness": 0.89,
             "points": [asdict(point) for point in self.circular_points],
             "accuracy": 0,
+            "inner_points": [],
         }
 
         accuracy_test_object = Polygon(
@@ -397,6 +402,7 @@ class TestPolygon(TestCase):
             "roundness": 0.89,
             "points": [asdict(point) for point in self.circular_points],
             "accuracy": 0.5,
+            "inner_points": [],
         }
 
         accuracy_test_object = Polygon(
@@ -551,3 +557,59 @@ class TestPolygon(TestCase):
     def test_raises(self):
         with self.assertRaises(SyntaxError):
             self.rectangle_polygon.points = self.circular_points
+
+    def test_inner_points(self):
+        id = "1234-1234-2134-1321"
+        children = []
+        parents = []
+        label = "inner_point_test"
+
+        self.maxDiff = None
+        points = [
+            Point(0, 0),
+            Point(0, 100),
+            Point(0, 200),
+            Point(0, 300),
+            Point(0, 400),
+            Point(100, 400),
+            Point(200, 400),
+            Point(300, 400),
+            Point(400, 400),
+            Point(400, 0),
+        ]
+        inner_points = [
+            [
+                Point(50, 50),
+                Point(50, 100),
+                Point(50, 150),
+                Point(100, 150),
+                Point(150, 150),
+                Point(150, 50),
+            ]
+        ]
+
+        expected = {
+            "accuracy": 1,
+            "label": label,
+            "id": id,
+            "children": children,
+            "parents": parents,
+            "type": "polygon",
+            "area": 150000.0,
+            "points": [asdict(point) for point in points],
+            "inner_points": [
+                [asdict(point) for point in list_of_points]
+                for list_of_points in inner_points
+            ],
+        }
+
+        donut_polygon = Polygon(
+            points=points,
+            id=id,
+            children=children,
+            parents=parents,
+            label=label,
+            inner_points=inner_points,
+        )
+        actual = donut_polygon.to_dict(features=["area"])
+        self.assertDictEqual(expected, actual)

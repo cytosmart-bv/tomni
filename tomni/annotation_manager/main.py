@@ -50,12 +50,12 @@ class AnnotationManager(object):
             elif d[TYPE_KEY] == "polygon":
                 if len(d["points"]) < MIN_NR_POINTS:
                     continue
-                inner_points = []
                 if "inner_points" in d:
-                    for inner_contour in d["inner_points"]:
-                        inner_points.append(
-                            [Point(x=pi["x"], y=pi["y"]) for pi in inner_contour]
-                        )
+                    inner_points = [
+                        [Point(x=pi["x"], y=pi["y"]) for pi in inner_contour]
+                        for inner_contour in d["inner_points"]
+                    ]
+
                 annotation = Polygon(
                     label=d.get(LABEL_KEY, None),
                     id=d.get(ID_KEY, str(uuid.uuid4())),
@@ -77,90 +77,110 @@ class AnnotationManager(object):
     def from_contours(
         cls,
         contours: List[np.ndarray],
+        hierarchy: Union[np.ndarray, None] = None,
     ):
         """Initializes a AnnotationManager object from cv2 contours.
         Contours' shape must be [N, 1, 2] with dtype of np.int32.
 
         Args:
             contours (List[np.ndarray]): Collection of cv2 contours.
+            hierarchy (bool, optional): the hierarchy from cv2.findContours using the RETR_CCOMP mode.
+                Defaults to None.
+                Currently, only hierarchy returned by RETR_CCOMP is supported.
+                If none, no hierarchy will be used.
         """
+
         annotations = []
-        for contour in contours:
-            if len(contour) < MIN_NR_POINTS:
-                continue
-            # change shape from [N, 1, 2] to [N, 2]
-            contour = np.vstack(contour)
+        # Check whether inner contours are present
+        if isinstance(hierarchy, np.ndarray):
+            # Iterate over all contours and their hierarchies
+            for idx, contour in enumerate(contours):
+                current_hierarchy = hierarchy[0][idx]
 
-            points: List[Point] = []
-            for i in range(contour.shape[0]):
-                points.append(Point(x=int(contour[i][0]), y=int(contour[i][1])))
+                if current_hierarchy[-1] == -1:
+                    # If the contour has no parent, it is an outer contour
+                    if len(contour) < MIN_NR_POINTS:
+                        continue
 
-            annotations.append(
-                Polygon(
-                    label="",
-                    id=str(uuid.uuid4()),
-                    children=[],
-                    parents=[],
-                    points=points,
-                ),
-            )
+                    # change shape from [N, 1, 2] to [N, 2]
+                    contour = np.vstack(contour)
 
+                    outer_points = [Point(x=int(pt[0]), y=int(pt[1])) for pt in contour]
+
+                    # Find the indices of the inner contours
+                    inner_indices = [
+                        i for i, h in enumerate(hierarchy[0]) if h[3] == idx
+                    ]
+                    # Add the corresponding inner contours
+                    inner_contours = [
+                        contours[inner_idx] for inner_idx in inner_indices
+                    ]
+
+                    list_of_inner_points = [
+                        [
+                            Point(x=int(pt[0]), y=int(pt[1]))
+                            for pt in inner_contour.reshape(-1, 2)
+                        ]
+                        for inner_contour in inner_contours
+                    ]
+
+                    annotations.append(
+                        Polygon(
+                            label="",
+                            id=str(uuid.uuid4()),
+                            children=[],
+                            parents=[],
+                            points=outer_points,
+                            inner_points=list_of_inner_points,
+                        ),
+                    )
+        else:
+            for contour in contours:
+                if len(contour) < MIN_NR_POINTS:
+                    continue
+                contour = np.vstack(contour)
+                points = [Point(x=int(pt[0]), y=int(pt[1])) for pt in contour]
+
+                annotations.append(
+                    Polygon(
+                        label="",
+                        id=str(uuid.uuid4()),
+                        children=[],
+                        parents=[],
+                        points=points,
+                        inner_points=[],
+                    ),
+                )
         return cls(annotations)
 
     @classmethod
     def from_binary_mask(
         cls,
         mask: np.ndarray,
-        connectivity: int = 8,
+        include_inner_contours: bool = False,
     ):
         """Initializes a AnnotationManager object from a binary mask.
-        Binary mask can contain either 0 and 1 or 0 and 255.
 
         Args:
             mask (np.ndarray): Binary mask input.
-            connectivity (int): When deriving connected components connectivy determines how diagonally components are handled.
-                `8` allows for diagonally connected components to be merged, while 4 does not. In the example below `8`-connectivity
-                will treat the ones as the same object while 4 treats them as seperate two distinct components.
-                Example:
-                    [[1,0],
-                    [0,1]]
 
         Returns:
             AnnotationManager: New annotation manager object from binary mask.
         """
+
         unique_values = np.unique(mask)
         assert np.array_equal(unique_values, np.array([0, 1])) or np.array_equal(
             unique_values, np.array([0, 255])
         ), "A binary mask must contain either 0 and 1 or 0 and 255 only."
         mask = mask.astype(np.uint8)
 
-        _, labeled_mask = cv2.connectedComponents(mask, connectivity=connectivity)
+        mode = cv2.RETR_CCOMP if include_inner_contours else cv2.RETR_EXTERNAL
+        contours, hierarchy = cv2.findContours(mask, mode, cv2.CHAIN_APPROX_SIMPLE)
 
-        padded_mask = cv2.copyMakeBorder(
-            mask,
-            top=1,
-            bottom=1,
-            left=1,
-            right=1,
-            borderType=cv2.BORDER_CONSTANT,
-            value=0,
-        )
-
-        # If bin mask with 0's and 1's is input then canny fails, so multiply by 255 and clip.
-        if padded_mask.max() == 1:
-            padded_mask = padded_mask * 255
-        edges = cv2.Canny(padded_mask, 50, 150)
-
-        edges = cv2.dilate(edges, np.ones((5, 5)))
-        edges = np.divide(edges, 255, dtype=np.float16)
-        edges = edges.astype(np.uint8)
-        edges = edges[1:-1, 1:-1]
-
-        edged_mask = edges * labeled_mask
-
-        return AnnotationManager.from_labeled_mask(
-            edged_mask,
-        )
+        if include_inner_contours:
+            return AnnotationManager.from_contours(contours, hierarchy=hierarchy)
+        else:
+            return AnnotationManager.from_contours(contours, None)
 
     @classmethod
     def from_labeled_mask(
@@ -183,15 +203,17 @@ class AnnotationManager(object):
         Returns:
             AnnotationManager: A new AnnotationManager object.
         """
-        points = labels2listsOfPoints(mask)
-        contours = [
-            positions2contour(point, return_inner_contours=include_inner_contours)
-            for point in points
-            if len(point) > 0
-        ]
-        return AnnotationManager.from_contours(
-            contours,
-        )
+        # TODO: Seperate labeled objects and then findcontours seperately. (also add label parameter to from_contours)
+        mask = mask.astype(np.uint8)
+        _, mask = cv2.threshold(mask, 0, 255, cv2.THRESH_BINARY)
+
+        mode = cv2.RETR_CCOMP if include_inner_contours else cv2.RETR_EXTERNAL
+        contours, hierarchy = cv2.findContours(mask, mode, cv2.CHAIN_APPROX_SIMPLE)
+
+        if not include_inner_contours:
+            return AnnotationManager.from_contours(contours, None)
+        else:
+            return AnnotationManager.from_contours(contours, hierarchy=hierarchy)
 
     @classmethod
     def from_darwin(cls, dicts: List[dict]):

@@ -215,6 +215,7 @@ class TestAnnotationManager(TestCase):
                     {"x": 2, "y": 2},
                 ],
                 "accuracy": 1,
+                "inner_points": [],
             },
             {
                 "id": "132132132123132",
@@ -234,6 +235,7 @@ class TestAnnotationManager(TestCase):
                     {"x": 20, "y": 20},
                 ],
                 "accuracy": 1,
+                "inner_points": [],
             },
             {
                 "id": "132132132123132",
@@ -253,6 +255,7 @@ class TestAnnotationManager(TestCase):
                     {"x": 200, "y": 200},
                 ],
                 "accuracy": 1,
+                "inner_points": [],
             },
             {
                 "id": "132132132123132",
@@ -272,6 +275,7 @@ class TestAnnotationManager(TestCase):
                     {"x": 20, "y": 20},
                 ],
                 "accuracy": 0,
+                "inner_points": [],
             },
         ]
         actual = self.manager.to_dict(
@@ -316,6 +320,7 @@ class TestAnnotationManager(TestCase):
                     {"x": 2, "y": 2},
                 ],
                 "accuracy": 1,
+                "inner_points": [],
             },
             {
                 "id": "132132132123132",
@@ -335,6 +340,7 @@ class TestAnnotationManager(TestCase):
                     {"x": 20, "y": 20},
                 ],
                 "accuracy": 1,
+                "inner_points": [],
             },
             {
                 "id": "132132132123132",
@@ -354,6 +360,7 @@ class TestAnnotationManager(TestCase):
                     {"x": 20, "y": 20},
                 ],
                 "accuracy": 0,
+                "inner_points": [],
             },
         ]
 
@@ -380,20 +387,20 @@ class TestAnnotationManager(TestCase):
 
         expected = np.array(
             [
-                [0, 0, 0, 0, 0, 0],
-                [0, 0, 0, 0, 0, 0],
-                [0, 0, 0, 0, 0, 0],
-                [0, 0, 0, 0, 0, 0],
-                [0, 0, 0, 0, 0, 0],
-                [0, 0, 0, 0, 0, 0],
-                [0, 0, 0, 0, 0, 0],
+                [0, 1, 1, 0, 0, 0],
+                [0, 1, 1, 0, 0, 0],
+                [1, 1, 1, 0, 0, 0],
+                [0, 1, 0, 0, 0, 0],
+                [0, 1, 1, 0, 0, 0],
+                [0, 1, 1, 1, 0, 0],
+                [0, 1, 1, 1, 1, 0],
             ]
         )
 
         shape = data.shape
         manager = AnnotationManager.from_labeled_mask(data)
 
-        n_labels = 0
+        n_labels = 1
         self.assertEqual(len(manager), n_labels)
 
         actual = manager.to_labeled_mask(shape)
@@ -650,10 +657,9 @@ class TestAnnotationManager(TestCase):
 
         np.testing.assert_array_equal(expected, actual)
 
-    def test_binary_mask_multiple_objects_not_connected_to_labeled_mask_connectivity_4_small_objects(
+    def test_binary_mask_multiple_objects(
         self,
     ):
-        connectivity = 4
         input_mask = np.array(
             [
                 [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
@@ -674,97 +680,11 @@ class TestAnnotationManager(TestCase):
             [
                 [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
                 [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-            ],
-            dtype=np.uint8,
-        )
-
-        manager = AnnotationManager.from_binary_mask(
-            input_mask, connectivity=connectivity
-        )
-        actual = manager.to_labeled_mask(input_mask.shape)
-
-        np.testing.assert_array_equal(expected, actual)
-
-    def test_binary_mask_multiple_objects_not_connected_to_labeled_mask_connectivity_4(
-        self,
-    ):
-        connectivity = 4
-        input_mask = np.array(
-            [
-                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-                [0, 1, 1, 1, 0, 0, 0, 0, 0, 0],
-                [0, 1, 1, 1, 1, 0, 0, 0, 0, 0],
-                [0, 1, 1, 1, 1, 0, 0, 0, 0, 0],
                 [0, 0, 1, 1, 1, 0, 0, 0, 0, 0],
-                [0, 0, 0, 0, 0, 1, 1, 1, 1, 0],
-                [0, 0, 0, 0, 0, 1, 1, 1, 1, 0],
+                [0, 0, 1, 1, 1, 0, 0, 0, 0, 0],
+                [0, 0, 1, 1, 1, 0, 0, 0, 0, 0],
                 [0, 0, 0, 0, 0, 1, 1, 1, 0, 0],
-                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-            ],
-            dtype=np.uint8,
-        )
-
-        expected = np.array(
-            [
-                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-                [0, 1, 1, 1, 0, 0, 0, 0, 0, 0],
-                [0, 1, 1, 1, 1, 0, 0, 0, 0, 0],
-                [0, 1, 1, 1, 1, 0, 0, 0, 0, 0],
-                [0, 0, 1, 1, 1, 0, 0, 0, 0, 0],
-                [0, 0, 0, 0, 0, 2, 2, 2, 2, 0],
-                [0, 0, 0, 0, 0, 2, 2, 2, 2, 0],
-                [0, 0, 0, 0, 0, 2, 2, 2, 0, 0],
-                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-            ],
-            dtype=np.uint8,
-        )
-
-        manager = AnnotationManager.from_binary_mask(
-            input_mask, connectivity=connectivity
-        )
-        actual = manager.to_labeled_mask(input_mask.shape)
-
-        np.testing.assert_array_equal(expected, actual)
-
-    def test_binary_mask_multiple_objects_not_connected_to_labeled_mask_connectivity_8(
-        self,
-    ):
-        connectivity = 8
-        input_mask = np.array(
-            [
-                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-                [0, 1, 1, 1, 0, 0, 0, 0, 0, 0],
-                [0, 1, 1, 1, 1, 0, 0, 0, 0, 0],
-                [0, 1, 1, 1, 1, 0, 0, 0, 0, 0],
-                [0, 0, 1, 1, 1, 0, 0, 0, 0, 0],
-                [0, 0, 0, 0, 0, 1, 1, 1, 1, 0],
-                [0, 0, 0, 0, 0, 1, 1, 1, 1, 0],
                 [0, 0, 0, 0, 0, 1, 1, 1, 0, 0],
-                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-            ],
-            dtype=np.uint8,
-        )
-
-        expected = np.array(
-            [
-                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-                [0, 1, 1, 1, 0, 0, 0, 0, 0, 0],
-                [0, 1, 1, 1, 1, 0, 0, 0, 0, 0],
-                [0, 1, 1, 1, 1, 0, 0, 0, 0, 0],
-                [0, 0, 1, 1, 1, 0, 0, 0, 0, 0],
-                [0, 0, 0, 0, 0, 1, 1, 1, 1, 0],
-                [0, 0, 0, 0, 0, 1, 1, 1, 1, 0],
                 [0, 0, 0, 0, 0, 1, 1, 1, 0, 0],
                 [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
                 [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
@@ -773,8 +693,174 @@ class TestAnnotationManager(TestCase):
         )
 
         manager = AnnotationManager.from_binary_mask(
-            input_mask, connectivity=connectivity
+            input_mask, include_inner_contours=False
         )
         actual = manager.to_labeled_mask(input_mask.shape)
 
         np.testing.assert_array_equal(expected, actual)
+
+    def test_from_binary_mask_to_dict_donut(self):
+        data = np.array(
+            [
+                [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+                [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+                [1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1],
+                [1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1],
+                [1, 1, 0, 0, 0, 1, 1, 1, 0, 0, 0, 1, 1],
+                [1, 1, 0, 0, 1, 1, 1, 1, 1, 0, 0, 1, 1],
+                [1, 1, 0, 1, 1, 0, 0, 0, 1, 1, 0, 1, 1],
+                [1, 1, 1, 1, 0, 0, 0, 0, 0, 1, 1, 1, 1],
+                [1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1],
+                [1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1],
+            ]
+        )
+
+        expected = [
+            {
+                "label": "",
+                "children": [],
+                "parents": [],
+                "type": "polygon",
+                "points": [
+                    {"x": 0, "y": 0},
+                    {"x": 0, "y": 9},
+                    {"x": 1, "y": 9},
+                    {"x": 5, "y": 5},
+                    {"x": 7, "y": 5},
+                    {"x": 11, "y": 9},
+                    {"x": 12, "y": 9},
+                    {"x": 12, "y": 0},
+                ],
+                "inner_points": [
+                    [
+                        {"x": 1, "y": 2},
+                        {"x": 2, "y": 1},
+                        {"x": 10, "y": 1},
+                        {"x": 11, "y": 2},
+                        {"x": 11, "y": 6},
+                        {"x": 10, "y": 7},
+                        {"x": 7, "y": 4},
+                        {"x": 5, "y": 4},
+                        {"x": 2, "y": 7},
+                        {"x": 1, "y": 6},
+                    ]
+                ],
+                "accuracy": 1,
+            }
+        ]
+
+        manager = AnnotationManager.from_binary_mask(data, include_inner_contours=True)
+        actual = manager.to_dict(features=[])
+        for dict_object in actual:
+            dict_object.pop("id")
+
+        np.testing.assert_array_equal(actual, expected)
+
+    def test_from_binary_mask_to_dict_polygon_inside_donut(self):
+        data = np.array(
+            [
+                [0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+                [0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1],
+                [0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1],
+                [0, 1, 0, 0, 1, 1, 1, 1, 1, 1, 0, 0, 1, 0, 0],
+                [0, 1, 0, 0, 1, 1, 1, 1, 1, 1, 0, 0, 1, 0, 0],
+                [0, 1, 0, 0, 1, 1, 1, 1, 1, 1, 0, 0, 1, 0, 0],
+                [0, 1, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 1, 0, 0],
+                [0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0],
+                [0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0],
+            ]
+        )
+
+        expected = [
+            {
+                "label": "",
+                "children": [],
+                "parents": [],
+                "type": "polygon",
+                "points": [
+                    {"x": 4, "y": 3},
+                    {"x": 4, "y": 5},
+                    {"x": 5, "y": 6},
+                    {"x": 8, "y": 6},
+                    {"x": 9, "y": 5},
+                    {"x": 9, "y": 3},
+                ],
+                "inner_points": [],
+                "accuracy": 1,
+            },
+            {
+                "label": "",
+                "children": [],
+                "parents": [],
+                "type": "polygon",
+                "points": [
+                    {"x": 1, "y": 0},
+                    {"x": 1, "y": 8},
+                    {"x": 12, "y": 8},
+                    {"x": 12, "y": 3},
+                    {"x": 13, "y": 2},
+                    {"x": 14, "y": 2},
+                    {"x": 14, "y": 0},
+                ],
+                "inner_points": [
+                    [
+                        {"x": 1, "y": 1},
+                        {"x": 2, "y": 0},
+                        {"x": 11, "y": 0},
+                        {"x": 12, "y": 1},
+                        {"x": 12, "y": 7},
+                        {"x": 11, "y": 8},
+                        {"x": 2, "y": 8},
+                        {"x": 1, "y": 7},
+                    ]
+                ],
+                "accuracy": 1,
+            },
+        ]
+
+        manager = AnnotationManager.from_binary_mask(data, include_inner_contours=True)
+        actual = manager.to_dict(features=[])
+        for dict_object in actual:
+            dict_object.pop("id")
+        np.testing.assert_array_equal(actual, expected)
+
+    def test_from_binary_mask_to_dict_polygon_inside_donut_inner_contour_false(self):
+        data = np.array(
+            [
+                [0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+                [0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1],
+                [0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1],
+                [0, 1, 0, 0, 1, 1, 1, 1, 1, 1, 0, 0, 1, 0, 0],
+                [0, 1, 0, 0, 1, 1, 1, 1, 1, 1, 0, 0, 1, 0, 0],
+                [0, 1, 0, 0, 1, 1, 1, 1, 1, 1, 0, 0, 1, 0, 0],
+                [0, 1, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 1, 0, 0],
+                [0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0],
+                [0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0],
+            ]
+        )
+
+        expected = [
+            {
+                "label": "",
+                "children": [],
+                "parents": [],
+                "type": "polygon",
+                "points": [
+                    {"x": 1, "y": 0},
+                    {"x": 1, "y": 8},
+                    {"x": 12, "y": 8},
+                    {"x": 12, "y": 3},
+                    {"x": 13, "y": 2},
+                    {"x": 14, "y": 2},
+                    {"x": 14, "y": 0},
+                ],
+                "inner_points": [],
+                "accuracy": 1,
+            },
+        ]
+
+        manager = AnnotationManager.from_binary_mask(data, include_inner_contours=False)
+        actual = manager.to_dict(features=[])
+        for dict_object in actual:
+            dict_object.pop("id")
+        np.testing.assert_array_equal(actual, expected)

@@ -9,6 +9,7 @@ from tomni.annotation_manager.utils import (
     are_lines_equal,
     parse_points_to_contour,
     overlap_object,
+    parse_points_to_inner_contour,
 )
 
 from ...utils import compress_polygon_points, parse_points_to_contour
@@ -47,10 +48,13 @@ class Polygon(Annotation):
         if len(self._points) < 5:
             raise ValueError("Polygon must have atleast 5 points.")
         self._contour: np.ndarray = parse_points_to_contour(points)
+        self._inner_contours: List[np.ndarray] = parse_points_to_inner_contour(
+            inner_points
+        )
         self._feature_multiplier = feature_multiplier
 
         self._area: Union[float, None] = None
-        self._area_outer: Union[float, None] = None
+        self._outer_area: Union[float, None] = None
         self._aspect_ratio: Union[float, None] = None
         self._average_diameter: Union[float, None] = None
         self._circularity: Union[float, None] = None
@@ -241,17 +245,21 @@ class Polygon(Annotation):
         inner_points = self._inner_points.copy()
         if kwargs.get("do_compress", False):
             points = compress_polygon_points(points, kwargs.get("epsilon", 3))
+            inner_points = [
+                compress_polygon_points(inner_polygon, kwargs.get("epsilon", 3))
+                for inner_polygon in inner_points
+            ]
 
-        inner_contours = []
-        for inner_contour in inner_points:
-            inner_contours.append(
-                [asdict(inner_point) for inner_point in inner_contour]
+        inner_polygons = []
+        for inner_polygon in inner_points:
+            inner_polygons.append(
+                [asdict(inner_point) for inner_point in inner_polygon]
             )
 
         polygon_dict = {
             "type": "polygon",
             "points": [asdict(point) for point in points],
-            "inner_points": inner_contours,
+            "inner_points": inner_polygons,
         }
 
         polygon_features = {}
@@ -321,8 +329,8 @@ class Polygon(Annotation):
         # outer area for calculating circularity f.e.
         self._outer_area = cv2.contourArea(self._contour)
         self._area = self._outer_area
-        for contour in self._inner_contour:
-            area_inner = cv2.contourArea(contour)
+        for inner_contour in self._inner_contours:
+            area_inner = cv2.contourArea(inner_contour)
             self._area -= area_inner
 
     def _calculate_circularity(self):

@@ -13,7 +13,7 @@ def parse_points_to_contour(points: List[Point]) -> np.ndarray:
 
 def parse_points_to_inner_contour(
     list_points: Union[List[List[Point]], List]
-) -> np.ndarray:
+) -> List[np.ndarray]:
     inner_contours = []
     for points in list_points:
         contour_points = [[[point.x, point.y]] for point in points]
