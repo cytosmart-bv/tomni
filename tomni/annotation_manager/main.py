@@ -150,12 +150,13 @@ class AnnotationManager(object):
         mode = cv2.RETR_CCOMP if include_inner_contours else cv2.RETR_EXTERNAL
 
         if not classes:
+            mask = mask.astype(np.uint8)
             contours, hierarchy = cv2.findContours(mask, mode, cv2.CHAIN_APPROX_SIMPLE)
             annotations = contours2polygons(contours, hierarchy)
 
         else:
             unique_values = np.unique(mask)
-            unique_values[unique_values != 0]
+            unique_values = unique_values[unique_values != 0]
             assert (len(unique_values)) == len(
                 classes
             ), f"Number of unique values is not equal to number of classes:{len(classes)}."
