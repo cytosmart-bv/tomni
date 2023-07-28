@@ -82,7 +82,7 @@ class Polygon(Annotation):
         return self._accuracy
 
     @accuracy.setter
-    def points(self, *arg, **kwargs) -> None:
+    def accuracy(self, *arg, **kwargs) -> None:
         raise SyntaxError("Accuracy is Immutable")
 
     @property
@@ -100,6 +100,14 @@ class Polygon(Annotation):
     @points.setter
     def points(self, *arg, **kwargs) -> None:
         raise SyntaxError("Points are Immutable")
+
+    @property
+    def inner_points(self) -> List[List[Point]]:
+        return self._inner_points
+
+    @points.setter
+    def inner_points(self, *arg, **kwargs) -> None:
+        raise SyntaxError("Inner Points are Immutable")
 
     @property
     def area(self) -> Union[float, None]:

@@ -20,7 +20,7 @@ def contours2polygons(
         contours (List[np.ndarray]): Collection of cv2 contours.
         hierarchy (bool, optional): the hierarchy from cv2.findContours using the RETR_CCOMP mode.
             Defaults to None.
-            Currently, only hierarchy returned by RETR_CCOMP is supported.
+            !!!!! Currently, only the hierarchy returned by mode: RETR_CCOMP is supported!!!!!
             If none, no hierarchy will be used.
         label(str, optional): The label of the polygon. Defaults to "".
     Returns:
