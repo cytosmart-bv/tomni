@@ -756,6 +756,65 @@ class TestAnnotationManager(TestCase):
 
         np.testing.assert_array_equal(actual, expected)
 
+    def test_from_binary_mask_to_dict_donut_labelled(self):
+        data = np.array(
+            [
+                [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+                [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+                [1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1],
+                [1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1],
+                [1, 1, 0, 0, 0, 1, 1, 1, 0, 0, 0, 1, 1],
+                [1, 1, 0, 0, 1, 1, 1, 1, 1, 0, 0, 1, 1],
+                [1, 1, 0, 1, 1, 0, 0, 0, 1, 1, 0, 1, 1],
+                [1, 1, 1, 1, 0, 0, 0, 0, 0, 1, 1, 1, 1],
+                [1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1],
+                [1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1],
+            ]
+        )
+
+        expected = [
+            {
+                "label": "dead",
+                "children": [],
+                "parents": [],
+                "type": "polygon",
+                "points": [
+                    {"x": 0, "y": 0},
+                    {"x": 0, "y": 9},
+                    {"x": 1, "y": 9},
+                    {"x": 5, "y": 5},
+                    {"x": 7, "y": 5},
+                    {"x": 11, "y": 9},
+                    {"x": 12, "y": 9},
+                    {"x": 12, "y": 0},
+                ],
+                "inner_points": [
+                    [
+                        {"x": 1, "y": 2},
+                        {"x": 2, "y": 1},
+                        {"x": 10, "y": 1},
+                        {"x": 11, "y": 2},
+                        {"x": 11, "y": 6},
+                        {"x": 10, "y": 7},
+                        {"x": 7, "y": 4},
+                        {"x": 5, "y": 4},
+                        {"x": 2, "y": 7},
+                        {"x": 1, "y": 6},
+                    ]
+                ],
+                "accuracy": 1,
+            }
+        ]
+        label = "dead"
+        manager = AnnotationManager.from_binary_mask(
+            data, include_inner_contours=True, label=label
+        )
+        actual = manager.to_dict(features=[])
+        for dict_object in actual:
+            dict_object.pop("id")
+
+        np.testing.assert_array_equal(actual, expected)
+
     def test_from_binary_mask_to_dict_polygon_inside_donut(self):
         data = np.array(
             [
@@ -865,7 +924,7 @@ class TestAnnotationManager(TestCase):
             dict_object.pop("id")
         np.testing.assert_array_equal(actual, expected)
 
-    def test_labeled_mask_classes_to_dict_no_inner(self):
+    def test_labeled_mask_classes_to_dict_without_inner(self):
         data = np.array(
             [
                 [0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
@@ -916,9 +975,9 @@ class TestAnnotationManager(TestCase):
             },
         ]
 
-        classes = ["alive", "dead"]
+        labels = ["alive", "dead"]
         manager = AnnotationManager.from_labeled_mask(
-            data, classes=classes, include_inner_contours=False
+            data, labels=labels, include_inner_contours=False
         )
         actual = manager.to_dict(features=[])
         for dict_object in actual:
@@ -987,9 +1046,124 @@ class TestAnnotationManager(TestCase):
             },
         ]
 
-        classes = ["alive", "dead"]
+        labels = ["alive", "dead"]
         manager = AnnotationManager.from_labeled_mask(
-            data, classes=classes, include_inner_contours=True
+            data, labels=labels, include_inner_contours=True
+        )
+        actual = manager.to_dict(features=[])
+        for dict_object in actual:
+            dict_object.pop("id")
+        np.testing.assert_array_equal(actual, expected)
+
+    def test_single_label_include_inner(self):
+        data = np.array(
+            [
+                [0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+                [0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1],
+                [0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1],
+                [0, 1, 0, 0, 2, 2, 2, 2, 2, 2, 0, 0, 1, 0, 0],
+                [0, 1, 0, 0, 2, 2, 2, 2, 2, 2, 0, 0, 1, 0, 0],
+                [0, 1, 0, 0, 2, 2, 2, 2, 2, 2, 0, 0, 1, 0, 0],
+                [0, 1, 0, 0, 0, 2, 2, 2, 2, 0, 0, 0, 1, 0, 0],
+                [0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0],
+                [0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0],
+            ]
+        )
+
+        expected = [
+            {
+                "label": "alive",
+                "children": [],
+                "parents": [],
+                "type": "polygon",
+                "points": [
+                    {"x": 4, "y": 3},
+                    {"x": 4, "y": 5},
+                    {"x": 5, "y": 6},
+                    {"x": 8, "y": 6},
+                    {"x": 9, "y": 5},
+                    {"x": 9, "y": 3},
+                ],
+                "inner_points": [],
+                "accuracy": 1,
+            },
+            {
+                "label": "alive",
+                "children": [],
+                "parents": [],
+                "type": "polygon",
+                "points": [
+                    {"x": 1, "y": 0},
+                    {"x": 1, "y": 8},
+                    {"x": 12, "y": 8},
+                    {"x": 12, "y": 3},
+                    {"x": 13, "y": 2},
+                    {"x": 14, "y": 2},
+                    {"x": 14, "y": 0},
+                ],
+                "inner_points": [
+                    [
+                        {"x": 1, "y": 1},
+                        {"x": 2, "y": 0},
+                        {"x": 11, "y": 0},
+                        {"x": 12, "y": 1},
+                        {"x": 12, "y": 7},
+                        {"x": 11, "y": 8},
+                        {"x": 2, "y": 8},
+                        {"x": 1, "y": 7},
+                    ]
+                ],
+                "accuracy": 1,
+            },
+        ]
+
+        label = "alive"
+        manager = AnnotationManager.from_labeled_mask(
+            data, include_inner_contours=True, labels=label
+        )
+        actual = manager.to_dict(features=[])
+        for dict_object in actual:
+            dict_object.pop("id")
+        np.testing.assert_array_equal(actual, expected)
+
+    def test_single_label_exclude_inner(self):
+        data = np.array(
+            [
+                [0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+                [0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1],
+                [0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1],
+                [0, 1, 0, 0, 2, 2, 2, 2, 2, 2, 0, 0, 1, 0, 0],
+                [0, 1, 0, 0, 2, 2, 2, 2, 2, 2, 0, 0, 1, 0, 0],
+                [0, 1, 0, 0, 2, 2, 2, 2, 2, 2, 0, 0, 1, 0, 0],
+                [0, 1, 0, 0, 0, 2, 2, 2, 2, 0, 0, 0, 1, 0, 0],
+                [0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0],
+                [0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0],
+            ]
+        )
+
+        expected = [
+            {
+                "label": "alive",
+                "children": [],
+                "parents": [],
+                "type": "polygon",
+                "points": [
+                    {"x": 1, "y": 0},
+                    {"x": 1, "y": 8},
+                    {"x": 12, "y": 8},
+                    {"x": 12, "y": 3},
+                    {"x": 13, "y": 2},
+                    {"x": 14, "y": 2},
+                    {"x": 14, "y": 0},
+                ],
+                "inner_points": [],
+                "accuracy": 1,
+            },
+        ]
+
+        label = "alive"
+        manager = AnnotationManager.from_labeled_mask(
+            data, include_inner_contours=False, labels=label
         )
         actual = manager.to_dict(features=[])
         for dict_object in actual:
@@ -1011,13 +1185,13 @@ class TestAnnotationManager(TestCase):
             ]
         )
 
-        classes = ["alive"]
+        labels = ["alive"]
 
         self.assertRaises(
             AssertionError,
             AnnotationManager.from_labeled_mask,
             data,
-            classes,
+            labels=labels,
             include_inner_contours=True,
         )
 
@@ -1036,12 +1210,12 @@ class TestAnnotationManager(TestCase):
             ]
         )
 
-        classes = ["alive", "dead", "more"]
+        labels = ["alive", "dead", "more"]
 
         self.assertRaises(
             AssertionError,
             AnnotationManager.from_labeled_mask,
             data,
-            classes,
+            labels=labels,
             include_inner_contours=True,
         )

@@ -73,30 +73,8 @@ class AnnotationManager(object):
         return cls(annotations)
 
     @classmethod
-    def from_contours(
-        cls,
-        contours: List[np.ndarray],
-        hierarchy: Union[np.ndarray, None] = None,
-    ):
-        """Initializes a AnnotationManager object from cv2 contours.
-        Contours' shape must be [N, 1, 2] with dtype of np.int32.
-
-        Args:
-            contours (List[np.ndarray]): Collection of cv2 contours.
-            hierarchy (bool, optional): the hierarchy from cv2.findContours using the RETR_CCOMP mode.
-                Defaults to None.
-                Currently, only hierarchy returned by RETR_CCOMP is supported.
-                If none, no hierarchy will be used.
-        """
-        annotations = contours2polygons(contours, hierarchy)
-
-        return cls(annotations)
-
-    @classmethod
     def from_binary_mask(
-        cls,
-        mask: np.ndarray,
-        include_inner_contours: bool = False,
+        cls, mask: np.ndarray, include_inner_contours: bool = False, label: str = ""
     ):
         """Initializes a AnnotationManager object from a binary mask.
 
@@ -117,16 +95,20 @@ class AnnotationManager(object):
         mode = cv2.RETR_CCOMP if include_inner_contours else cv2.RETR_EXTERNAL
         contours, hierarchy = cv2.findContours(mask, mode, cv2.CHAIN_APPROX_SIMPLE)
 
-        if include_inner_contours:
-            return AnnotationManager.from_contours(contours, hierarchy=hierarchy)
-        else:
-            return AnnotationManager.from_contours(contours, None)
+        annotations = contours2polygons(
+            contours=contours,
+            hierarchy=hierarchy,
+            include_inner_contours=include_inner_contours,
+            label=label,
+        )
+
+        return cls(annotations)
 
     @classmethod
     def from_labeled_mask(
         cls,
         mask: np.ndarray,
-        classes: Union[List[str], None] = None,
+        labels: Union[List[str], str] = "",
         include_inner_contours: bool = False,
     ):
         """Initializes a AnnotationManager object from a labeled mask.
@@ -149,33 +131,42 @@ class AnnotationManager(object):
         """
         mode = cv2.RETR_CCOMP if include_inner_contours else cv2.RETR_EXTERNAL
 
-        if not classes:
+        if isinstance(labels, str):
             mask = mask.astype(np.uint8)
+            _, mask = cv2.threshold(mask, 0, 255, cv2.THRESH_BINARY)
             contours, hierarchy = cv2.findContours(mask, mode, cv2.CHAIN_APPROX_SIMPLE)
-            if not include_inner_contours:
-                hierarchy = None
-            annotations = contours2polygons(contours, hierarchy)
 
-        else:
+            annotations = contours2polygons(
+                contours=contours,
+                include_inner_contours=include_inner_contours,
+                hierarchy=hierarchy,
+                label=labels,
+            )
+
+        elif isinstance(labels, List):
             unique_values = np.unique(mask)
             unique_values = unique_values[unique_values != 0]
             assert (len(unique_values)) == len(
-                classes
-            ), f"Number of unique values is not equal to number of classes:{len(classes)}."
+                labels
+            ), f"Number of unique values is not equal to number of classes:{len(labels)}."
 
             annotations = []
-
             # Generate seperate mask for each class and find contours.
-            for idx, pixel_value in enumerate(unique_values):
+            for label, pixel_value in zip(labels, unique_values):
                 class_mask = np.uint8(mask == pixel_value)
                 contours, hierarchy = cv2.findContours(
                     class_mask, mode, cv2.CHAIN_APPROX_SIMPLE
                 )
-                if not include_inner_contours:
-                    hierarchy = None
                 annotations.extend(
-                    contours2polygons(contours, hierarchy, label=classes[idx])
+                    contours2polygons(
+                        contours=contours,
+                        hierarchy=hierarchy,
+                        include_inner_contours=include_inner_contours,
+                        label=label,
+                    )
                 )
+        else:
+            raise ValueError("Labels must be either a string or a list of strings.")
 
         return cls(annotations)
 

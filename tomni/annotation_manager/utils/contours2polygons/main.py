@@ -10,6 +10,7 @@ MIN_NR_POINTS = 5
 
 def contours2polygons(
     contours: List[np.ndarray],
+    include_inner_contours: bool = False,
     hierarchy: Union[np.ndarray, None] = None,
     label: str = "",
 ) -> List[Polygon]:
@@ -18,9 +19,10 @@ def contours2polygons(
 
     Args:
         contours (List[np.ndarray]): Collection of cv2 contours.
+        include_inner_contours (bool, optional): whether to return inner contours.
         hierarchy (bool, optional): the hierarchy from cv2.findContours using the RETR_CCOMP mode.
             Defaults to None.
-            !!!!! Currently, only the hierarchy returned by mode: RETR_CCOMP is supported!!!!!
+            !!!!!Currently, only the hierarchy returned by mode: RETR_CCOMP is supported!!!!!
             If none, no hierarchy will be used.
         label(str, optional): The label of the polygon. Defaults to "".
     Returns:
@@ -28,7 +30,11 @@ def contours2polygons(
     """
     annotations = []
     # Check whether inner contours are present
-    if isinstance(hierarchy, np.ndarray):
+    if include_inner_contours:
+        if hierarchy is None:
+            raise ValueError(
+                "hierarchy must be provided if include_inner_contours is True"
+            )
         # Iterate over all contours and their hierarchies
         for idx, contour in enumerate(contours):
             current_hierarchy = hierarchy[0][idx]
@@ -39,18 +45,15 @@ def contours2polygons(
 
                 # change shape from [N, 1, 2] to [N, 2]
                 contour = np.vstack(contour)
-
                 outer_points = [Point(x=int(pt[0]), y=int(pt[1])) for pt in contour]
 
                 # Find the indices of the inner contours
                 inner_indices = [i for i, h in enumerate(hierarchy[0]) if h[3] == idx]
                 # Add the corresponding inner contours
                 inner_contours = [contours[inner_idx] for inner_idx in inner_indices]
-
                 inner_contours = [
                     np.vstack(inner_contour) for inner_contour in inner_contours
                 ]
-
                 list_of_inner_points = [
                     [
                         Point(x=int(pt[0]), y=int(pt[1]))
@@ -69,7 +72,7 @@ def contours2polygons(
                         inner_points=list_of_inner_points,
                     ),
                 )
-    else:
+    elif not include_inner_contours:
         for contour in contours:
             if len(contour) < MIN_NR_POINTS:
                 continue
