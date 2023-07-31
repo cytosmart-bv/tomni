@@ -58,3 +58,107 @@ class TestContours2Polygons(TestCase):
         ]
 
         self.assertEqual(polygons, expected)
+
+    def test_happy_flow_multiple_contours(self) -> None:
+        contours = np.array(
+            [
+                [[0, 0], [10, 0], [100, 0], [100, 100], [50, 100], [0, 100]],
+                [[0, 0], [10, 0], [200, 0], [200, 100], [50, 100], [0, 100]],
+            ]
+        )
+        polygons = contours2polygons(contours, None, label="labelled")
+
+        expected = [
+            Polygon(
+                label="labelled",
+                id=str(uuid.uuid4()),
+                children=[],
+                parents=[],
+                points=[
+                    Point(0, 0),
+                    Point(10, 0),
+                    Point(100, 0),
+                    Point(100, 100),
+                    Point(50, 100),
+                    Point(0, 100),
+                ],
+                inner_points=[],
+            ),
+            Polygon(
+                label="labelled",
+                id=str(uuid.uuid4()),
+                children=[],
+                parents=[],
+                points=[
+                    Point(0, 0),
+                    Point(10, 0),
+                    Point(200, 0),
+                    Point(200, 100),
+                    Point(50, 100),
+                    Point(0, 100),
+                ],
+                inner_points=[],
+            ),
+        ]
+
+        self.assertEqual(polygons, expected)
+
+    def test_happy_flow_hierarchy(self) -> None:
+        contours = [
+            np.array([[[1, 1]], [[1, 8]], [[7, 7]], [[7, 8]], [[7, 1]]]),
+            [
+                np.array(
+                    [
+                        [[2, 3]],
+                        [[3, 2]],
+                        [[5, 2]],
+                        [[6, 3]],
+                        [[6, 6]],
+                        [[5, 7]],
+                        [[3, 7]],
+                        [[2, 6]],
+                    ]
+                )
+            ],
+        ]
+
+        hierarchy = np.array(
+            [
+                [
+                    [-1, -1, 1, -1],
+                    [-1, -1, -1, 0],
+                ]
+            ]
+        )
+
+        polygons = contours2polygons(contours, hierarchy, label="labelled")
+
+        expected = [
+            Polygon(
+                label="labelled",
+                id=str(uuid.uuid4()),
+                children=[],
+                parents=[],
+                points=[
+                    Point(1, 1),
+                    Point(1, 8),
+                    Point(7, 7),
+                    Point(7, 8),
+                    Point(7, 1),
+                ],
+                inner_points=[
+                    [
+                        Point(2, 3),
+                        Point(3, 2),
+                        Point(5, 2),
+                        Point(6, 3),
+                        Point(6, 6),
+                        Point(5, 7),
+                        Point(3, 7),
+                        Point(2, 6),
+                    ]
+                ],
+            ),
+        ]
+
+        self.assertEqual(polygons, expected)

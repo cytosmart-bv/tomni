@@ -4,7 +4,7 @@ from unittest import TestCase
 import numpy as np
 
 from .main import binary2contours
-
+import cv2
 
 class TestColony(TestCase):
     def test_contours_with_inner_contour(self):
@@ -91,6 +91,10 @@ class TestColony(TestCase):
                 [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
             ],
             dtype=np.uint8,
+        )
+        conf_result = cv2.imread(
+            r"C:\Users\bmvan\Documents\datasets\tomni\test_labeled_mask\binary_mask_big_holes.png",
+            0,
         )
 
         result = binary2contours(conf_result, True)

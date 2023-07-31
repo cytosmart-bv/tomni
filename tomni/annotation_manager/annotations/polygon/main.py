@@ -105,7 +105,7 @@ class Polygon(Annotation):
     def inner_points(self) -> List[List[Point]]:
         return self._inner_points
 
-    @points.setter
+    @inner_points.setter
     def inner_points(self, *arg, **kwargs) -> None:
         raise SyntaxError("Inner Points are Immutable")
 

@@ -32,7 +32,6 @@ def contours2polygons(
         # Iterate over all contours and their hierarchies
         for idx, contour in enumerate(contours):
             current_hierarchy = hierarchy[0][idx]
-
             if current_hierarchy[-1] == -1:
                 # If the contour has no parent, it is an outer contour
                 if len(contour) < MIN_NR_POINTS:
@@ -47,6 +46,10 @@ def contours2polygons(
                 inner_indices = [i for i, h in enumerate(hierarchy[0]) if h[3] == idx]
                 # Add the corresponding inner contours
                 inner_contours = [contours[inner_idx] for inner_idx in inner_indices]
+
+                inner_contours = [
+                    np.vstack(inner_contour) for inner_contour in inner_contours
+                ]
 
                 list_of_inner_points = [
                     [

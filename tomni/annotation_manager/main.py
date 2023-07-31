@@ -152,6 +152,8 @@ class AnnotationManager(object):
         if not classes:
             mask = mask.astype(np.uint8)
             contours, hierarchy = cv2.findContours(mask, mode, cv2.CHAIN_APPROX_SIMPLE)
+            if not include_inner_contours:
+                hierarchy = None
             annotations = contours2polygons(contours, hierarchy)
 
         else:
@@ -162,12 +164,15 @@ class AnnotationManager(object):
             ), f"Number of unique values is not equal to number of classes:{len(classes)}."
 
             annotations = []
+
             # Generate seperate mask for each class and find contours.
             for idx, pixel_value in enumerate(unique_values):
                 class_mask = np.uint8(mask == pixel_value)
                 contours, hierarchy = cv2.findContours(
                     class_mask, mode, cv2.CHAIN_APPROX_SIMPLE
                 )
+                if not include_inner_contours:
+                    hierarchy = None
                 annotations.extend(
                     contours2polygons(contours, hierarchy, label=classes[idx])
                 )
