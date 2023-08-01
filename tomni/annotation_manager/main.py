@@ -8,7 +8,7 @@ from tomni.annotation_manager.utils.contours2polygons import contours2polygons
 from .annotations import Annotation, Ellipse, Point, Polygon
 from .utils import parse_points_to_contour
 
-MIN_NR_POINTS = 5
+MIN_NR_POINTS_POLYGON = 5
 
 
 class AnnotationManager(object):
@@ -47,13 +47,15 @@ class AnnotationManager(object):
                     accuracy=d.get("accuracy", 1),
                 )
             elif d[TYPE_KEY] == "polygon":
-                if len(d["points"]) < MIN_NR_POINTS:
+                if len(d["points"]) < MIN_NR_POINTS_POLYGON:
                     continue
                 if "inner_points" in d:
                     inner_points = [
                         [Point(x=pi["x"], y=pi["y"]) for pi in inner_contour]
                         for inner_contour in d["inner_points"]
                     ]
+                else:
+                    inner_points = []
 
                 annotation = Polygon(
                     label=d.get(LABEL_KEY, None),
@@ -146,13 +148,15 @@ class AnnotationManager(object):
         elif isinstance(labels, List):
             unique_values = np.unique(mask)
             unique_values = unique_values[unique_values != 0]
-            assert (len(unique_values)) == len(
-                labels
-            ), f"Number of unique values is not equal to number of classes:{len(labels)}."
+
+            if len(labels) < len(unique_values):
+                raise ValueError(
+                    f"Not enough labels for unique pixel values. {len(labels)} labels for {len(unique_values)} unique pixel values."
+                )
 
             annotations = []
             # Generate seperate mask for each class and find contours.
-            for label, pixel_value in zip(labels, unique_values):
+            for pixel_value in unique_values:
                 class_mask = np.uint8(mask == pixel_value)
                 contours, hierarchy = cv2.findContours(
                     class_mask, mode, cv2.CHAIN_APPROX_SIMPLE
@@ -162,7 +166,7 @@ class AnnotationManager(object):
                         contours=contours,
                         hierarchy=hierarchy,
                         include_inner_contours=include_inner_contours,
-                        label=label,
+                        label=labels[pixel_value - 1],
                     )
                 )
         else:

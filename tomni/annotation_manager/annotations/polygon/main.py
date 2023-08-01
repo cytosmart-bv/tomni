@@ -12,6 +12,8 @@ from tomni.annotation_manager.utils import (
     parse_points_to_inner_contour,
 )
 
+MIN_NR_POINTS_POLYGON = 5
+
 from ...utils import compress_polygon_points, parse_points_to_contour
 
 
@@ -252,9 +254,17 @@ class Polygon(Annotation):
         points = self._points.copy()
         inner_points = self._inner_points.copy()
         if kwargs.get("do_compress", False):
-            points = compress_polygon_points(points, kwargs.get("epsilon", 3))
+            points = compress_polygon_points(
+                points,
+                kwargs.get("epsilon", 3),
+                min_number_of_points=MIN_NR_POINTS_POLYGON,
+            )
             inner_points = [
-                compress_polygon_points(inner_polygon, kwargs.get("epsilon", 3))
+                compress_polygon_points(
+                    inner_polygon,
+                    kwargs.get("epsilon", 3),
+                    min_number_of_points=MIN_NR_POINTS_POLYGON,
+                )
                 for inner_polygon in inner_points
             ]
 
@@ -330,6 +340,15 @@ class Polygon(Annotation):
                 [[point.x, point.y] for point in self._points], dtype=np.int32
             )
             cv2.fillPoly(mask, [points], color=1)
+
+        if self._inner_points:
+            mask_inner = np.zeros(shape, dtype=np.uint8)
+            for inner_polygon in self._inner_points:
+                points = np.array(
+                    [[point.x, point.y] for point in inner_polygon], dtype=np.int32
+                )
+                cv2.fillPoly(mask_inner, [points], color=1)
+            mask = mask - mask_inner
 
         return mask
 

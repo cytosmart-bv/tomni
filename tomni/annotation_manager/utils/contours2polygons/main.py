@@ -5,7 +5,7 @@ from typing import List, Union
 from tomni.annotation_manager.annotations import Polygon, Point
 import uuid
 
-MIN_NR_POINTS = 5
+MIN_NR_POINTS_POLYGON = 5
 
 
 def contours2polygons(
@@ -40,7 +40,7 @@ def contours2polygons(
             current_hierarchy = hierarchy[0][idx]
             if current_hierarchy[-1] == -1:
                 # If the contour has no parent, it is an outer contour
-                if len(contour) < MIN_NR_POINTS:
+                if len(contour) < MIN_NR_POINTS_POLYGON:
                     continue
 
                 # change shape from [N, 1, 2] to [N, 2]
@@ -74,7 +74,7 @@ def contours2polygons(
                 )
     elif not include_inner_contours:
         for contour in contours:
-            if len(contour) < MIN_NR_POINTS:
+            if len(contour) < MIN_NR_POINTS_POLYGON:
                 continue
             contour = np.vstack(contour)
             points = [Point(x=int(pt[0]), y=int(pt[1])) for pt in contour]
