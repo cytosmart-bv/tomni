@@ -4,12 +4,11 @@ from typing import Dict, List, Tuple, Union
 import cv2
 import numpy as np
 
-from tomni.transformers import labels2listsOfPoints, positions2contour
-
+from tomni.annotation_manager.utils.contours2polygons import contours2polygons
 from .annotations import Annotation, Ellipse, Point, Polygon
 from .utils import parse_points_to_contour
 
-MIN_NR_POINTS = 5
+MIN_NR_POINTS_POLYGON = 5
 
 
 class AnnotationManager(object):
@@ -48,14 +47,23 @@ class AnnotationManager(object):
                     accuracy=d.get("accuracy", 1),
                 )
             elif d[TYPE_KEY] == "polygon":
-                if len(d["points"]) < MIN_NR_POINTS:
+                if len(d["points"]) < MIN_NR_POINTS_POLYGON:
                     continue
+                if "inner_points" in d:
+                    inner_points = [
+                        [Point(x=pi["x"], y=pi["y"]) for pi in inner_contour]
+                        for inner_contour in d["inner_points"]
+                    ]
+                else:
+                    inner_points = []
+
                 annotation = Polygon(
                     label=d.get(LABEL_KEY, None),
                     id=d.get(ID_KEY, str(uuid.uuid4())),
                     children=d.get(CHILDREN_KEY, []),
                     parents=d.get(PARENTS_KEY, []),
                     points=[Point(x=p["x"], y=p["y"]) for p in d["points"]],
+                    inner_points=inner_points,
                     accuracy=d.get("accuracy", 1),
                 )
             else:
@@ -67,98 +75,42 @@ class AnnotationManager(object):
         return cls(annotations)
 
     @classmethod
-    def from_contours(
-        cls,
-        contours: List[np.ndarray],
-    ):
-        """Initializes a AnnotationManager object from cv2 contours.
-        Contours' shape must be [N, 1, 2] with dtype of np.int32.
-
-        Args:
-            contours (List[np.ndarray]): Collection of cv2 contours.
-        """
-        annotations = []
-        for contour in contours:
-            if len(contour) < MIN_NR_POINTS:
-                continue
-            # change shape from [N, 1, 2] to [N, 2]
-            contour = np.vstack(contour)
-
-            points: List[Point] = []
-            for i in range(contour.shape[0]):
-                points.append(Point(x=int(contour[i][0]), y=int(contour[i][1])))
-
-            annotations.append(
-                Polygon(
-                    label="",
-                    id=str(uuid.uuid4()),
-                    children=[],
-                    parents=[],
-                    points=points,
-                ),
-            )
-
-        return cls(annotations)
-
-    @classmethod
     def from_binary_mask(
-        cls,
-        mask: np.ndarray,
-        connectivity: int = 8,
+        cls, mask: np.ndarray, include_inner_contours: bool = False, label: str = ""
     ):
         """Initializes a AnnotationManager object from a binary mask.
-        Binary mask can contain either 0 and 1 or 0 and 255.
 
         Args:
             mask (np.ndarray): Binary mask input.
-            connectivity (int): When deriving connected components connectivy determines how diagonally components are handled.
-                `8` allows for diagonally connected components to be merged, while 4 does not. In the example below `8`-connectivity
-                will treat the ones as the same object while 4 treats them as seperate two distinct components.
-                Example:
-                    [[1,0],
-                    [0,1]]
-
+            include_inner_contours (bool, optional): Include annotations that are contained within another annotation.
+                Defaults to False.
         Returns:
             AnnotationManager: New annotation manager object from binary mask.
         """
+
         unique_values = np.unique(mask)
         assert np.array_equal(unique_values, np.array([0, 1])) or np.array_equal(
             unique_values, np.array([0, 255])
         ), "A binary mask must contain either 0 and 1 or 0 and 255 only."
         mask = mask.astype(np.uint8)
 
-        _, labeled_mask = cv2.connectedComponents(mask, connectivity=connectivity)
+        mode = cv2.RETR_CCOMP if include_inner_contours else cv2.RETR_EXTERNAL
+        contours, hierarchy = cv2.findContours(mask, mode, cv2.CHAIN_APPROX_SIMPLE)
 
-        padded_mask = cv2.copyMakeBorder(
-            mask,
-            top=1,
-            bottom=1,
-            left=1,
-            right=1,
-            borderType=cv2.BORDER_CONSTANT,
-            value=0,
+        annotations = contours2polygons(
+            contours=contours,
+            hierarchy=hierarchy,
+            include_inner_contours=include_inner_contours,
+            label=label,
         )
 
-        # If bin mask with 0's and 1's is input then canny fails, so multiply by 255 and clip.
-        if padded_mask.max() == 1:
-            padded_mask = padded_mask * 255
-        edges = cv2.Canny(padded_mask, 50, 150)
-
-        edges = cv2.dilate(edges, np.ones((5, 5)))
-        edges = np.divide(edges, 255, dtype=np.float16)
-        edges = edges.astype(np.uint8)
-        edges = edges[1:-1, 1:-1]
-
-        edged_mask = edges * labeled_mask
-
-        return AnnotationManager.from_labeled_mask(
-            edged_mask,
-        )
+        return cls(annotations)
 
     @classmethod
     def from_labeled_mask(
         cls,
         mask: np.ndarray,
+        labels: Union[List[str], str] = "",
         include_inner_contours: bool = False,
     ):
         """Initializes a AnnotationManager object from a labeled mask.
@@ -171,20 +123,56 @@ class AnnotationManager(object):
 
         Args:
             mask (np.ndarray): A labeled mask with a max. nr. of components limited by max(np.uint32).
-            include_inner_contours (bool, optional): Include annotations that are contained within another annotation. Defaults to False.
-
+            classes(List[str], optional): A list of class names to add to Polygon labels. Defaults to None.
+                Should have the same number of unique pixel values as classes.
+                Class names in order of low pixel value to high pixel value.
+            include_inner_contours (bool, optional): Include annotations that are contained within another annotation.
+                Defaults to False.
         Returns:
             AnnotationManager: A new AnnotationManager object.
         """
-        points = labels2listsOfPoints(mask)
-        contours = [
-            positions2contour(point, return_inner_contours=include_inner_contours)
-            for point in points
-            if len(point) > 0
-        ]
-        return AnnotationManager.from_contours(
-            contours,
-        )
+        mode = cv2.RETR_CCOMP if include_inner_contours else cv2.RETR_EXTERNAL
+
+        if isinstance(labels, str):
+            mask = mask.astype(np.uint8)
+            _, mask = cv2.threshold(mask, 0, 255, cv2.THRESH_BINARY)
+            contours, hierarchy = cv2.findContours(mask, mode, cv2.CHAIN_APPROX_SIMPLE)
+
+            annotations = contours2polygons(
+                contours=contours,
+                include_inner_contours=include_inner_contours,
+                hierarchy=hierarchy,
+                label=labels,
+            )
+
+        elif isinstance(labels, List):
+            unique_values = np.unique(mask)
+            unique_values = unique_values[unique_values != 0]
+
+            if len(labels) < len(unique_values):
+                raise ValueError(
+                    f"Not enough labels for unique pixel values. {len(labels)} labels for {len(unique_values)} unique pixel values."
+                )
+
+            annotations = []
+            # Generate seperate mask for each class and find contours.
+            for pixel_value in unique_values:
+                class_mask = np.uint8(mask == pixel_value)
+                contours, hierarchy = cv2.findContours(
+                    class_mask, mode, cv2.CHAIN_APPROX_SIMPLE
+                )
+                annotations.extend(
+                    contours2polygons(
+                        contours=contours,
+                        hierarchy=hierarchy,
+                        include_inner_contours=include_inner_contours,
+                        label=labels[pixel_value - 1],
+                    )
+                )
+        else:
+            raise ValueError("Labels must be either a string or a list of strings.")
+
+        return cls(annotations)
 
     @classmethod
     def from_darwin(cls, dicts: List[dict]):

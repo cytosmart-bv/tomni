@@ -3,7 +3,9 @@ from typing import List
 from tomni.annotation_manager.annotations.point import Point
 
 
-def compress_polygon_points(points: List[Point], epsilon: float = 3.0):
+def compress_polygon_points(
+    points: List[Point], epsilon: float = 3.0, min_number_of_points: int = 5
+):
     """Compresses the polygon
 
     Args:
@@ -18,4 +20,6 @@ def compress_polygon_points(points: List[Point], epsilon: float = 3.0):
 
     point_arr = [[point.x, point.y] for point in points]
     point_arr_compressed = simplify_coords(point_arr, epsilon)
+    if len(point_arr_compressed) < min_number_of_points:
+        return points
     return [Point(x, y) for (x, y) in point_arr_compressed]
