@@ -4,7 +4,6 @@ from unittest import TestCase
 import numpy as np
 
 from .main import binary2contours
-import cv2
 
 
 class TestColony(TestCase):
