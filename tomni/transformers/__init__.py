@@ -8,6 +8,7 @@ from .json2labels import json2labels
 from .json2mask import json2mask
 from .json2vgg import json2vgg
 from .labels2contours import labels2contours
+from .binary2contours import binary2contours
 from .labels2listsOfPoints import labels2listsOfPoints
 from .mask2bbox import mask2bbox
 from .mask2json import mask2json
