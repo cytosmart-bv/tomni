@@ -6,6 +6,7 @@
 - added binary2contours
 - change parameters for from_binary_mask
 - made contours2polygon
+- test
 
 2.0.0-b1 (2023-07-06)
 ------------------
