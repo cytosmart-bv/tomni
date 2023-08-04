@@ -1,5 +1,10 @@
 # History
 
+2.0.0-b2 (2023-08-04)
+- Moved `feature_multiplier` and `metric_unit` to to_dict() from from_dict().
+- Added inner contours options 
+- added binary2contours
+
 2.0.0-b1 (2023-07-06)
 ------------------
 - AnnotationManager function from_dict is called with an optional list of features

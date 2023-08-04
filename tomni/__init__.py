@@ -3,12 +3,16 @@
 
 __author__ = """Tom Nijhof & Jelle van Kerkvoorde"""
 __email__ = "tom.nijhof@cytosmart.com"
-__version__ = "2.0.0b1"
+__version__ = "2.0.0b2"
 
 from .bbox_fitting import bbox_fitting, bbox_fitting_center
 from .bbox_operations import check_overlap_bbox
 from .convert_color import convert_color
-from .illumination_correction import absolute_difference, fluo_tophat, relative_difference
+from .illumination_correction import (
+    absolute_difference,
+    fluo_tophat,
+    relative_difference,
+)
 from .img_dim import img_dim
 from .img_paste import img_paste
 from .json_operations import *
