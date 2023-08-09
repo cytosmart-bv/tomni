@@ -805,72 +805,41 @@ class TestAnnotationManager(TestCase):
         np.testing.assert_array_equal(expected, actual)
 
     def test_binary_mask_no_object(self):
-        input_mask = np.array(
-            [
-                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-            ],
-            dtype=np.uint8,
-        )
-        expected = np.array(
-            [
-                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-            ],
-            dtype=np.uint8,
-        )
+        input_mask = np.zeros((10, 10))
+        expected = np.zeros((10, 10))
+        manager = AnnotationManager.from_binary_mask(input_mask)
+        actual = manager.to_binary_mask(input_mask.shape)
+
+        np.testing.assert_array_equal(expected, actual)
+
+    def test_binary_mask_all_1_object(self):
+        input_mask = np.ones((10, 10))
+        expected = np.ones((10, 10))
+        manager = AnnotationManager.from_binary_mask(input_mask)
+        actual = manager.to_binary_mask(input_mask.shape)
+
+        np.testing.assert_array_equal(expected, actual)
+
+    def test_binary_mask_all_1_object_big(self):
+        input_mask = np.ones((100, 100))
+        expected = np.ones((100, 100))
+        manager = AnnotationManager.from_binary_mask(input_mask)
+        actual = manager.to_binary_mask(input_mask.shape)
+
+        np.testing.assert_array_equal(expected, actual)
+
+    def test_labeled_mask_all_1_object(self):
+        input_mask = np.ones((10, 10))
+        expected = np.ones((10, 10))
         manager = AnnotationManager.from_binary_mask(input_mask)
         actual = manager.to_binary_mask(input_mask.shape)
 
         np.testing.assert_array_equal(expected, actual)
 
     def test_labeled_mask_no_object(self):
-        input_mask = np.array(
-            [
-                [1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
-                [1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
-                [1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
-                [1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
-                [1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
-                [1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
-                [1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
-                [1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
-                [1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
-                [1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
-            ],
-            dtype=np.uint8,
-        )
-        expected = np.array(
-            [
-                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-            ],
-            dtype=np.uint8,
-        )
+        input_mask = np.zeros((10, 10))
+
+        expected = np.zeros((10, 10))
         manager = AnnotationManager.from_binary_mask(input_mask)
         actual = manager.to_binary_mask(input_mask.shape)
 
@@ -892,21 +861,7 @@ class TestAnnotationManager(TestCase):
             ],
             dtype=np.uint8,
         )
-        expected = np.array(
-            [
-                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-            ],
-            dtype=np.uint8,
-        )
+        expected = np.zeros((10, 10))
         manager = AnnotationManager.from_binary_mask(input_mask)
         actual = manager.to_binary_mask(input_mask.shape)
 

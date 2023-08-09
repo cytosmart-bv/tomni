@@ -8,15 +8,14 @@ import cv2
 MIN_NR_POINTS_POLYGON = 5
 
 
-def _is_approx_rectangle(contour, area_threshold=0.95):
+def _is_approx_rectangle(contour):
     contour_area = cv2.contourArea(contour)
     x, y, w, h = cv2.boundingRect(contour)
     bounding_rect_area = w * h
 
     if contour_area > 0 and bounding_rect_area > 0:
         similarity_ratio = contour_area / bounding_rect_area
-        return similarity_ratio >= area_threshold
-
+        return similarity_ratio >= 0.75
     return False
 
 
@@ -107,7 +106,14 @@ def contours2polygons(
     elif not include_inner_contours:
         for contour in contours:
             if len(contour) < MIN_NR_POINTS_POLYGON:
-                continue
+                if (
+                    len(contour) == 4
+                    and cv2.contourArea(contour) > 50
+                    and _is_approx_rectangle(contour)
+                ):
+                    contour = _add_point(contour)
+                else:
+                    continue
             contour = np.vstack(contour)
             points = [Point(x=int(pt[0]), y=int(pt[1])) for pt in contour]
 
