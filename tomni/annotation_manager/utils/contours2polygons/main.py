@@ -3,8 +3,31 @@ import numpy as np
 from typing import List, Union, Tuple
 from tomni.annotation_manager.annotations import Polygon, Point
 import uuid
+import cv2
 
 MIN_NR_POINTS_POLYGON = 5
+
+
+def _is_approx_rectangle(contour, area_threshold=0.95):
+    contour_area = cv2.contourArea(contour)
+    x, y, w, h = cv2.boundingRect(contour)
+    bounding_rect_area = w * h
+
+    if contour_area > 0 and bounding_rect_area > 0:
+        similarity_ratio = contour_area / bounding_rect_area
+        return similarity_ratio >= area_threshold
+
+    return False
+
+
+def _add_point(contour):
+    # Calculate the midpoint between the first and second points
+    new_point = (contour[0][0] + contour[1][0]) / 2
+
+    # Insert the new point between the first and second points
+    new_contour = np.insert(contour, 1, new_point, axis=0)
+
+    return new_contour
 
 
 def contours2polygons(
@@ -42,9 +65,15 @@ def contours2polygons(
         for idx, contour in enumerate(contours):
             current_hierarchy = hierarchy[0][idx]
             if current_hierarchy[-1] == -1:
-                # If the contour has no parent, it is an outer contour
                 if len(contour) < MIN_NR_POINTS_POLYGON:
-                    continue
+                    if (
+                        len(contour) == 4
+                        and cv2.contourArea(contour) > 100
+                        and _is_approx_rectangle(contour)
+                    ):
+                        contour = _add_point(contour)
+                    else:
+                        continue
 
                 # change shape from [N, 1, 2] to [N, 2]
                 contour = np.vstack(contour)

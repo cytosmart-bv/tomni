@@ -1,6 +1,10 @@
 from unittest import TestCase
 
-from tomni.annotation_manager.utils.contours2polygons import contours2polygons
+from tomni.annotation_manager.utils.contours2polygons import (
+    contours2polygons,
+    _is_approx_rectangle,
+    _add_point,
+)
 from tomni.annotation_manager.annotations import Polygon, Point
 import numpy as np
 import uuid
@@ -261,10 +265,100 @@ class TestContours2Polygons(TestCase):
 
     def test_too_few_points(self) -> None:
         contours = np.array(
-            [[[0, 0]], [[10, 0]], [[100, 0]], [[100, 100]]],
+            [[[0, 0]], [[5, 0]], [[5, 5]], [[0, 5]]],
         )
         polygons = contours2polygons(contours, None)
 
         expected = []
 
         self.assertEqual(polygons, expected)
+
+    def test_is_approx_rectangle_true(self) -> None:
+        contours = np.array(
+            [
+                [[0, 0]],
+                [[100, 0]],
+                [[100, 100]],
+                [[0, 100]],
+            ],
+        )
+        polygons = _is_approx_rectangle(contours)
+
+        expected = True
+
+        self.assertEqual(polygons, expected)
+
+    def test_is_approx_rectangle_false(self) -> None:
+        contour = np.array(
+            [
+                [[0, 0]],
+                [[50, 25]],
+                [[100, 125]],
+                [[50, 100]],
+            ],
+        )
+        polygons = _is_approx_rectangle(contour)
+
+        expected = False
+
+        self.assertEqual(polygons, expected)
+
+    def test_is_approx_rectangle_false(self) -> None:
+        contour = np.array(
+            [
+                [[0, 0]],
+                [[50, 25]],
+                [[100, 125]],
+            ],
+        )
+        polygons = _is_approx_rectangle(contour)
+
+        expected = False
+
+        self.assertEqual(polygons, expected)
+
+    def test_add_point(self) -> None:
+        contour = np.array(
+            [
+                [[0, 0]],
+                [[50, 0]],
+                [[50, 50]],
+                [[0, 50]],
+            ],
+        )
+        output = _add_point(contour)
+
+        expected = np.array(
+            [
+                [[0, 0]],
+                [[25, 0]],
+                [[50, 0]],
+                [[50, 50]],
+                [[0, 50]],
+            ],
+        )
+
+        np.testing.assert_array_equal(output, expected)
+
+    def test_add_point_2(self) -> None:
+        contour = np.array(
+            [
+                [[0, 0]],
+                [[100, 0]],
+                [[100, 100]],
+                [[0, 100]],
+            ],
+        )
+        output = _add_point(contour)
+
+        expected = np.array(
+            [
+                [[0, 0]],
+                [[50, 0]],
+                [[100, 0]],
+                [[100, 100]],
+                [[0, 100]],
+            ],
+        )
+
+        np.testing.assert_array_equal(output, expected)
