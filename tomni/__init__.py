@@ -3,7 +3,7 @@
 
 __author__ = """Tom Nijhof & Jelle van Kerkvoorde"""
 __email__ = "tom.nijhof@cytosmart.com"
-__version__ = "2.0.0b2"
+__version__ = "2.0.0b3"
 
 from .bbox_fitting import bbox_fitting, bbox_fitting_center
 from .bbox_operations import check_overlap_bbox

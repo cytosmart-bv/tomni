@@ -8,10 +8,6 @@
  - BUGFIX: Multiplied minor axis and major axis by 2, which was currently calculated as radii instead of diameters.
  - BUGFIX: Fixed average diameter, which was calculated with radii instead of diameters.
 
-
-
-
-
 2.0.0-b2 (2023-08-04) 
 ------------------
 - Moved feature_multiplier and metric_unit to to_dict() from from_dict(). 
