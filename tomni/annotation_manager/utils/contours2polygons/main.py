@@ -39,7 +39,7 @@ def contours2polygons(
     Contours' shape must be [N, 1, 2] with dtype of np.int32.
 
     Args:
-        contours (np.ndarray): Collection of cv2 contours.
+        contours (Tuple(np.ndarray)): Collection of cv2 contours.
         include_inner_contours (bool, optional): whether to return inner contours.
         hierarchy (bool, optional): the hierarchy from cv2.findContours using the RETR_CCOMP mode.
             Defaults to None.
