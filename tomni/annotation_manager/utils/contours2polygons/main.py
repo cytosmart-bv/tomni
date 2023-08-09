@@ -1,7 +1,6 @@
-import cv2
 import numpy as np
 
-from typing import List, Union
+from typing import List, Union, Tuple
 from tomni.annotation_manager.annotations import Polygon, Point
 import uuid
 
@@ -9,7 +8,7 @@ MIN_NR_POINTS_POLYGON = 5
 
 
 def contours2polygons(
-    contours: List[np.ndarray],
+    contours: Tuple[np.ndarray],
     include_inner_contours: bool = False,
     hierarchy: Union[np.ndarray, None] = None,
     label: str = "",
@@ -18,7 +17,7 @@ def contours2polygons(
     Contours' shape must be [N, 1, 2] with dtype of np.int32.
 
     Args:
-        contours (List[np.ndarray]): Collection of cv2 contours.
+        contours (np.ndarray): Collection of cv2 contours.
         include_inner_contours (bool, optional): whether to return inner contours.
         hierarchy (bool, optional): the hierarchy from cv2.findContours using the RETR_CCOMP mode.
             Defaults to None.
@@ -29,6 +28,10 @@ def contours2polygons(
         List[np.ndarray]: A list of Polygon objects.
     """
     annotations = []
+
+    if len(contours) == 0:
+        return annotations
+
     # Check whether inner contours are present
     if include_inner_contours:
         if hierarchy is None:

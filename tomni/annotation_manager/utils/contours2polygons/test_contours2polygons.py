@@ -8,8 +8,10 @@ import uuid
 
 class TestContours2Polygons(TestCase):
     def test_happy_flow(self) -> None:
-        contours = np.array(
-            [[[0, 0], [10, 0], [100, 0], [100, 100], [50, 100], [0, 100]]]
+        contours = (
+            np.array(
+                [[[0, 0]], [[10, 0]], [[100, 0]], [[100, 100]], [[50, 100]], [[0, 100]]]
+            ),
         )
         polygons = contours2polygons(contours, None)
 
@@ -34,8 +36,10 @@ class TestContours2Polygons(TestCase):
         self.assertEqual(polygons, expected)
 
     def test_happy_flow_label(self) -> None:
-        contours = np.array(
-            [[[0, 0], [10, 0], [100, 0], [100, 100], [50, 100], [0, 100]]]
+        contours = (
+            np.array(
+                [[[0, 0]], [[10, 0]], [[100, 0]], [[100, 100]], [[50, 100]], [[0, 100]]]
+            ),
         )
         polygons = contours2polygons(contours, None, label="labelled")
 
@@ -60,23 +64,21 @@ class TestContours2Polygons(TestCase):
         self.assertEqual(polygons, expected)
 
     def test_happy_flow_hierarchy(self) -> None:
-        contours = [
+        contours = (
             np.array([[[1, 1]], [[1, 8]], [[7, 7]], [[7, 8]], [[7, 1]]]),
-            [
-                np.array(
-                    [
-                        [[2, 3]],
-                        [[3, 2]],
-                        [[5, 2]],
-                        [[6, 3]],
-                        [[6, 6]],
-                        [[5, 7]],
-                        [[3, 7]],
-                        [[2, 6]],
-                    ]
-                )
-            ],
-        ]
+            np.array(
+                [
+                    [[2, 3]],
+                    [[3, 2]],
+                    [[5, 2]],
+                    [[6, 3]],
+                    [[6, 6]],
+                    [[5, 7]],
+                    [[3, 7]],
+                    [[2, 6]],
+                ],
+            ),
+        )
 
         hierarchy = np.array(
             [
@@ -88,7 +90,10 @@ class TestContours2Polygons(TestCase):
         )
 
         polygons = contours2polygons(
-            contours=contours, hierarchy=hierarchy, label="labelled"
+            contours=contours,
+            hierarchy=hierarchy,
+            include_inner_contours=True,
+            label="labelled",
         )
 
         expected = [
@@ -122,12 +127,15 @@ class TestContours2Polygons(TestCase):
         self.assertEqual(polygons, expected)
 
     def test_happy_flow_multiple_contours(self) -> None:
-        contours = np.array(
-            [
-                [[0, 0], [10, 0], [100, 0], [100, 100], [50, 100], [0, 100]],
-                [[0, 0], [10, 0], [200, 0], [200, 100], [50, 100], [0, 100]],
-            ]
+        contours = (
+            np.array(
+                [[[0, 0]], [[10, 0]], [[100, 0]], [[100, 100]], [[50, 100]], [[0, 100]]]
+            ),
+            np.array(
+                [[[0, 0]], [[10, 0]], [[200, 0]], [[200, 100]], [[50, 100]], [[0, 100]]]
+            ),
         )
+
         polygons = contours2polygons(contours, None, label="labelled")
 
         expected = [
@@ -166,8 +174,10 @@ class TestContours2Polygons(TestCase):
         self.assertEqual(polygons, expected)
 
     def test_include_inner_and_hierarchy(self) -> None:
-        contours = np.array(
-            [[[0, 0], [10, 0], [100, 0], [100, 100], [50, 100], [0, 100]]]
+        contours = (
+            np.array(
+                [[[0, 0]], [[10, 0]], [[100, 0]], [[100, 100]], [[50, 100]], [[0, 100]]]
+            ),
         )
         hierarchy = np.array(
             [
@@ -203,8 +213,10 @@ class TestContours2Polygons(TestCase):
         self.assertEqual(polygons, expected)
 
     def test_external_hierarchy_include_inner_contours_true(self) -> None:
-        contours = np.array(
-            [[[0, 0], [10, 0], [100, 0], [100, 100], [50, 100], [0, 100]]]
+        contours = (
+            np.array(
+                [[[0, 0]], [[10, 0]], [[100, 0]], [[100, 100]], [[50, 100]], [[0, 100]]]
+            ),
         )
         hierarchy = np.array([[[1, -1, -1, -1]]])
 
@@ -233,8 +245,10 @@ class TestContours2Polygons(TestCase):
         self.assertEqual(polygons, expected)
 
     def test_include_inner_and_hierarchy_mismatch(self) -> None:
-        contours = np.array(
-            [[[0, 0], [10, 0], [100, 0], [100, 100], [50, 100], [0, 100]]]
+        contours = (
+            np.array(
+                [[[0, 0]], [[10, 0]], [[100, 0]], [[100, 100]], [[50, 100]], [[0, 100]]]
+            ),
         )
 
         self.assertRaises(
@@ -246,7 +260,9 @@ class TestContours2Polygons(TestCase):
         )
 
     def test_too_few_points(self) -> None:
-        contours = np.array([[[0, 0], [10, 0], [100, 0], [100, 100]]])
+        contours = np.array(
+            [[[0, 0]], [[10, 0]], [[100, 0]], [[100, 100]]],
+        )
         polygons = contours2polygons(contours, None)
 
         expected = []
