@@ -303,12 +303,13 @@ class TestContours2Polygons(TestCase):
 
         self.assertEqual(polygons, expected)
 
-    def test_is_approx_rectangle_false_triangle(self) -> None:
+    def test_is_approx_rectangle_false_diamond(self) -> None:
         contour = np.array(
             [
-                [[0, 0]],
-                [[50, 25]],
-                [[100, 125]],
+                [[50, 0]],
+                [[0, 50]],
+                [[50, 100]],
+                [[100, 50]],
             ],
         )
         polygons = _is_approx_rectangle(contour)
