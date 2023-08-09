@@ -385,9 +385,9 @@ class Polygon(Annotation):
         self._roundness = self._outer_area / enclosing_circle_area
 
     def _calculate_axes(self) -> None:
-        _, (r1, r2), _ = cv2.fitEllipse(self._contour)
-        self._minor_axis = min(r1, r2)
-        self._major_axis = max(r1, r2)
+        _, (diameter_1, diameter_2), _ = cv2.fitEllipse(self._contour)
+        self._minor_axis = min(diameter_1, diameter_2)
+        self._major_axis = max(diameter_1, diameter_2)
 
     def _calculate_average_diameter(self) -> None:
         if self._minor_axis is None or self._major_axis is None:

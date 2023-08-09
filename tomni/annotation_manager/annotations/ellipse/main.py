@@ -364,7 +364,7 @@ class Ellipse(Annotation):
         if self.major_axis == 0:
             self._roundness = 0
         else:
-            enclosing_circle_area = self._major_axis**2 * np.pi
+            enclosing_circle_area = (self._major_axis / 2) ** 2 * np.pi
             self._roundness = self._area / enclosing_circle_area
 
     def _calculate_area(self) -> None:
@@ -376,13 +376,13 @@ class Ellipse(Annotation):
         self._convex_hull_area = self._area
 
     def _calculate_minor_axis(self) -> None:
-        self._minor_axis = min(self._radius_x, self._radius_y)
+        self._minor_axis = min(self._radius_x, self._radius_y) * 2
 
     def _calculate_major_axis(self) -> None:
-        self._major_axis = max(self._radius_x, self._radius_y)
+        self._major_axis = max(self._radius_x, self._radius_y) * 2
 
     def _calculate_average_diameter(self) -> None:
-        self._average_diameter = (self._radius_x + self._radius_y) // 2
+        self._average_diameter = (self._radius_x * 2 + self._radius_y * 2) / 2
 
     def _calculate_aspect_ratio(self) -> None:
         if self._radius_x == self._radius_y:
