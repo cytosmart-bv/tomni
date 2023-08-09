@@ -1,12 +1,24 @@
 # History
+2.0.0-b3 (2023-09-08) 
+------------------
+- Added check for rectangled contours.
+    - Adds extra point if rectangle
+    - Added unittests for empty and full masks.
+ - Changed variable name from r1/r2 to diameter_1/diameter_2 etc for naming clarity.
+ - BUGFIX: Multiplied minor axis and major axis by 2, which was currently calculated as radii instead of diameters.
+ - BUGFIX: Fixed average diameter, which was calculated with radii instead of diameters.
+
+
+
+
 
 2.0.0-b2 (2023-08-04) 
+------------------
 - Moved feature_multiplier and metric_unit to to_dict() from from_dict(). 
 - Added inner contours options 
 - added binary2contours
 - change parameters for from_binary_mask
 - made contours2polygon
-- test
 
 2.0.0-b1 (2023-07-06)
 ------------------

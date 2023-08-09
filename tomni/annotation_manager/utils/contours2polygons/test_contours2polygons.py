@@ -1,9 +1,9 @@
 from unittest import TestCase
 
-from tomni.annotation_manager.utils.contours2polygons import (
-    contours2polygons,
+from tomni.annotation_manager.utils.contours2polygons.main import (
     _is_approx_rectangle,
     _add_point,
+    contours2polygons,
 )
 from tomni.annotation_manager.annotations import Polygon, Point
 import numpy as np
@@ -303,7 +303,7 @@ class TestContours2Polygons(TestCase):
 
         self.assertEqual(polygons, expected)
 
-    def test_is_approx_rectangle_false(self) -> None:
+    def test_is_approx_rectangle_false_triangle(self) -> None:
         contour = np.array(
             [
                 [[0, 0]],
