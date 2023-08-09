@@ -3,10 +3,11 @@
 ------------------
 - Added check for rectangled contours.
     - Adds extra point if rectangle
-    - Added unittests for empty and full masks.
- - Changed variable name from r1/r2 to diameter_1/diameter_2 etc for naming clarity.
- - BUGFIX: Multiplied minor axis and major axis by 2, which was currently calculated as radii instead of diameters.
- - BUGFIX: Fixed average diameter, which was calculated with radii instead of diameters.
+- Added unittests for empty and full masks from binary_mask and from_labeled_mask
+- Changed variable name from r1/r2 to diameter_1/diameter_2 etc for naming clarity.
+- BUGFIX: Multiplied minor axis and major axis by 2, which was currently calculated as radii instead of diameters.
+- BUGFIX: Fixed average diameter, which was calculated with radii instead of diameters.
+- BUGFIX: fixed assert in from_binary_mask when no objects were detected.
 
 2.0.0-b2 (2023-08-04) 
 ------------------
