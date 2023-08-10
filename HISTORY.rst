@@ -7,7 +7,7 @@
 - Changed variable name from r1/r2 to diameter_1/diameter_2 etc for naming clarity.
 - BUGFIX: Multiplied minor axis and major axis by 2, which was currently calculated as radii instead of diameters.
 - BUGFIX: Fixed average diameter, which was calculated with radii instead of diameters.
-- BUGFIX: fixed assert in from_binary_mask when no objects were detected.
+- BUGFIX: removed assert, which took over half the time of the entire `from_binary_mask`.
 
 2.0.0-b2 (2023-08-04) 
 ------------------
