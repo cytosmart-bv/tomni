@@ -88,13 +88,6 @@ class AnnotationManager(object):
             AnnotationManager: New annotation manager object from binary mask.
         """
 
-        unique_values = np.unique(mask)
-        assert (
-            (len(unique_values) == 1 and unique_values in [0, 1, 255])
-            or np.array_equal(unique_values, np.array([0, 1]))
-            or np.array_equal(unique_values, np.array([0, 255]))
-        ), "A binary mask must contain either all 0s, all 1s, all 255s, or both 0s and 1s or 0s and 255s."
-
         mask = mask.astype(np.uint8)
         mode = cv2.RETR_CCOMP if include_inner_contours else cv2.RETR_EXTERNAL
         contours, hierarchy = cv2.findContours(mask, mode, cv2.CHAIN_APPROX_SIMPLE)
