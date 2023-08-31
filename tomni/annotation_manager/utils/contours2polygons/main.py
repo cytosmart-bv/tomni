@@ -6,6 +6,7 @@ import uuid
 import cv2
 
 MIN_NR_POINTS_POLYGON = 5
+MIN_AREA_RETANGLE_POLYGON = 500
 
 
 def _is_approx_rectangle(contour):
@@ -67,7 +68,7 @@ def contours2polygons(
                 if len(contour) < MIN_NR_POINTS_POLYGON:
                     if (
                         len(contour) == 4
-                        and cv2.contourArea(contour) > 100
+                        and cv2.contourArea(contour) > MIN_AREA_RETANGLE_POLYGON
                         and _is_approx_rectangle(contour)
                     ):
                         contour = _add_point(contour)
@@ -108,7 +109,7 @@ def contours2polygons(
             if len(contour) < MIN_NR_POINTS_POLYGON:
                 if (
                     len(contour) == 4
-                    and cv2.contourArea(contour) > 50
+                    and cv2.contourArea(contour) > MIN_AREA_RETANGLE_POLYGON
                     and _is_approx_rectangle(contour)
                 ):
                     contour = _add_point(contour)
