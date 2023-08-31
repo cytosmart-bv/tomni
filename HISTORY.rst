@@ -1,12 +1,22 @@
 # History
+2.0.0-b3 (2023-09-08) 
+------------------
+- Added check for rectangled contours.
+    - Adds extra point if rectangle.
+    - This allows us to initialize masks (of wells) that only consist of 4 points if required in the future.
+- Added unittests for empty and full masks from binary_mask and from_labeled_mask
+- Changed variable name in `ellipse` class from r1/r2 to diameter_1/diameter_2 etc for naming clarity.
+- BUGFIX: Multiplied minor axis and major axis by 2 in `ellipse` class, which was currently calculated as radii instead of diameters.
+- BUGFIX: Fixed average diameter in `ellipse` class, which was calculated with radii instead of diameters.
+- BUGFIX: removed assert, which took over half the time of the entire `from_binary_mask`.
 
 2.0.0-b2 (2023-08-04) 
+------------------
 - Moved feature_multiplier and metric_unit to to_dict() from from_dict(). 
 - Added inner contours options 
 - added binary2contours
 - change parameters for from_binary_mask
 - made contours2polygon
-- test
 
 2.0.0-b1 (2023-07-06)
 ------------------

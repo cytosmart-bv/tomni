@@ -1,15 +1,37 @@
-import cv2
 import numpy as np
 
-from typing import List, Union
+from typing import List, Union, Tuple
 from tomni.annotation_manager.annotations import Polygon, Point
 import uuid
+import cv2
 
 MIN_NR_POINTS_POLYGON = 5
+MIN_AREA_RETANGLE_POLYGON = 500
+
+
+def _is_approx_rectangle(contour):
+    contour_area = cv2.contourArea(contour)
+    x, y, w, h = cv2.boundingRect(contour)
+    bounding_rect_area = w * h
+
+    if contour_area > 0 and bounding_rect_area > 0:
+        similarity_ratio = contour_area / bounding_rect_area
+        return similarity_ratio >= 0.75
+    return False
+
+
+def _add_point(contour):
+    # Calculate the midpoint between the first and second points
+    new_point = (contour[0][0] + contour[1][0]) / 2
+
+    # Insert the new point between the first and second points
+    new_contour = np.insert(contour, 1, new_point, axis=0)
+
+    return new_contour
 
 
 def contours2polygons(
-    contours: List[np.ndarray],
+    contours: Tuple[np.ndarray],
     include_inner_contours: bool = False,
     hierarchy: Union[np.ndarray, None] = None,
     label: str = "",
@@ -18,7 +40,7 @@ def contours2polygons(
     Contours' shape must be [N, 1, 2] with dtype of np.int32.
 
     Args:
-        contours (List[np.ndarray]): Collection of cv2 contours.
+        contours (Tuple(np.ndarray)): Collection of cv2 contours.
         include_inner_contours (bool, optional): whether to return inner contours.
         hierarchy (bool, optional): the hierarchy from cv2.findContours using the RETR_CCOMP mode.
             Defaults to None.
@@ -29,6 +51,10 @@ def contours2polygons(
         List[np.ndarray]: A list of Polygon objects.
     """
     annotations = []
+
+    if len(contours) == 0:
+        return annotations
+
     # Check whether inner contours are present
     if include_inner_contours:
         if hierarchy is None:
@@ -39,9 +65,15 @@ def contours2polygons(
         for idx, contour in enumerate(contours):
             current_hierarchy = hierarchy[0][idx]
             if current_hierarchy[-1] == -1:
-                # If the contour has no parent, it is an outer contour
                 if len(contour) < MIN_NR_POINTS_POLYGON:
-                    continue
+                    if (
+                        len(contour) == 4
+                        and cv2.contourArea(contour) > MIN_AREA_RETANGLE_POLYGON
+                        and _is_approx_rectangle(contour)
+                    ):
+                        contour = _add_point(contour)
+                    else:
+                        continue
 
                 # change shape from [N, 1, 2] to [N, 2]
                 contour = np.vstack(contour)
@@ -75,7 +107,14 @@ def contours2polygons(
     elif not include_inner_contours:
         for contour in contours:
             if len(contour) < MIN_NR_POINTS_POLYGON:
-                continue
+                if (
+                    len(contour) == 4
+                    and cv2.contourArea(contour) > MIN_AREA_RETANGLE_POLYGON
+                    and _is_approx_rectangle(contour)
+                ):
+                    contour = _add_point(contour)
+                else:
+                    continue
             contour = np.vstack(contour)
             points = [Point(x=int(pt[0]), y=int(pt[1])) for pt in contour]
 

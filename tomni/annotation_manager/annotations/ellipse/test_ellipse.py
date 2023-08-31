@@ -149,12 +149,12 @@ class TestEllipse(TestCase):
         self.assertEqual(expected, actual)
 
     def test_circle_average_diameter(self):
-        expected = 1
+        expected = 2
         actual = self.circle.average_diameter
         self.assertEqual(expected, actual)
 
     def test_oval_average_diameter(self):
-        expected = 2
+        expected = 4
         actual = self.oval.average_diameter
         self.assertEqual(expected, actual)
 
@@ -164,12 +164,12 @@ class TestEllipse(TestCase):
         self.assertEqual(expected, actual)
 
     def test_circle_minor_axis(self):
-        expected = 1
+        expected = 2
         actual = self.circle.minor_axis
         self.assertEqual(expected, actual)
 
     def test_oval_minor_axis(self):
-        expected = 1
+        expected = 2
         actual = self.oval.minor_axis
         self.assertEqual(expected, actual)
 
@@ -179,12 +179,12 @@ class TestEllipse(TestCase):
         self.assertEqual(expected, actual)
 
     def test_circle_major_axis(self):
-        expected = 1
+        expected = 2
         actual = self.circle.major_axis
         self.assertEqual(expected, actual)
 
     def test_oval_major_axis(self):
-        expected = 3
+        expected = 6
         actual = self.oval.major_axis
         self.assertEqual(expected, actual)
 
@@ -249,15 +249,15 @@ class TestEllipse(TestCase):
         expected = {
             "area": 3.14,
             "aspectRatio": 1.0,
-            "averageDiameter": 1,
+            "averageDiameter": 2,
             "center": {"x": 0, "y": 0},
             "children": [],
             "circularity": 1.0,
             "convexHullArea": 3.14,
             "id": "1234-1234-2134-1321",
             "label": "ellipse_test",
-            "majorAxis": 1,
-            "minorAxis": 1,
+            "majorAxis": 2,
+            "minorAxis": 2,
             "parents": [],
             "perimeter": 6.28,
             "radiusX": 1,
@@ -274,15 +274,15 @@ class TestEllipse(TestCase):
         expected = {
             "area": 9.42,
             "aspectRatio": 0.33,
-            "averageDiameter": 2,
+            "averageDiameter": 4,
             "center": {"x": 0, "y": 0},
             "children": [],
             "circularity": 0.6,
             "convexHullArea": 9.42,
             "id": "1234-1234-2134-1321",
             "label": "ellipse_test",
-            "majorAxis": 3,
-            "minorAxis": 1,
+            "majorAxis": 6,
+            "minorAxis": 2,
             "parents": [],
             "perimeter": 14.05,
             "radiusX": 1,
@@ -300,15 +300,15 @@ class TestEllipse(TestCase):
         expected = {
             "area": 9.42,
             "aspectRatio": 0.33,
-            "averageDiameter": 2,
+            "averageDiameter": 4,
             "center": {"x": 0, "y": 0},
             "children": [],
             "circularity": 0.6,
             "convexHullArea": 9.42,
             "id": "",
             "label": "",
-            "majorAxis": 3,
-            "minorAxis": 1,
+            "majorAxis": 6,
+            "minorAxis": 2,
             "parents": [],
             "perimeter": 14.05,
             "radiusX": 1,
@@ -337,15 +337,15 @@ class TestEllipse(TestCase):
         expected = {
             "area": 9.42,
             "aspectRatio": 0.33,
-            "averageDiameter": 2,
+            "averageDiameter": 4,
             "center": {"x": 0, "y": 0},
             "children": [],
             "circularity": 0.6,
             "convexHullArea": 9.42,
             "id": "",
             "label": "",
-            "majorAxis": 3,
-            "minorAxis": 1,
+            "majorAxis": 6,
+            "minorAxis": 2,
             "parents": [],
             "perimeter": 14.05,
             "radiusX": 1,
@@ -490,13 +490,13 @@ class TestEllipse(TestCase):
         )
         expected = {
             "area": 9.42,
-            "averageDiameter": 2,
+            "averageDiameter": 4,
             "center": {"x": 0, "y": 0},
             "children": [],
             "circularity": 0.6,
             "id": "id",
             "label": "label",
-            "minorAxis": 1,
+            "minorAxis": 2,
             "parents": [],
             "radiusX": 1,
             "radiusY": 3,
@@ -551,15 +551,15 @@ class TestEllipse(TestCase):
         expected = {
             "area": 9.42,
             "aspectRatio": 0.33,
-            "averageDiameter": 2,
+            "averageDiameter": 4,
             "center": {"x": 0, "y": 0},
             "children": [],
             "circularity": 0.6,
             "convexHullArea": 9.42,
             "id": "id",
             "label": "label",
-            "majorAxis": 3,
-            "minorAxis": 1,
+            "majorAxis": 6,
+            "minorAxis": 2,
             "parents": [],
             "perimeter": 14.05,
             "radiusX": 1,
@@ -588,15 +588,15 @@ class TestEllipse(TestCase):
         expected = {
             "area": round(9.42 * feature_multiplier**2, 2),
             "aspectRatio": 0.33,
-            "averageDiameter": round(2 * feature_multiplier, 2),
+            "averageDiameter": round(4 * feature_multiplier, 2),
             "center": {"x": 0, "y": 0},
             "children": [],
             "circularity": 0.6,
             "convexHullArea": round(9.42 * feature_multiplier**2, 2),
             "id": "id",
             "label": "label",
-            "majorAxis": round(3 * feature_multiplier, 2),
-            "minorAxis": round(1 * feature_multiplier, 2),
+            "majorAxis": round(6 * feature_multiplier, 2),
+            "minorAxis": round(2 * feature_multiplier, 2),
             "parents": [],
             "perimeter": round(14.05 * feature_multiplier, 2),
             "radiusX": 1,
@@ -624,15 +624,15 @@ class TestEllipse(TestCase):
         expected = {
             "areaPm": 9.42,
             "aspectRatio": 0.33,
-            "averageDiameterPm": 2,
+            "averageDiameterPm": 4,
             "center": {"x": 0, "y": 0},
             "children": [],
             "circularity": 0.6,
             "convexHullAreaPm": 9.42,
             "id": "id",
             "label": "label",
-            "majorAxisPm": 3,
-            "minorAxisPm": 1,
+            "majorAxisPm": 6,
+            "minorAxisPm": 2,
             "parents": [],
             "perimeterPm": 14.05,
             "radiusX": 1,
