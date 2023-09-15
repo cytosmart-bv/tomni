@@ -80,7 +80,6 @@ def json2mask(
     for json_object in json_objects:
         if json_object["type"] == "polygon":
             if len(json_object["points"]) >= minimum_size_contours:
-
                 contour = json2contours(json_object)
                 contour = [x[0] for x in contour]
                 mask = contour2mask(mask, contour)
