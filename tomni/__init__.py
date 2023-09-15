@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 """Tomni is a collection of image analysis functions useful for CytoSmart solution."""
 
-__author__ = """Tom Nijhof & Jelle van Kerkvoorde"""
+__author__ = """Tom Nijhof & Jelle van Kerkvoorde & Bram van der Velden"""
 __email__ = "bram.vandervelden@axionbio.com & jelle.vankerkvoorde@axionbio.com"
 __version__ = "2.0.0"
 

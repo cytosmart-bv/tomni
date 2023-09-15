@@ -49,6 +49,14 @@
 - Add init-function `from_binary_mask` and `from_labeled_mask` to `AnnotationManager`
 - Bugfix: Fixed a bug where `simplify_line` returns empty list when passing two points.
 - Add option to to compress polygons in `to_dict()`.
+1.17.0 (2023-07-26)
+- Add binary2contours
+
+1.16.1 (2023-05-10)
+- make it possible to set n_iter to 0. 
+
+1.16.0 (2023-05-08)
+- Add iterative_downsampling for downsampling polygon points in 'naive' way
 
 1.15.0 (2022-12-05)
 ------------------
