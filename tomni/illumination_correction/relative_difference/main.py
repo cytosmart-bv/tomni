@@ -10,27 +10,31 @@ def relative_difference(
     resize_ratio=None,
 ) -> np.array:
     """
-    Remove big blurry artifact from the image.
-    It will do this by taking the ratio difference between the blurred and raw image.
+    Remove large blurry artifacts from an image by calculating the relative difference
+    between the blurred and raw image.
+
+    Args:
+        img (numpy.ndarray): The input image.
+        gauss_size (int, optional): The size of the Gaussian filter kernel for artifact removal.
+                                    Must be an odd number. Defaults to 301.
+        smooth_size (int, optional): The size of the Gaussian filter kernel applied to the image
+                                    before division. Must be an odd number. Defaults to None.
+        do_normalize (bool, optional): If True, the output image is normalized between the minimum
+                                       and maximum values of the smoothed image. Defaults to False.
+        resize_ratio (float, optional): Resize ratio for the input image before applying Gaussian blur.
+                                       Used to increase processing speed. Defaults to None.
+
+    Returns:
+        numpy.ndarray: The result image after artifact removal.
 
     # Usage
-    This can be used for human vision.
-    This is good as algorithm input for algorithm that rely on relative pixel difference.
+    This function can be used for human vision and as input for algorithms relying on relative pixel differences.
 
-    # NOT fractal
-    This algorithm is NOT fractal.
-    Meaning the illumination correction followed by cropping will given a different result than first cropping.
-
-    img (np.array): input image
-    gauss_size (int): needs to be an odd number.
-        This is corralated to the size of the big artifact to remove.
-    smooth_size (int): need to be an odd number.
-        Is the size of the kernal of the gaussian filter that is used on the image before division.
-    resize_ratio (float): the img is resized according to this ration before using a GaussianBlur.
-        This is done to increase the speed of the function.
-    do_normalize (bool): if true, the output img is normalized between the minimum and maximum
-        value of the smoothed img.
+    # Not Fractal
+    This algorithm is not fractal, meaning that applying illumination correction followed by cropping
+    will produce a different result than cropping first.
     """
+
     img = np.float32(img)
 
     if gauss_size % 2 == 0:

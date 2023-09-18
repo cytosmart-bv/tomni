@@ -7,21 +7,26 @@ def absolute_difference(
     img: np.ndarray, gauss_size: int = 21, new_median: int = 128
 ) -> np.ndarray:
     """
-    Remove big blurry artifact from the image.
-    It will do this by taking the absolute difference between the blurred and raw image.
+    Remove large blurry artifacts from an image by taking the absolute difference
+    between the blurred and original image.
 
-    # Usage
-    Best not to use this for human vision.
-    The algorithm can have weird artifacts.
-    This is good as algorithm input for algorithms that rely on absolute pixel difference.
+    Args:
+        img (numpy.ndarray): The input image.
+        gauss_size (int, optional): The size of the Gaussian filter kernel for blurring.
+                                    Must be an odd number. Defaults to 21.
+        new_median (int, optional): The target median value for the resulting image.
+                                    Defaults to 128.
 
-    # Fractal
-    This algorithm is fractal.
-    Meaning the illumination correction followed by cropping will given the same result than first cropping.
+    Returns:
+        numpy.ndarray: The processed image with blurry artifacts removed.
 
-    img (np.array): input image
-    gauss_size (int): needs to be an odd number.
-        This is corralated to the size of the big artifact to remove.
+    Warning:
+        - This function is not suitable for human vision and may produce artifacts.
+        - The `gauss_size` should be an odd number; if it's even, it will be incremented by 1.
+
+    Note:
+        This algorithm is fractal, meaning that applying illumination correction
+        followed by cropping will yield the same result as cropping first.
     """
 
     img = np.array(img, dtype=np.int16)

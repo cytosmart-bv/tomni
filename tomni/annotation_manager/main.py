@@ -234,7 +234,7 @@ class AnnotationManager(object):
             feature_multiplier (int, optional): A multiplier used during feature calculation. For example 1/742. Defaults to 1.
 
         Returns:
-            List[Dict]: Output is a list of dicts in cytosmart format.
+            List[Dict]: Output is a list of dicts in AxionBio format.
         """
 
         if mask_json is not None:

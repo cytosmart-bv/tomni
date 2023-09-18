@@ -4,11 +4,19 @@ from ..contours2json import contours2json
 
 
 def list_of_points2json(list_of_points: Union[list, np.array]) -> dict:
-    """'
-    From a list of points in the form of [[x1, y1], [x2, y2], ... ,[xn, yn]] a json is made
+    """
+    Convert a list of points into a JSON object representing a polygon.
 
-    list_of_points: (list or numpy array) the list of points that discripe a polygon.
-        In the form of [[x1, y1], [x2, y2], ... ,[xn, yn]].
+    Args:
+        list_of_points (Union[list, np.ndarray]): The list of points describing a polygon in the form of
+            a list or NumPy array, where each point is represented as [x, y].
+
+    Returns:
+        dict: A JSON object representing a polygon with the following structure:
+            {
+                'type': 'polygon',
+                'points': [{'x': x1, 'y': y1}, {'x': x2, 'y': y2}, ..., {'x': xn, 'y': yn}]
+            }
     """
     contours = np.array(list_of_points)
     contours = contours.reshape((1, contours.shape[0], 1, contours.shape[1]))

@@ -6,7 +6,19 @@ from ..labels2contours import labels2contours
 
 
 def get_edges(mask: np.ndarray):
-    """get edges of the mask"""
+    """
+    Extracts and returns the edges of a binary mask image.
+
+    This function uses the Canny edge detection algorithm to identify edges in the input binary mask image.
+
+    Args:
+        mask (np.ndarray): A binary mask represented as a NumPy array, where 1 indicates the object of interest,
+            and 0 indicates the background.
+
+    Returns:
+        np.ndarray: A binary image representing the edges of the input mask. Pixels along edges are set to 1,
+            while non-edge pixels are set to 0.
+    """
     mask_copy = cv2.copyMakeBorder(
         mask,
         top=1,
@@ -34,36 +46,32 @@ def mask2json(
     return_inner_contours: bool = False,
 ) -> list:
     """
-    Converts binary mask to standard cytosmart format
+    Converts a binary mask into a list of JSON objects representing contours.
 
     Args:
-        mask (np.ndarray): binary mask
-        minimum_size_contours (int, optional): The minimum number of points an contour should have to be included. Defaults to 3.
-        is_diagonal_connected (bool, optional): If true diagonal pixels [[1, 0][0,1]] will be seen as the same object. Defaults to True.
-        return_inner_contours (bool, optional): return the internal contours.
-            These contours are around the holes with the contour
-            default: False
+        mask (np.ndarray): A binary mask represented as a NumPy array.
+        minimum_size_contours (int, optional): The minimum number of points a contour should have to be included.
+            Contours with fewer points will be excluded. Defaults to 3.
+        is_diagonal_connected (bool, optional): If True, diagonal pixels (e.g., [[1, 0], [0, 1]]) will be considered
+            part of the same object during contour extraction. Defaults to True.
+        return_inner_contours (bool, optional): If True, include internal contours (holes within the shape).
+            If False, only return the external contours (outlines of the shapes). Defaults to False.
 
     Returns:
-        list: json_objects,
-            e.g [
+        list: A list of JSON objects representing contours in the mask. Each JSON object has the following structure:
+            {
+                'type': 'polygon',
+                'points': [{'x': x1, 'y': y1}, {'x': x2, 'y': y2}, ...],
+                'innerObjects': [
                     {
-                        'type':'polygon',
-                        'points':[
-                            {'x':1,'y':4},
-                            {'x':2,'y':3},
-                            {'x':4,'y':4}
-                        ],
-                        "innerObjects": [
-                            {
-                                'type':'polygon',
-                                'points':[
-                                    {'x':3,'y':2}
-                                ]
-                            }
-                        ]
-                    }
-                ]
+                        'type': 'polygon',
+                        'points': [{'x': x3, 'y': y3}, {'x': x4, 'y': y4}, ...],
+                        # More inner contours if present
+                    },
+                    # More inner contours if present
+                ],
+                # More contours if present
+            }
     """
     connectivity = 4
     if is_diagonal_connected:

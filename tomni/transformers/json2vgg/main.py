@@ -8,10 +8,18 @@ def json2vgg(
     add_accuracy: bool = True,
 ):
     """
-    Transforms a a lists of jsons into a json that can be used in 'VGG Image Annotator'.
-    json_objects: (list[dict]) the jsons are in the standard CytoSMART format.
-    image_name: (string) the name of the image where the annotations will be overlayed with
-                inside the 'VGG Image Annotator'.
+    Transform a list of JSON annotations into a format compatible with 'VGG Image Annotator'.
+
+    Args:
+        json_list (List[dict]): A list of JSON objects representing annotations in the standard AxionBio format.
+        image_name (str): The name of the image to which the annotations will be overlaid within 'VGG Image Annotator'.
+        extension (str, optional): The file extension for the image. Defaults to ".jpg".
+        add_accuracy (bool, optional): If True, include an "accuracy" attribute in the region attributes of each annotation.
+            If False, omit the accuracy attribute. Defaults to True.
+
+    Returns:
+        dict: A JSON object compatible with 'VGG Image Annotator' format, containing the image filename,
+            a list of regions (annotations), and file attributes.
     """
     file_name = f"{image_name}{extension}"
     regions = []

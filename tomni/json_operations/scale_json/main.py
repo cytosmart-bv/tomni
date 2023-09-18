@@ -1,27 +1,34 @@
 def scale_json(json_object: dict, scaling_factor: float):
     """
-    Takes in a json object (ellipse or polygon) and makes it scaling_factor bigger
-    json_object: (dict) following the standard format
-    scaling_factor: (float) the multiplier of the object
+    Scale a JSON object (ellipse or polygon) by a specified scaling factor.
 
-    example:
-    json_object = {
-        "type": "ellipse",
-        "center": {"x": 100, "y": 200},
-        "radiusX": 50,
-        "radiusY": 100,
-        "angleOfRotation": 0,
-        "id": "12345-abcde"}
-    scaling_factor = 2
+    Args:
+        json_object (dict): JSON object following the standard format (ellipse or polygon).
+        scaling_factor (float): The multiplier to scale the object. A value of 1.0 keeps the object unchanged.
 
-    result = {
-        "type": "ellipse",
-        "center": {"x": 200, "y": 400},
-        "radiusX": 100,
-        "radiusY": 200,
-        "angleOfRotation": 0,
-        "id": "12345-abcde"}
+    Returns:
+        dict: A new JSON object scaled by the provided factor.
 
+    Raises:
+        ValueError: If the JSON object type is not supported.
+
+    Example:
+        json_object = {
+            "type": "ellipse",
+            "center": {"x": 100, "y": 200},
+            "radiusX": 50,
+            "radiusY": 100,
+            "angleOfRotation": 0,
+            "id": "12345-abcde"}
+        scaling_factor = 2
+
+        result = {
+            "type": "ellipse",
+            "center": {"x": 200, "y": 400},
+            "radiusX": 100,
+            "radiusY": 200,
+            "angleOfRotation": 0,
+            "id": "12345-abcde"}
     """
     newjson_object = json_object.copy()
     if json_object["type"] == "ellipse":

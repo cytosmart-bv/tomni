@@ -1,29 +1,38 @@
 def translation_json(json_object: dict, x_translation: int, y_translation: int):
     """
-    Takes in a json object (ellipse or polygon) and translates it
-    json_object: (dict) following the standard format
-    x_translation: (int) The translation in the x-direction
-    y_translation: (int) The translation in the y-direction
+    Translate a JSON object (ellipse or polygon) by specified amounts in the x and y directions.
 
-    example:
-    json_object = {
-        "type": "ellipse",
-        "center": {"x": 100, "y": 200},
-        "radiusX": 50,
-        "radiusY": 100,
-        "angleOfRotation": 0,
-        "id": "12345-abcde"}
-    x_translation = 100
-    y_translation = -20
+    Args:
+        json_object (dict): A JSON object following the standard format.
+        x_translation (int): The translation in the x-direction.
+        y_translation (int): The translation in the y-direction.
 
-    result = {
-        "type": "ellipse",
-        "center": {"x": 200, "y": 180},
-        "radiusX": 50,
-        "radiusY": 100,
-        "angleOfRotation": 0,
-        "id": "12345-abcde"}
+    Raises:
+        ValueError: If the JSON object type is not supported.
 
+    Returns:
+        dict: A translated JSON object.
+
+    Example:
+        json_object = {
+            "type": "ellipse",
+            "center": {"x": 100, "y": 200},
+            "radiusX": 50,
+            "radiusY": 100,
+            "angleOfRotation": 0,
+            "id": "12345-abcde"
+        }
+        x_translation = 100
+        y_translation = -20
+
+        result = {
+            "type": "ellipse",
+            "center": {"x": 200, "y": 180},
+            "radiusX": 50,
+            "radiusY": 100,
+            "angleOfRotation": 0,
+            "id": "12345-abcde"
+        }
     """
     newjson_object = json_object.copy()
     if json_object["type"] == "ellipse":

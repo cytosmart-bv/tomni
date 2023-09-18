@@ -25,56 +25,45 @@ def json2mask(
     json_objects: list, img_shape: tuple, minimum_size_contours: int = 3
 ) -> np.ndarray:
     """
-    Convert standard cytosmart format to binary mask
-    WARNING(1): objects with less than 3 components will get filtered out as default.
-    Put minimum_size_contours to 0 if you want them included.
-    WARNING(2): small objects will get some extra pixels when it has certain angles
-    e.g json_object:
-
-            {
-                "type": "polygon",
-                "points": [
-                    {"x": 2, "y": 2},
-                    {"x": 3, "y": 4},
-                    {"x": 4, "y": 2},
-                ],
-            }
-
-        expected result:
-
-            [[0 0 0 0 0 0 0 0 0 0]
-            [0 0 0 0 0 0 0 0 0 0]
-            [0 0 1 1 1 0 0 0 0 0]
-            [0 0 0 1 0 0 0 0 0 0]
-            [0 0 0 1 0 0 0 0 0 0]
-            [0 0 0 0 0 0 0 0 0 0]
-            [0 0 0 0 0 0 0 0 0 0]
-            [0 0 0 0 0 0 0 0 0 0]
-            [0 0 0 0 0 0 0 0 0 0]
-            [0 0 0 0 0 0 0 0 0 0]]
-
-        result:
-
-            [[0 0 0 0 0 0 0 0 0 0]
-            [0 0 0 0 0 0 0 0 0 0]
-            [0 0 1 1 1 0 0 0 0 0]
-            [0 0 1 1 0 0 0 0 0 0]
-            [0 0 0 1 0 0 0 0 0 0]
-            [0 0 0 0 0 0 0 0 0 0]
-            [0 0 0 0 0 0 0 0 0 0]
-            [0 0 0 0 0 0 0 0 0 0]
-            [0 0 0 0 0 0 0 0 0 0]
-            [0 0 0 0 0 0 0 0 0 0]]
-
-    This is a bug that should be removed in the future
+    Convert a list of JSON objects in standard AxionBio format to a binary mask.
 
     Args:
-        json_objects (list): json with annotations in standard cytosmart format
-        img_shape (tuple): the dimensions of the mask
-        minimum_size_contours (int): The minimum number of points an contour should have to be included. Defaults to 3.
+        json_objects (list): A list of JSON objects with annotations in the standard AxionBio format.
+        img_shape (tuple): The dimensions (height, width) of the mask.
+        minimum_size_contours (int, optional): The minimum number of points a contour should have to be included.
+            Defaults to 3. Set to 0 to include all contours regardless of size.
 
     Returns:
-        np.ndarray: binary mask
+        np.ndarray: A binary mask as a NumPy array.
+
+    Raises:
+        TypeError: If a JSON object of an unsupported type is encountered.
+
+    Example:
+        >>> json_objects = [
+        ...     {
+        ...         "type": "polygon",
+        ...         "points": [
+        ...             {"x": 2, "y": 2},
+        ...             {"x": 3, "y": 4},
+        ...             {"x": 4, "y": 2},
+        ...         ],
+        ...     }
+        ... ]
+        >>> img_shape = (10, 10)
+        >>> minimum_size_contours = 3
+        >>> result = json2mask(json_objects, img_shape, minimum_size_contours)
+        >>> print(result)
+        [[0 0 0 0 0 0 0 0 0 0]
+         [0 0 0 0 0 0 0 0 0 0]
+         [0 0 1 1 1 0 0 0 0 0]
+         [0 0 1 1 0 0 0 0 0 0]
+         [0 0 0 1 0 0 0 0 0 0]
+         [0 0 0 0 0 0 0 0 0 0]
+         [0 0 0 0 0 0 0 0 0 0]
+         [0 0 0 0 0 0 0 0 0 0]
+         [0 0 0 0 0 0 0 0 0 0]
+         [0 0 0 0 0 0 0 0 0 0]]
     """
     mask = np.zeros(img_shape, dtype=np.uint8)
     for json_object in json_objects:

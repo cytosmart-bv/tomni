@@ -8,33 +8,35 @@ def bbox_fitting(
     """
     Bounding box fitting:
     Using cropping and padding to fit an image to the bounding box.
-    Relative to the 0,0 of the input image the image gets cropped and padded to fit with x1, y1, x2 and y2.
-    The result is including the pixels x1, x2, y1 and y2.
-    So a 0, 0, 9, 9 gives an 10x10 result.
+    Relative to the 0,0 of the input image, the image gets cropped and padded to fit within x1, y1, x2, and y2.
+    The result includes the pixels at x1, x2, y1, and y2.
+    So, for example, 0, 0, 9, 9 gives a 10x10 result.
 
     WARNING:
-    Coordinates are IMAGE-coordinates. So that is the same pillow and OpenCV uses but swapped from what Numpy and Scipy use (ARRAY-coordinates).
+    Coordinates are in IMAGE coordinates, which is the same as what Pillow and OpenCV use but swapped
+    from what Numpy and Scipy use (ARRAY coordinates).
     Yes, I hate it too.
 
     Args:
-        img: (np.ndarray): The image the bounding box will be extracted from
+        img (np.ndarray): The image from which the bounding box will be extracted.
 
-        x1: (int): Lowest value of X
+        x1 (int): Lowest value of X.
 
-        y1: (int): Lowest value of Y
+        y1 (int): Lowest value of Y.
 
-        x2: (int): Highest value of X
+        x2 (int): Highest value of X.
 
-        y2: (int): Highest value of Y
+        y2 (int): Highest value of Y.
 
-        padding_value: (int, optional): Every pixel outside the image bit inside the bounding box will get this value.
-        Defaults to 0.
+        padding_value (int, optional): Every pixel outside the image but inside the bounding box
+        will get this value. Defaults to 0.
 
     Returns:
-        np.ndarray: Extracted patch within the bounding box from the image
-    """
-    """
+        np.ndarray: Extracted patch within the bounding box from the image.
 
+    Raises:
+        TypeError: If img is not a numpy.ndarray.
+        ValueError: If x1, y1, x2, or y2 are not positive integers.
     """
 
     if not isinstance(img, np.ndarray):

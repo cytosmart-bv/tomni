@@ -7,9 +7,6 @@ json2contours
 
 This function takes a JSON object as input and converts it into a contour represented as a numpy array. The JSON object should have the following format:
 
-- `'type'` (str): Must be set to `'polygon'`.
-- `'points'` (list of dict): A list of dictionaries with the form `{'x': ..., 'y': ...}` representing the coordinates of the points of the polygon.
-
 Example Usage::
 
    import numpy as np

@@ -6,14 +6,19 @@ from ..list_of_points2json import list_of_points2json
 
 def vgg2json(vgg_data: dict) -> List[dict]:
     """
-    Transforms a created with 'VGG Image Annotator' into a lists of jsons
-    vgg_data: (dict) a opened json made with the VGG. Can contain annotations of
-        multiple images.
+    Transforms data created with 'VGG Image Annotator' into a list of JSON objects.
+
+    Args:
+        vgg_data (dict): A JSON dictionary created with VGG Image Annotator, which can contain annotations
+            for multiple images.
+
+    Returns:
+        List[List[dict]]: A list of lists of JSON dictionaries, where each inner list represents
+        annotations for a single image, and each JSON dictionary contains annotation data.
     """
     results = []
 
     for filename in vgg_data.keys():
-
         result = []
 
         for annotation_vgg in vgg_data[filename]["regions"]:

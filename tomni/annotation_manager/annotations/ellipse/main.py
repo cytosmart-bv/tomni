@@ -238,7 +238,7 @@ class Ellipse(Annotation):
         feature_multiplier: int = 1,
         **kwargs,
     ) -> dict:
-        """Returns a dictionary of the annotation in cytosmart format.
+        """Returns a dictionary of the annotation in AxionBio format.
 
         Args:
             decimals (int, optional): The number of decimals to use when rounding. Defaults to 2.
@@ -252,7 +252,7 @@ class Ellipse(Annotation):
             ValueError: It raises and error if any of the features are not compatible with the Annotation Manager.
 
         Returns:
-            dict: a dictionary of the annotation in cytosmart format with the calculated features.
+            dict: a dictionary of the annotation in AxionBio format with the calculated features.
         """
         self._feature_multiplier = feature_multiplier
 

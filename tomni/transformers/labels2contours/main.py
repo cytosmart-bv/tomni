@@ -8,14 +8,20 @@ def labels2contours(
     labels: np.ndarray, simplify_error: float = 0, return_inner_contours: bool = False
 ) -> list:
     """
-    Transforms an image with labels into opencv contours
+    Convert a labeled image into a list of OpenCV contours.
 
-    labels: (numpy.array) An array where every pixels is label to which object it belongs
-    simplify_error ⚠️: (float) DEPRECATED the amount of error allowed well simplifying the contours
-    return_inner_contours (bool, optional): return the internal contours.
-            These contours are around the holes with the contour
-            default: False
+    Args:
+        labels (np.ndarray): An array where every pixel is labeled to indicate which object it belongs to.
+            The labels should be non-negative integers.
+        simplify_error ⚠️ (float): DEPRECATED - The amount of error allowed when simplifying the contours.
+            This parameter is no longer used and has been deprecated.
+        return_inner_contours (bool, optional): If True, return the internal contours (contours around holes within objects).
+            If False, return only the external contours (outlines of objects). Defaults to False.
 
+    Returns:
+        list: A list of OpenCV-style contours represented as NumPy arrays. Each contour is a 2D array
+            with shape (N, 1, 2), where N is the number of points in the contour and each point has (x, y) coordinates.
+            The list contains contours for each labeled object in the input image.
     """
     listPoints = labels2listsOfPoints(labels)
     contours = [

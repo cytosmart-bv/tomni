@@ -7,9 +7,10 @@ from typing import List
 def binary2contours(
     binary_img: np.ndarray, return_inner_contours: bool = True
 ) -> List[np.ndarray]:
-    """transforms a binary image to a list of outer contours and inner contours if boolean return_inner_contours is True.
-    inner contours are in the same list as their corresponding outer contour.
-    If return_inner_contours is False, only outer contours are returned.
+    """
+    Convert a binary image to a list of outer contours and their corresponding inner contours
+    if 'return_inner_contours' is True. If 'return_inner_contours' is False, only outer contours
+    are returned.
 
     Args:
         binary_img (np.ndarray): A binary image.

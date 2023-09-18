@@ -3,26 +3,19 @@ import copy
 
 def flip_json(json_object: dict, img_dim: int) -> dict:
     """
-    Takes in a json object (ellipse or polygon, standard CytoSMART format)
-    and flips it over the y axis.
-    json_object: (dict) following the standard CytoSMART format
-    img_dim: (int) the y dimension of the image that is related to the json_object.
+    Flip a JSON object over the y-axis.
 
-    input_json = {
-            "type": "ellipse",
-            "center": {"x": 9, "y": 3},
-            "radiusX": 5,
-            "radiusY": 5,
-            "angleOfRotation": 0,
-        }
+    Args:
+        json_object (dict): JSON object following the standard AxionBio format (ellipse or polygon).
+        img_dim (int): The y-dimension of the image related to the JSON object.
 
-    expected_json = {
-        "type": "ellipse",
-        "center": {"x": 9, "y": 6},
-        "radiusX": 5,
-        "radiusY": 5,
-        "angleOfRotation": 0,
-    }
+    Raises:
+        ValueError: If the JSON object type is not "ellipse" or "polygon".
+
+    Returns:
+        dict: A new JSON object with coordinates flipped over the y-axis.
+
+
     """
     newjson_object = copy.deepcopy(json_object)
     if json_object["type"] == "ellipse":
