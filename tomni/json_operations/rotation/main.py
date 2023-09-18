@@ -17,7 +17,8 @@ def rotate_json(json_object: dict, angle: int, img_shape: Union[list, tuple]) ->
     Raises:
         ValueError: If the angle is not one of 0, 90, 180, or 270 degrees.
 
-    Example:
+    Example::
+
         input_json = {
             "type": "ellipse",
             "center": {"x": 0, "y": 2},

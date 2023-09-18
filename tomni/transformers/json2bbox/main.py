@@ -19,13 +19,14 @@ def json2bbox(scf_object: dict) -> tuple:
     Raises:
         ValueError: If the type of the object is not supported.
 
-    Example:
-        >>> object = {
-        ...     "type": "polygon",
-        ...     "points": [{'x': 0, 'y': 0}, {'x': 20, 'y': 0}, {'x': 20, 'y': 30}, {'x': 0, 'y': 30}]
-        ... }
-        >>> bbox = json2bbox(object)
-        >>> print(bbox)
+    Example::
+
+        object = {
+            "type": "polygon",
+            "points": [{'x': 0, 'y': 0}, {'x': 20, 'y': 0}, {'x': 20, 'y': 30}, {'x': 0, 'y': 30}]
+        }
+        bbox = json2bbox(object)
+        print(bbox)
         (0, 0, 20, 30)
 
     """

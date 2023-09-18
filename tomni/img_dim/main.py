@@ -8,13 +8,15 @@ def img_dim(arr, showChannels=False):
     Args:
         arr (numpy.ndarray): The image represented as a numpy array.
         showChannels (bool, optional): Whether to include the number of color channels in the output.
-                                       True to show channels, False to hide them. Defaults to False.
+                                        True to show channels, False to hide them. Defaults to False.
 
     Returns:
         tuple: A tuple containing the dimensions of the image (width, height) or (width, height, channels)
-               depending on the value of showChannels.
+                depending on the value of showChannels.
 
-    Example:
+    Example::
+
+        import numpy as np
         image = np.zeros((100, 200, 3), dtype=np.uint8)
         dimensions = img_dim(image)
         print(dimensions)  # Output: (200, 100)

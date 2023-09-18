@@ -14,9 +14,10 @@ def get_center(contour: np.ndarray) -> Tuple[int, int]:
     Returns:
         Tuple[int, int]: A tuple containing the x and y coordinates of the center.
 
-    Example:
-        >>> contour = np.array([[[1, 2]], [[2, 3]], [[3, 2]], [[2, 1]]])
-        >>> get_center(contour)
+    Example::
+
+        contour = np.array([[[1, 2]], [[2, 3]], [[3, 2]], [[2, 1]]])
+        get_center(contour)
         (2, 2)
     """
     M = cv2.moments(contour)

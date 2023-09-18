@@ -27,12 +27,14 @@ def relative_difference(
     Returns:
         numpy.ndarray: The result image after artifact removal.
 
-    # Usage
-    This function can be used for human vision and as input for algorithms relying on relative pixel differences.
+    Warning:
+        - The `gauss_size` should be an odd number; if it's even, it will be incremented by 1.
 
-    # Not Fractal
-    This algorithm is not fractal, meaning that applying illumination correction followed by cropping
-    will produce a different result than cropping first.
+    Note:
+        This function can be used for human vision and as input for algorithms relying on relative pixel differences.
+
+        This algorithm is not fractal, meaning that applying illumination correction followed by cropping
+        will produce a different result than cropping first.
     """
 
     img = np.float32(img)

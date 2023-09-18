@@ -29,7 +29,8 @@ def summary_json(
             - Maximum value of the keyword in objects
             - Minimum value of the keyword in objects
 
-    Example:
+    Example::
+
         json_list = [
             {"area": 10},
             {"area": 15},

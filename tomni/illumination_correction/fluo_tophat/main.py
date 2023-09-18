@@ -14,9 +14,6 @@ def rescale_intensity(img, min_val, max_val):
 
     Returns:
         numpy.ndarray: The rescaled image.
-
-    Example:
-        rescaled_image = rescale_intensity(image, 0, 255)
     """
     output_img = np.clip(img, min_val, max_val)
     output_img = (output_img - min_val) / (max_val - min_val) * 255

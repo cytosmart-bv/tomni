@@ -21,11 +21,12 @@ def bbox_fitting_center(img: np.ndarray, size, padding_value: int = 0) -> np.nda
         TypeError: If img is not a numpy.ndarray.
         ValueError: If size elements are not positive integers.
 
-    Example:
-        >>> img = np.zeros((100, 100))
-        >>> size = [50, 50]
-        >>> result = bbox_fitting_center(img, size)
-        >>> result.shape
+    Example::
+
+        img = np.zeros((100, 100))
+        size = [50, 50]
+        result = bbox_fitting_center(img, size)
+        result.shape
         (50, 50)  # The resulting image size.
     """
     if not isinstance(img, np.ndarray):

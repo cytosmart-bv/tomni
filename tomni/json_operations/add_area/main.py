@@ -16,14 +16,15 @@ def add_area(json_object: dict) -> None:
     Raises:
         ValueError: If the type of the annotation in the JSON object is not supported.
 
-    Example:
-        >>> circle_json = {
-        ...     "type": "circle",
-        ...     "center": {"x": 10, "y": 10},
-        ...     "radiusX": 5
-        ... }
-        >>> add_area(circle_json)
-        >>> print(circle_json)
+    Example::
+
+        circle_json = {
+            "type": "circle",
+            "center": {"x": 10, "y": 10},
+            "radiusX": 5
+        }
+        add_area(circle_json)
+        print(circle_json)
         {
             "type": "circle",
             "center": {"x": 10, "y": 10},

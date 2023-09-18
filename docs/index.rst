@@ -13,15 +13,9 @@ Functions
 .. toctree::
    :maxdepth: 2
 
-   quickstart
-   apidocs
-   tutorials
+   image_operations
    transformers
-   shape_fitting
-   make_mask
-   json_operations
-   img_paste
-   polygon_downsampling
+
 
 Annotation Manager
 ---------------------------------

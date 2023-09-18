@@ -24,9 +24,10 @@ def circularity(contour: np.ndarray) -> float:
     Returns:
         float: The circularity value, where 0 < circularity <= 1.
 
-    Example:
-        >>> contour = np.array([[[1, 2]], [[2, 3]], [[3, 2]], [[2, 1]]])
-        >>> circularity(contour)
+    Example::
+
+        contour = np.array([[[1, 2]], [[2, 3]], [[3, 2]], [[2, 1]]])
+        circularity(contour)
         0.7853981633974483  # Approximate circularity of a square.
     """
     # calculate size

@@ -14,7 +14,8 @@ def img_paste(big_img: np.ndarray, small_img: np.ndarray, x: int, y: int) -> Non
     Returns:
         None
 
-    The function checks if the smaller image can fit within the boundaries of the larger image at the specified position (x, y). If it can fit, the smaller image is pasted onto the larger image.
+    Note:
+        The function checks if the smaller image can fit within the boundaries of the larger image at the specified position (x, y). If it can fit, the smaller image is pasted onto the larger image.
     """
 
     size_bimg = (big_img.shape[1], big_img.shape[0])

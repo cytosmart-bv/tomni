@@ -16,10 +16,11 @@ def check_overlap_bbox(bb1: Union[tuple, list], bb2: Union[tuple, list]) -> bool
     Returns:
         bool: True if the bounding boxes overlap, False otherwise.
 
-    Example:
-        >>> bb1 = (1, 1, 4, 4)
-        >>> bb2 = (3, 3, 6, 6)
-        >>> check_overlap_bbox(bb1, bb2)
+    Example::
+
+        bb1 = (1, 1, 4, 4)
+        bb2 = (3, 3, 6, 6)
+        check_overlap_bbox(bb1, bb2)
         True  # The bounding boxes overlap.
     """
     if len(bb1) != 4 or len(bb2) != 4:

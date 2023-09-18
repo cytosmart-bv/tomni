@@ -12,7 +12,8 @@ def scale_json(json_object: dict, scaling_factor: float):
     Raises:
         ValueError: If the JSON object type is not supported.
 
-    Example:
+    Example::
+
         json_object = {
             "type": "ellipse",
             "center": {"x": 100, "y": 200},

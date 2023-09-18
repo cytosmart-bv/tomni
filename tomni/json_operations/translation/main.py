@@ -13,7 +13,8 @@ def translation_json(json_object: dict, x_translation: int, y_translation: int):
     Returns:
         dict: A translated JSON object.
 
-    Example:
+    Example::
+
         json_object = {
             "type": "ellipse",
             "center": {"x": 100, "y": 200},

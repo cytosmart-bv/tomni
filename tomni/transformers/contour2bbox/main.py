@@ -12,10 +12,11 @@ def contour2bbox(contour: np.ndarray) -> tuple:
     Returns:
         tuple: A tuple containing the bounding box coordinates (xmin, ymin, xmax, ymax).
 
-    Example:
-        >>> contour = np.array([[[3, 3]], [[3, 5]], [[5, 5]], [[5, 3]]], dtype=np.int32)
-        >>> bbox = contour2bbox(contour)
-        >>> print(bbox)
+    Example::
+
+        contour = np.array([[[3, 3]], [[3, 5]], [[5, 5]], [[5, 3]]], dtype=np.int32)
+        bbox = contour2bbox(contour)
+        print(bbox)
         (3, 3, 6, 6)
 
     Note:

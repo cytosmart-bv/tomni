@@ -1,7 +1,7 @@
-Image Paste
+Image Dimensions
 =================
 
 .. automodule:: tomni
-   :members: img_paste
+   :members: img_dim
    :show-inheritance:
 

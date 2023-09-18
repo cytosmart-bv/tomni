@@ -39,21 +39,22 @@ def json2mask(
     Raises:
         TypeError: If a JSON object of an unsupported type is encountered.
 
-    Example:
-        >>> json_objects = [
-        ...     {
-        ...         "type": "polygon",
-        ...         "points": [
-        ...             {"x": 2, "y": 2},
-        ...             {"x": 3, "y": 4},
-        ...             {"x": 4, "y": 2},
-        ...         ],
-        ...     }
-        ... ]
-        >>> img_shape = (10, 10)
-        >>> minimum_size_contours = 3
-        >>> result = json2mask(json_objects, img_shape, minimum_size_contours)
-        >>> print(result)
+    Example::
+
+        json_objects = [
+            {
+                "type": "polygon",
+                "points": [
+                    {"x": 2, "y": 2},
+                    {"x": 3, "y": 4},
+                    {"x": 4, "y": 2},
+                ],
+            }
+        ]
+        img_shape = (10, 10)
+        minimum_size_contours = 3
+        result = json2mask(json_objects, img_shape, minimum_size_contours)
+        print(result)
         [[0 0 0 0 0 0 0 0 0 0]
          [0 0 0 0 0 0 0 0 0 0]
          [0 0 1 1 1 0 0 0 0 0]
