@@ -13,12 +13,11 @@ This section presents a set of image processing operations tailored for direct a
 This page provides comprehensive documentation for image processing operations designed for direct use on images.
 
 .. toctree::
-   :maxdepth: 2
-   :caption: Contents:
+   :maxdepth: 1
 
    functions/img_paste/img_paste
    functions/illumination_correction/relative_difference
    functions/illumination_correction/absolute_difference
    functions/img_dim/img_dim
 
- 
+   

@@ -8,6 +8,7 @@ That is where the tutorials are for.
 .. toctree::
    :maxdepth: 2
    :caption: Contents:
+   :hidden:
 
    functions/img_paste/img_paste
 

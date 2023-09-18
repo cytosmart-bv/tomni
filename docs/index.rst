@@ -5,20 +5,27 @@
 
 Welcome to Tomni documentation!
 ===================================
-
+Tomni, developed and utilized by CytoSMART, is a dedicated Python package designed to simplify image analysis and streamline computer vision tasks. 
+With its comprehensive set of functions and capabilities, Tomni offers an accessible solution for users seeking to harness the power of image analysis and computer vision in their projects. 
+Detailed information on its functions and usage can be found in the following documentation, ensuring that you can make the most of Tomni's capabilities.
 
 Functions
 ---------------------------------
 
 .. toctree::
-   :maxdepth: 2
+   :maxdepth: 1
 
+   general
    image_operations
+   bbox_operations
+   json_operations
    transformers
-
 
 Annotation Manager
 ---------------------------------
+.. toctree::
+   annotation_manager
+
 
 Indices and tables
 ---------------------------------
