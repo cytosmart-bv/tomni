@@ -1,7 +1,1 @@
-Fluo Tophat
-=================
-
-.. automodule:: tomni.fluo_tophat_paste
-   :members: fluo_tophat
-   :show-inheritance:
-
+   functions/illumination_correction/relative_difference
