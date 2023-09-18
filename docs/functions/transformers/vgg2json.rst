@@ -1,13 +1,9 @@
 vgg2json
 =========================
-.. py:function:: vgg2json(vgg_data: dict) -> List[dict]
-
-   Transforms annotations created with 'VGG Image Annotator' into a list of JSON objects.
-
-   :param dict vgg_data: A dictionary containing annotations created with VGG Image Annotator.
-   :return: A list of JSON objects representing the annotations.
-   :rtype: List[dict]
-
+.. automodule:: tomni
+   :members: vgg2json
+   :show-inheritance:
+   
 This function takes a dictionary `vgg_data`, which should contain annotations for multiple images, and transforms these annotations into a list of JSON objects. Each JSON object represents an annotation for a given image.
 
 For each annotation in the `vgg_data`, the function checks the type of shape (polygon, circle, or ellipse) and converts it into the appropriate JSON format. The resulting JSON objects are collected in a list.

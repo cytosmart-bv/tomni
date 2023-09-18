@@ -1,14 +1,8 @@
 json2mask
 =========================
-.. py:function:: json2mask(json_objects: list, img_shape: tuple, minimum_size_contours: int = 3) -> numpy.ndarray
-
-   Convert annotations in standard CytoSMART format to a binary mask.
-
-   :param list json_objects: A list of JSON objects representing annotations in standard CytoSMART format.
-   :param tuple img_shape: The dimensions of the mask (height, width).
-   :param int minimum_size_contours: The minimum number of points a contour should have to be included (default is 3).
-   :return: A binary mask representing the annotations in the image.
-   :rtype: numpy.ndarray
+.. automodule:: tomni
+   :members: json2mask
+   :show-inheritance:
 
 This function takes a list of JSON objects in standard CytoSMART format, representing annotations, and converts them into a binary mask. The binary mask has the same dimensions as the specified image shape and contains the annotated regions.
 

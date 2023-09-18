@@ -1,12 +1,8 @@
 json2bbox
 =========================
-.. py:function:: json2bbox(scf_object: dict) -> tuple
-
-   Convert a single standard CytoSMART format annotation (polygon, ellipse, or circle) into bounding box coordinates (x_min, y_min, x_max, y_max).
-
-   :param dict scf_object: A dictionary representing a single standard CytoSMART format annotation. Supported types are 'polygon', 'ellipse', or 'circle'.
-   :return: A tuple containing bounding box coordinates (x_min, y_min, x_max, y_max).
-   :rtype: tuple
+.. automodule:: tomni
+   :members: json2bbox
+   :show-inheritance:
 
 This function takes a dictionary representing a single standard CytoSMART format annotation and converts it into bounding box coordinates. The supported annotation types are 'polygon', 'ellipse', or 'circle'. Depending on the type, the function calculates the bounding box coordinates accordingly.
 

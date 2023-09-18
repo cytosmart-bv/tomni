@@ -1,13 +1,9 @@
 contour2bbox
 =========================
-.. py:function:: contour2bbox(contour: np.ndarray) -> tuple
+.. automodule:: tomni
+   :members: contour2bbox
+   :show-inheritance:
 
-   Convert OpenCV contours into a bounding box in the format (xmin, ymin, xmax, ymax).
-
-   :param contour: An array with coordinates defining the contour of an object.
-   :type contour: np.ndarray
-   :return: A tuple containing the bounding box coordinates (xmin, ymin, xmax, ymax).
-   :rtype: tuple
 
 This function takes an OpenCV contour as input, which is an array of coordinates defining the contour of an object. It then computes the bounding box around this contour and returns the bounding box coordinates as a tuple in the format (xmin, ymin, xmax, ymax).
 

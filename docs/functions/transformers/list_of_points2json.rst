@@ -1,12 +1,8 @@
 list_of_points2json
 =========================
-.. py:function:: list_of_points2json(list_of_points: Union[list, numpy.ndarray]) -> dict
-
-   Convert a list of points into a JSON object representing a polygon.
-
-   :param Union[list, numpy.ndarray] list_of_points: A list or NumPy array of points in the form [[x1, y1], [x2, y2], ..., [xn, yn]].
-   :return: A JSON object representing a polygon.
-   :rtype: dict
+.. automodule:: tomni
+   :members: list_of_points2json 
+   :show-inheritance:
 
 This function takes a list or NumPy array of points that describe a polygon and converts it into a JSON object.
 

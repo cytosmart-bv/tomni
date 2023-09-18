@@ -1,12 +1,9 @@
 json2contours
 =========================
-.. py:function:: json2contours(json: dict) -> numpy.ndarray
+.. automodule:: tomni
+   :members: json2contours
+   :show-inheritance:
 
-   Convert a default JSON format object to a contour in numpy.ndarray format.
-
-   :param dict json: The JSON object to convert to a contour.
-   :return: A numpy array representing the contour.
-   :rtype: numpy.ndarray
 
 This function takes a JSON object as input and converts it into a contour represented as a numpy array. The JSON object should have the following format:
 

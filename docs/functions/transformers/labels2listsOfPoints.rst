@@ -1,12 +1,8 @@
 labels2listsOfPoints
 =========================
-.. py:function:: labels2listsOfPoints(labels: numpy.ndarray) -> numpy.ndarray
-
-   Transform labels into lists of points for each label.
-
-   :param numpy.ndarray labels: An array where every pixel is labeled to indicate which object it belongs to.
-   :return: An array of lists of points, where each list contains the (x, y) coordinates of pixels belonging to the same label.
-   :rtype: numpy.ndarray
+.. automodule:: tomni
+   :members: labels2listsOfPoints
+   :show-inheritance:
 
 This function takes an array of labels where each pixel is labeled to indicate which object it belongs to, and transforms it into an array of lists of points. Each list contains the (x, y) coordinates of pixels that belong to the same label.
 

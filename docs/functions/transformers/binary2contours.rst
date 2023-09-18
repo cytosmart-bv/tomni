@@ -1,17 +1,10 @@
 binary2contours
 =========================
 
-.. py:function:: binary2contours(binary_img: numpy.ndarray, return_inner_contours: bool = True) -> List[numpy.ndarray]
+.. automodule:: tomni
+   :members: binary2contours
+   :show-inheritance:
 
-   Transform a binary image to a list of outer contours and inner contours if desired.
-
-   :param binary_img: A binary image represented as a NumPy array.
-   :type binary_img: numpy.ndarray
-   :param return_inner_contours: A boolean indicating whether to return inner contours (default is True).
-   :type return_inner_contours: bool
-
-   :returns: A list of outer contours with their corresponding inner contours if requested.
-   :rtype: List[numpy.ndarray]
 
 This function transforms a binary image into a list of contours, where each contour represents an object in the image. It can also optionally return inner contours (contours within other contours) if specified.
 

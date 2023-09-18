@@ -1,12 +1,8 @@
 mask2json
 =========================
-.. py:function:: get_edges(mask: numpy.ndarray) -> numpy.ndarray
-
-   Get the edges of a binary mask.
-
-   :param numpy.ndarray mask: Binary mask representing an object.
-   :return: Edges of the mask.
-   :rtype: numpy.ndarray
+.. automodule:: tomni
+   :members: mask2json
+   :show-inheritance:
 
 This function takes a binary mask as input and returns the edges of the mask using the Canny edge detection algorithm.
 

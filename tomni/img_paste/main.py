@@ -1,16 +1,18 @@
 import numpy as np
 
 
-def img_paste(big_img, small_img, x, y):
-    """
-    This function adds a small image to a bigger image by translating it to position x, y (img coordinates).
-    :big_img: (numpy.ndarray) the big image that gets altered
-    :small_img: (numpy.ndarray) the smaller image that gets added to the big_img
-    :x: (int) image coordinate x
-    :y: (int) image coordinate y
+def img_paste(big_img: np.ndarray, small_img: np.ndarray, x: int, y: int) -> None:
+    """This function adds a small image to a bigger image by translating it to position x, y (img coordinates).
 
-    return: None (big_img gets altered)
+    Args:
+        big_img (np.ndarray): the big image that gets altered
+        small_img (np.ndarray): the smaller image that gets added to the big_img
+        x (integer): image coordinate x
+        y (integer): image coordinate y
+
+    Returns: None
     """
+
     size_bimg = (big_img.shape[1], big_img.shape[0])
     size_simg = (small_img.shape[1], small_img.shape[0])
 

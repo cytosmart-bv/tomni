@@ -1,21 +1,21 @@
 img_paste
 =================
-.. autofunction:: your_module_name.img_paste
-   :members:
-   :undoc-members:
 
-This function adds a smaller image to a larger image by translating it to a specified position (x, y) in image coordinates.
+.. automodule:: tomni
+   :members: img_paste
+   :show-inheritance:
 
-**Parameters:**
+.. This function adds a smaller image to a larger image by translating it to a specified position (x, y) in image coordinates.
 
-- ``big_img`` (numpy.ndarray): The larger image that gets altered.
-- ``small_img`` (numpy.ndarray): The smaller image that gets added to the `big_img`.
-- ``x`` (int): Image coordinate x.
-- ``y`` (int): Image coordinate y.
+.. **Parameters:**
 
-**Returns:**
+.. - ``big_img`` (numpy.ndarray): The larger image that gets altered.
+.. - ``small_img`` (numpy.ndarray): The smaller image that gets added to the `big_img`.
+.. - ``x`` (int): Image coordinate x.
+.. - ``y`` (int): Image coordinate y.
 
-- None: `big_img` gets altered in-place.
+.. **Returns:**
 
-This function calculates the position of the smaller image in the larger image, taking into account boundaries and cropping as necessary.
+.. - None: `big_img` gets altered in-place.
 
+.. This function calculates the position of the smaller image in the larger image, taking into account boundaries and cropping as necessary.

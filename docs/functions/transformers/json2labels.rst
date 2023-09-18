@@ -1,13 +1,8 @@
 json2labels
 =========================
-.. py:function:: json2labels(json_list: List[dict], output_dim: tuple) -> numpy.ndarray
-
-   Convert a list of JSON objects representing objects to a segmentation map.
-
-   :param List[dict] json_list: A list of JSON objects representing objects in the JSON format.
-   :param tuple output_dim: The dimensions of the output image in the format (width, height).
-   :return: A segmentation map where each object is assigned a unique number.
-   :rtype: numpy.ndarray
+.. automodule:: tomni
+   :members: json2labels
+   :show-inheritance:
 
 This function takes a list of JSON objects representing objects and converts them into a segmentation map. Each object in the JSON list is assigned a unique number in the output segmentation map.
 

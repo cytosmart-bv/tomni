@@ -1,13 +1,8 @@
 json2dict
 =========================
-.. py:function:: json2dict(json_list: List[dict], keywords: list = ["type", "area", "center", "id"]) -> dict
-
-   Transform a list of JSON objects in standard CytoSMART format into a dictionary using specified keywords.
-
-   :param List[dict] json_list: A list of JSON objects in the standard CytoSMART format.
-   :param list keywords: A list of keywords to extract from the JSON objects (default is ["type", "area", "center", "id"]).
-   :return: A dictionary containing lists of each keyword extracted from the JSON objects.
-   :rtype: dict
+.. automodule:: tomni
+   :members: json2dict
+   :show-inheritance:
 
 This function takes a list of JSON objects in standard CytoSMART format and extracts specific keywords from those objects, creating a dictionary with lists of extracted values. You can specify which keywords you want to extract by providing a list of keywords as an argument.
 

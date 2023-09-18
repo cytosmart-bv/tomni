@@ -1,14 +1,8 @@
 mask2bbox
 =========================
-.. py:function:: mask2bbox(mask: numpy.ndarray, padding: int = 0) -> Tuple[int, int, int, int]
-
-   Convert a binary image mask into bounding box coordinates (xmin, ymin, xmax, ymax).
-
-   :param numpy.ndarray mask: A binary image mask.
-   :param int padding: Padding added/subtracted from the bounding box (xmin-padding, ymin-padding, xmax+padding, ymax+padding).
-                       The bounding box coordinates do not go outside the image dimensions (default is 0).
-   :return: A tuple representing the bounding box coordinates (xmin, ymin, xmax, ymax).
-   :rtype: Tuple[int, int, int, int]
+.. automodule:: tomni
+   :members: mask2bbox
+   :show-inheritance:
 
 This function takes a binary image mask as input and calculates the bounding box coordinates (xmin, ymin, xmax, ymax) of the region covered by the mask. Optionally, you can specify padding to add or subtract from the bounding box coordinates.
 
