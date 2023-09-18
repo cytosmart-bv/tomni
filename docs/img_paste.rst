@@ -9,6 +9,6 @@ That is where the tutorials are for.
    :maxdepth: 2
    :caption: Contents:
 
-   docs/functions/img_paste/img_paste
+   functions/img_paste/img_paste
 
  

@@ -13,15 +13,15 @@ Functions
 .. toctree::
    :maxdepth: 1
 
-   front_page/quickstart
-   front_page/apidocs
-   front_page/tutorials
-   front_page/transformers
-   front_page/shape_fitting
-   front_page/make_mask
-   front_page/json_operations
-   front_page/img_paste
-   front_page/polygon_downsampling
+   quickstart
+   apidocs
+   tutorials
+   transformers
+   shape_fitting
+   make_mask
+   json_operations
+   img_paste
+   polygon_downsampling
 
 Annotation Manager
 ---------------------------------
