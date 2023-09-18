@@ -9,7 +9,7 @@ That is where the tutorials are for.
    :maxdepth: 2
    :caption: Contents:
 
-   make_mask/circlair_mask
-   make_mask/contour_mask_maker
-   make_mask/ellipse_mask
+   functions/make_mask/circlair_mask
+   functions/make_mask/contour_mask_maker
+   functions/make_mask/ellipse_mask
 

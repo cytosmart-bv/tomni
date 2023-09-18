@@ -1,4 +1,4 @@
-Shape_fitting
+polygon_downsampling
 =================
 
 Some of the subject Tomni deals with need context to be fully understood.
@@ -9,4 +9,6 @@ That is where the tutorials are for.
    :maxdepth: 2
    :caption: Functions:
 
-   functions/shape_fitting/fit_rect_ellipse
+   functions/polygon_downsampling/iterative_downsampling
+
+

@@ -1,4 +1,4 @@
-Shape_fitting
+img_paste
 =================
 
 Some of the subject Tomni deals with need context to be fully understood.
@@ -7,6 +7,8 @@ That is where the tutorials are for.
 
 .. toctree::
    :maxdepth: 2
-   :caption: Functions:
+   :caption: Contents:
 
-   functions/shape_fitting/fit_rect_ellipse
+   docs/functions/img_paste/img_paste
+
+ 

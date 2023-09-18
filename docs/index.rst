@@ -7,20 +7,27 @@ Welcome to Tomni documentation!
 ===================================
 
 
+Functions
+---------------------------------
+
 .. toctree::
    :maxdepth: 1
-   :caption: Contents:
 
-   quickstart
-   apidocs
-   tutorials
-   transformers
-   shape_fitting
-   make_mask
+   front_page/quickstart
+   front_page/apidocs
+   front_page/tutorials
+   front_page/transformers
+   front_page/shape_fitting
+   front_page/make_mask
+   front_page/json_operations
+   front_page/img_paste
+   front_page/polygon_downsampling
 
+Annotation Manager
+---------------------------------
 
 Indices and tables
-==================
+---------------------------------
 
 * :ref:`genindex`
 * :ref:`modindex`

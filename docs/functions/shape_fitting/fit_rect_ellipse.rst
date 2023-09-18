@@ -1,5 +1,5 @@
 fit_rect_around_ellipse
-=================
+============================
 
 .. function:: fit_rect_around_ellipse(x, y, r1, r2, alpha)
 

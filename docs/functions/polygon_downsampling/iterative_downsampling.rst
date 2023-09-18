@@ -1,3 +1,5 @@
+iterative_downsampling
+=================
 .. function:: iterative_downsampling(points, n_iter)
 
    Compresses a list of 2D points by reducing the number of points by half iteratively.
