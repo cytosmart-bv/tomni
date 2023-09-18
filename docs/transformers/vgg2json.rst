@@ -1,3 +1,5 @@
+vgg2json
+=========================
 .. py:function:: vgg2json(vgg_data: dict) -> List[dict]
 
    Transforms annotations created with 'VGG Image Annotator' into a list of JSON objects.

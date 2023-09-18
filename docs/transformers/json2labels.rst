@@ -1,3 +1,5 @@
+json2labels
+=========================
 .. py:function:: json2labels(json_list: List[dict], output_dim: tuple) -> numpy.ndarray
 
    Convert a list of JSON objects representing objects to a segmentation map.

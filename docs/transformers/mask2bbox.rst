@@ -1,3 +1,5 @@
+mask2bbox
+=========================
 .. py:function:: mask2bbox(mask: numpy.ndarray, padding: int = 0) -> Tuple[int, int, int, int]
 
    Convert a binary image mask into bounding box coordinates (xmin, ymin, xmax, ymax).

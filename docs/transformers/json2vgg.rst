@@ -1,3 +1,5 @@
+json2vgg
+=========================
 .. py:function:: json2vgg(json_list: List[dict], image_name: str, extension: str = ".jpg", add_accuracy: bool = True) -> dict
 
    Transform a list of JSON objects into a JSON format suitable for 'VGG Image Annotator'.

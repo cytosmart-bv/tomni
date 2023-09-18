@@ -1,3 +1,5 @@
+contour2bbox
+=========================
 .. py:function:: contour2bbox(contour: np.ndarray) -> tuple
 
    Convert OpenCV contours into a bounding box in the format (xmin, ymin, xmax, ymax).

@@ -1,3 +1,5 @@
+mask2json
+=========================
 .. py:function:: get_edges(mask: numpy.ndarray) -> numpy.ndarray
 
    Get the edges of a binary mask.

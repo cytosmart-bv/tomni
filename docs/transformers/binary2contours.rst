@@ -1,3 +1,6 @@
+binary2contours
+=========================
+
 .. py:function:: binary2contours(binary_img: numpy.ndarray, return_inner_contours: bool = True) -> List[numpy.ndarray]
 
    Transform a binary image to a list of outer contours and inner contours if desired.

@@ -1,3 +1,5 @@
+labels2contours
+=========================
 .. py:function:: labels2contours(labels: numpy.ndarray, simplify_error: float = 0, return_inner_contours: bool = False) -> list
 
    Transform an image with labels into OpenCV contours.

@@ -1,3 +1,5 @@
+json2dict
+=========================
 .. py:function:: json2dict(json_list: List[dict], keywords: list = ["type", "area", "center", "id"]) -> dict
 
    Transform a list of JSON objects in standard CytoSMART format into a dictionary using specified keywords.

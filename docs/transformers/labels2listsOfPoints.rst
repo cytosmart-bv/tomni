@@ -1,3 +1,5 @@
+labels2listsOfPoints
+=========================
 .. py:function:: labels2listsOfPoints(labels: numpy.ndarray) -> numpy.ndarray
 
    Transform labels into lists of points for each label.

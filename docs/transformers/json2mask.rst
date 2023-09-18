@@ -1,3 +1,5 @@
+json2mask
+=========================
 .. py:function:: json2mask(json_objects: list, img_shape: tuple, minimum_size_contours: int = 3) -> numpy.ndarray
 
    Convert annotations in standard CytoSMART format to a binary mask.

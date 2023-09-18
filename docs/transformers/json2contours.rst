@@ -1,3 +1,5 @@
+json2contours
+=========================
 .. py:function:: json2contours(json: dict) -> numpy.ndarray
 
    Convert a default JSON format object to a contour in numpy.ndarray format.

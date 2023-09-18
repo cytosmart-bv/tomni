@@ -1,3 +1,5 @@
+positions2contour
+=========================
 .. py:function:: positions2contour(positions: numpy.ndarray, simplify_error: float = 0, return_inner_contours: bool = False) -> numpy.ndarray
 
    Transform a list of positions into an OpenCV contour.

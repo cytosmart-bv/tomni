@@ -8,13 +8,15 @@ Welcome to Tomni documentation!
 
 
 .. toctree::
-   :maxdepth: 2
+   :maxdepth: 1
    :caption: Contents:
 
    quickstart
    apidocs
    tutorials
-
+   transformers
+   shape_fitting
+   make_mask
 
 
 Indices and tables

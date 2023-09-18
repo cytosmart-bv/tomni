@@ -1,3 +1,5 @@
+contours2json
+=========================
 .. py:function:: ellipse2json(x: int, y: int, radius: int, secondRadius: Union[None, int] = None, alpha: float = 0) -> dict
 
    Create a JSON representation of an ellipse or circle.

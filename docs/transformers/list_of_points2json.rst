@@ -1,3 +1,5 @@
+list_of_points2json
+=========================
 .. py:function:: list_of_points2json(list_of_points: Union[list, numpy.ndarray]) -> dict
 
    Convert a list of points into a JSON object representing a polygon.
