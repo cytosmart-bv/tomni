@@ -10,7 +10,6 @@ def convert_color(img: np.ndarray, new_color: Union[str, int]) -> np.ndarray:
     Args:
         img (np.ndarray): The image to be converted. Supported color spaces: GRAY (1), BGR (3), and BGRA (4).
         new_color (Union[str, int]): The desired color space for the converted image.
-            Supported values: 'GRAY'/'GREY' (1), 'BGR'/'COLOR'/'COLOUR' (3), or 'BGRA'/'TRANSPARENT' (4).
 
     Raises:
         ValueError: If new_color is not supported.
@@ -19,6 +18,14 @@ def convert_color(img: np.ndarray, new_color: Union[str, int]) -> np.ndarray:
 
     Returns:
         np.ndarray: The converted image.
+
+    Note:
+        Supported values:
+
+        - (1) 'GRAY'/'GREY'
+        - (3) 'BGR'/'COLOR'/'COLOUR'
+        - (4) 'BGRA'/'TRANSPARENT'
+
     """
 
     img = img.astype(np.uint8)

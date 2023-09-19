@@ -11,6 +11,7 @@ These functions are explicitly intended for direct application to images, granti
    functions/make_mask/circlair_mask
    functions/make_mask/ellipse_mask
    functions/make_mask/contour_mask_maker
+   functions/convert_color/convert_color
    functions/illumination_correction/fluo_tophat
    functions/img_dim/img_dim
    functions/img_paste/img_paste
