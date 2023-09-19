@@ -8,7 +8,7 @@ These functions are explicitly intended for direct application to images, granti
    :maxdepth: 1
 
    functions/illumination_correction/absolute_difference
+   functions/illumination_correction/fluo_tophat
    functions/img_dim/img_dim
    functions/img_paste/img_paste
    functions/illumination_correction/relative_difference
-

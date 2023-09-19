@@ -1,4 +1,4 @@
-Summary JSON
+Summary
 =================================
 
 .. automodule:: tomni.json_operations

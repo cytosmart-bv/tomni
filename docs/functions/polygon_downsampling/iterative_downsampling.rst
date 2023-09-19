@@ -1,4 +1,4 @@
-Iterative Downsampling
+Polygon Downsampling
 =================================
 
 .. automodule:: tomni.polygon_downsampling

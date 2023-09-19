@@ -1,4 +1,4 @@
-Scale JSON
+Scale
 =================================
 
 .. automodule:: tomni.json_operations

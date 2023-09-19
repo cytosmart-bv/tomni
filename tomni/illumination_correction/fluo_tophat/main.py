@@ -22,25 +22,27 @@ def rescale_intensity(img, min_val, max_val):
 
 def fluo_tophat(img, normalize=0):
     """
-    Perform background subtraction on a fluorescent channel image using a morphological
-    white top-hat filter.
+    Fluorescent Top-Hat Background Subtraction
+
+    This function performs background subtraction on a fluorescent channel image using a morphological white top-hat filter.
+    The white top-hat filter is effective at highlighting small bright structures against a darker background.
 
     Args:
-        img (numpy.ndarray): A standard grayscale image.
-        normalize (int, optional): Normalizes the image to the 0-255 range if set to 1.
-                                   Defaults to 0.
+        img (numpy.ndarray): A grayscale image where background subtraction will be applied.
+        normalize (int, optional): If set to 1, the resulting image will be normalized to the 0-255 range. Defaults to 0.
 
     Returns:
-        img (numpy.ndarray): The result image after background subtraction.
-        p2 (float): The lower bound value where a percentage of pixels are included.
-        p98 (float): The higher bound value where a percentage of pixels are included.
+        img (numpy.ndarray): The image after background subtraction.
+        p2 (float): The lower bound value used for potential later normalization.
+        p98 (float): The upper bound value used for potential later normalization.
 
-    The `p2` and `p98` values are used to normalize the image but are not automatically applied
-    due to potential data loss. These values should be used later during integration to pass
-    to the front-end.
+    Note:
+        The `p2` and `p98` values represent the lower and upper bounds for potential image normalization. They are not automatically applied to the image to avoid data loss. These values can be used during integration and passed to the front-end for further processing.
 
     Example:
-        result_image, lower_bound, upper_bound = fluo_tophat(image, normalize=1)
+        To perform background subtraction on an image and normalize the result, you can use this function as follows:
+
+        >>> result_image, lower_bound, upper_bound = fluo_tophat(image, normalize=1)
     """
 
     img = img.astype(np.uint8)
