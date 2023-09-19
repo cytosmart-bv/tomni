@@ -1,7 +1,7 @@
 Image Dimensions
 =================
 
-.. automodule:: tomni
+.. automodule:: tomni.img_dim
    :members: img_dim
    :show-inheritance:
 

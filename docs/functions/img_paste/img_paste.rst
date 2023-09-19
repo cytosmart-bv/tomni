@@ -1,7 +1,7 @@
 Image Paste
 =================
 
-.. automodule:: tomni
+.. automodule:: tomni.img_paste
    :members: img_paste
    :show-inheritance:
 

@@ -1,4 +1,4 @@
-annotation_manager page
+Annotation Manager
 =========================
 
 .. toctree::

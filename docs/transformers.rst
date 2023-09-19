@@ -4,12 +4,9 @@ Transformers
 This section is dedicated to a comprehensive array of functions for data transformation purposes. 
 These functions are tailored to manipulate data in various formats, facilitating conversion between binary and contour representations, extraction of bounding boxes, generation of JSON data, and more.
 
-
-
 .. toctree::
    :maxdepth: 1
    :caption: Functions:
-   :hidden:
 
    functions/transformers/binary2contours
    functions/transformers/contour2bbox

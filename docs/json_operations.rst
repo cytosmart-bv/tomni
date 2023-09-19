@@ -18,5 +18,6 @@ These functions are specifically crafted to manipulate and extract information f
    functions/json_operations/translation
    functions/json_operations/scale_json
    functions/json_operations/summary_json
-
+   functions/polygon_downsampling/iterative_downsampling
+   
  

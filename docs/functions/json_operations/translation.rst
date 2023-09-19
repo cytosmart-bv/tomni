@@ -2,6 +2,6 @@ Translation
 =================================
 
 .. automodule:: tomni.json_operations
-   :members: translation
+   :members: translation_json
    :show-inheritance:
 

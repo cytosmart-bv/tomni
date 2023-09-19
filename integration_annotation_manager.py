@@ -1,11 +1,4 @@
-# %%
-import json
-import os
-from tkinter import filedialog
-import numpy as np
-
 import cv2
-import cytoBoom as CB
 
 from tomni.annotation_manager import AnnotationManager
 from tomni.transformers.json2contours import json2contours
@@ -128,14 +121,14 @@ print("done")
 # print(annotations)
 
 # # %%
-# # Filter with inplace=True: manager object is updated internally. Returns manager object to allow chaining.
-# updated_manager = manager.filter(
-#     # The return does not have to be used. This is merely to show difference between inplace.
-#     feature="roundness",
-#     min_val=0.5,
-#     max_val=1.0,
-#     inplace=True,
-# ).filter(feature="area", min_val=0, max_val=1000, inplace=True)
+# Filter with inplace=True: manager object is updated internally. Returns manager object to allow chaining.
+updated_manager = manager.filter(
+    # The return does not have to be used. This is merely to show difference between inplace.
+    feature="roundness",
+    min_val=0.5,
+    max_val=1.0,
+    inplace=True,
+).filter(feature="area", min_val=0, max_val=1000, inplace=True)
 # print(type(updated_manager))
 
 

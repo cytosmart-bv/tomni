@@ -2,6 +2,6 @@ Cropping
 =================================
 
 .. automodule:: tomni.json_operations
-   :members: cropping
+   :members: crop_json
    :show-inheritance:
 
