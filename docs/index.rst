@@ -22,6 +22,7 @@ Explore Tomni's image analysis and computer vision techniques.
    
    image_operations
    bbox_operations
+   contour_operations
    json_operations
    transformers
 
