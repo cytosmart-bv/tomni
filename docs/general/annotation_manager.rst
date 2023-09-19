@@ -8,6 +8,9 @@ Example using binary image as input::
     from tkinter import filedialog
     from tomni.annotation_manager import AnnotationManager
 
+    mask_path = filedialog.askopenfilename(title="Select mask.")
+    mask = cv2.imread(mask_path, 0)
+
     manager = AnnotationManager.from_binary_mask(mask=mask, include_inner_contours=True)
     output_dicts = manager.to_dict(
         features=["area", "circularity", "major_axis", "average_diameter"],
@@ -17,7 +20,13 @@ Example using binary image as input::
 
 Example using list of dictionaries as input::
 
-    with open(json_fp, "rb") as f:
+    import json
+    import cv2
+    from tkinter import filedialog
+    from tomni.annotation_manager import AnnotationManager
+
+    json_path = filedialog.askopenfilename(title="Select JSON.")
+    with open(json_path, "rb") as f:
         dicts = json.load(f)
 
     manager = AnnotationManager.from_dicts(dicts=dicts)

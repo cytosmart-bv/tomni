@@ -1,8 +1,7 @@
 General
 ================
-The General section provides an overview of the key decisions and foundational principles that underpin our computer vision techniques. 
-It offers insights into critical topics, including the distinction between roundness and circularity, along with the rationale behind our chosen approaches. 
-Additionally, this section serves as a reference for the basic formats and conventions we employ in our documentation and methodologies.
+The General section primarily serves as a clarification of our standardized document formats, provides guidance on the practical
+application of our functions, and shows the thought process regarding certain implementation methods.
 
 .. toctree::
    :maxdepth: 1
