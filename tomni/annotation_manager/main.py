@@ -25,6 +25,22 @@ class AnnotationManager(object):
         cls,
         dicts: List[dict],
     ):
+        """
+        Initializes the class with a list of dictionaries containing annotations.
+
+        Args:
+            cls ('AnnotationManager'): The class itself.
+            dicts (List[dict]): A list of dicts containing annotations.
+
+        Raises:
+            ValueError: Raised if the input dictionaries are not properly formatted.
+
+        Note:
+            Only Polygon and Ellipse annotations are supported.
+
+        Returns:
+            AnnotationManager: An instance of the AnnotationManager class containing the parsed annotations.
+        """
         TYPE_KEY = "type"
         LABEL_KEY = "label"
         CHILDREN_KEY = "children"
@@ -78,14 +94,18 @@ class AnnotationManager(object):
     def from_binary_mask(
         cls, mask: np.ndarray, include_inner_contours: bool = False, label: str = ""
     ):
-        """Initializes a AnnotationManager object from a binary mask.
+        """
+        Initializes an AnnotationManager object from a binary mask.
 
         Args:
+            cls ('AnnotationManager'): The class itself.
             mask (np.ndarray): Binary mask input.
             include_inner_contours (bool, optional): Include annotations that are contained within another annotation.
                 Defaults to False.
+            label (str, optional): A label to assign to the annotations. Defaults to "".
+
         Returns:
-            AnnotationManager: New annotation manager object from binary mask.
+            AnnotationManager: A new AnnotationManager object created from the binary mask.
         """
 
         mask = mask.astype(np.uint8)
@@ -108,21 +128,27 @@ class AnnotationManager(object):
         labels: Union[List[str], str] = "",
         include_inner_contours: bool = False,
     ):
-        """Initializes a AnnotationManager object from a labeled mask.
-        A labeled mask contains components indicated by the same pixel values (see example below).
-
-        Example containing two components yielding a AnnotationManager object with two annotations:
-        [[0,0,2,1,1],
-        [0,0,2,0,0],
-        [0,0,2,0,]]
+        """
+        Initializes an AnnotationManager object from a labeled mask.
+        A labeled mask contains components indicated by the same pixel values.
 
         Args:
-            mask (np.ndarray): A labeled mask with a max. nr. of components limited by max(np.uint32).
-            classes(List[str], optional): A list of class names to add to Polygon labels. Defaults to None.
+            cls ('AnnotationManager'): The class itself.
+            mask (np.ndarray): A labeled mask with a maximum number of components limited by max(np.uint32).
+            labels (Union[List[str], str], optional): A list of class names to add to Polygon labels. Defaults to "".
                 Should have the same number of unique pixel values as classes.
                 Class names in order of low pixel value to high pixel value.
             include_inner_contours (bool, optional): Include annotations that are contained within another annotation.
                 Defaults to False.
+
+        Example input with multiple pixel values::
+
+            [
+                [0, 0, 2, 1, 1],
+                [0, 0, 2, 0, 0],
+                [0, 0, 2, 0, 0]
+            ]
+
         Returns:
             AnnotationManager: A new AnnotationManager object.
         """
@@ -220,21 +246,27 @@ class AnnotationManager(object):
         feature_multiplier: int = 1,
         **kwargs,
     ) -> List[Dict]:
-        """Transform AM object to a collection of our format.
+        """
+        Transform the AnnotationManager object into a collection of data in AxionBio format.
 
         Args:
             decimals (int, optional): The number of decimals to use when rounding. Defaults to 2.
-            mask_json (Union[dict, None], optional): The dict mask that indicates what area to include in the output dict.
+            mask_json (Union[dict, None], optional): The dictionary mask that indicates the area to include in the output dictionary.
                 Defaults to None.
-            min_overlap (float, optional): Minimum overlap required between the polygon and the mask, expressed as a value between 0 and 1
+            min_overlap (float, optional): Minimum overlap required between the polygon and the mask, expressed as a value between 0 and 1.
                 Defaults to 0.9.
-            features (Union[List[str], None], optional): The features that you want to calculate and add to the dict objects.
+            features (Union[List[str], None], optional): The features you want to calculate and add to the dictionary objects.
                 Defaults to None, which returns all features.
-            metric_unit (str, optional): The suffix you want to add to the dict keys' names in camelCasing. Defaults to "".
-            feature_multiplier (int, optional): A multiplier used during feature calculation. For example 1/742. Defaults to 1.
+            metric_unit (str, optional): The suffix to add to the dictionary keys' names in camelCasing. Defaults to "".
+            feature_multiplier (int, optional): A multiplier used during feature calculation, e.g., 1/742. Defaults to 1.
+
+        Note:
+            - If a `mask_json` is provided, the method filters annotations based on their overlap with the mask.
+            - Only annotations meeting the specified `min_overlap` criteria are included in the output.
+            - If no `mask_json` is provided, all annotations are included in the output.
 
         Returns:
-            List[Dict]: Output is a list of dicts in AxionBio format.
+            List[Dict]: Output is a list of dictionaries in AxionBio format.
         """
 
         if mask_json is not None:

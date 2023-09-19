@@ -1,4 +1,4 @@
-Image Operations
+Bounding Box Operations
 ================
 
 This section presents a set of functions for the purpose of image manipulation and enhancement. 
@@ -7,8 +7,7 @@ These functions are explicitly intended for direct application to images, granti
 .. toctree::
    :maxdepth: 1
 
-   functions/img_paste/img_paste
-   functions/img_dim/img_dim
-   functions/illumination_correction/relative_difference
-   functions/illumination_correction/absolute_difference
-   
+   functions/bbox_operations/fit_rect_ellipse
+   functions/bbox_operations/check_overlap_bbox
+   functions/bbox_operations/bbox_fitting
+   functions/bbox_operations/bbox_fitting_center

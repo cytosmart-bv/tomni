@@ -6,7 +6,7 @@ Only reading the API documentation might not give this context.
 That is where the tutorials are for.
 
 .. toctree::
-   :maxdepth: 2
+   :maxdepth: 1
    :caption: Contents:
 
    tutorials/roundness_vs_circularity

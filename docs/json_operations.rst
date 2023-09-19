@@ -1,9 +1,8 @@
 JSON Operations
 =================
 
-Some of the subject Tomni deals with need context to be fully understood.
-Only reading the API documentation might not give this context.
-That is where the tutorials are for.
+This section encompasses a set of meticulously designed functions tailored for operations on JSON data structures. 
+These functions are specifically crafted to manipulate and extract information from JSON objects. 
 
 .. toctree::
    :maxdepth: 1

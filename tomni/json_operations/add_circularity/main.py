@@ -9,11 +9,8 @@ from ...transformers import json2contours
 def add_circularity(json_object: dict) -> None:
     """
     Calculate and add the circularity property to a JSON annotation object.
-
-    This function calculates the circularity of a polygonal object in a JSON annotation.
     The circularity is calculated by drawing a circle around the object and comparing
-    the area of the circle with the area of the object. The closer the circularity
-    is to 1.0, the more circular the object is.
+    the area of the circle with the area of the object.
 
     Args:
         json_object (dict): A JSON object of type "polygon" following the standard AxionBio format.
@@ -24,7 +21,9 @@ def add_circularity(json_object: dict) -> None:
     Note:
         - Only polygon objects are supported for circularity calculation.
         - The circularity value is added as the "circularity" property to the JSON object.
+        - The closer the circularity is to 1.0, the more circular the object is.
     """
+
     if json_object["type"] == "polygon":
         cnt = json2contours(json_object)
 

@@ -1,9 +1,10 @@
 import numpy as np
+from typing import Tuple
 
 
 def fit_rect_around_ellipse(
     x: int, y: int, r1: float, r2: float, alpha: float
-) -> (int, int, int, int):
+) -> Tuple[int, int, int, int]:
     """
     Compute the bounding box coordinates of an ellipse given its parameters.
 

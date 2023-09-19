@@ -1,15 +1,7 @@
-add_circularity
-=================
-.. autofunction:: your_module_name.add_circularity
-   :members:
-   :undoc-members:
+Add Circularity
+=================================
 
-This function calculates and adds the property 'circularity' to the input JSON object.
+.. automodule:: tomni.json_operations
+   :members: add_circularity
+   :show-inheritance:
 
-**Parameters:**
-
-- ``json_object`` (dict): A JSON object of type polygon.
-
-**Raises:**
-
-- ``ValueError``: If the object type is not supported.

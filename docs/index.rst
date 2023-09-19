@@ -1,8 +1,3 @@
-.. Tomni documentation master file, created by
-   sphinx-quickstart on Thu Jan  7 23:46:55 2021.
-   You can adapt this file completely to your liking, but it should at least
-   contain the root `toctree` directive.
-
 Welcome to Tomni documentation!
 ===================================
 Tomni, developed and utilized by CytoSMART, is a dedicated Python package designed to simplify image analysis and streamline computer vision tasks. 
@@ -11,6 +6,8 @@ Detailed information on its functions and usage can be found in the following do
 
 Functions
 ---------------------------------
+Explore Tomni's versatile functions and unleash the potential of image analysis and computer vision in your projects.
+
 
 .. toctree::
    :maxdepth: 1
@@ -20,10 +17,15 @@ Functions
    bbox_operations
    json_operations
    transformers
+   tutorials
 
 Annotation Manager
 ---------------------------------
+Take control of your annotations and streamline your workflow with Tomni's Annotation Manager.
+
 .. toctree::
+   :maxdepth: 1
+
    annotation_manager
 
 

@@ -305,7 +305,7 @@ class Polygon(Annotation):
         """Check if a polygon is within a binary mask.
 
         Args:
-            mask_json (List[dict]): A list of dict masks in cytosmart dict format.
+            mask_json (List[dict]): A list of dict masks in AxionBio dict format.
             min_overlap (float, optional): Minimum overlap required between the polygon a mask, expressed as a value between 0 and 1.
             Defaults to 0.9.
 
