@@ -7,7 +7,6 @@ These functions are specifically crafted to manipulate and extract information f
 .. toctree::
    :maxdepth: 1
    :caption: Contents:
-   :hidden:
 
    functions/json_operations/add_area
    functions/json_operations/add_center
