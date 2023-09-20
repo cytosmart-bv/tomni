@@ -59,9 +59,9 @@ def crop_json(
 
     Args:
         json_list (List[dict]): A list of JSON objects in standard AxionBio format.
-        x_translation (int): The translation in the x-direction of the cropped image relative to the original image.
-        y_translation (int): The translation in the y-direction of the cropped image relative to the original image.
-        crop_dim (Union[list, tuple]): Crop dimensions (x, y) of the cropped image.
+        x_translation (int): The translation in the x-direction of the cropped JSON relative to the original JSON.
+        y_translation (int): The translation in the y-direction of the cropped JSON relative to the original JSON.
+        crop_dim (Union[list, tuple]): Crop dimensions (x, y) of the cropped JSON.
         crop_mode (str): Crop mode, either "remove_objects" (default) or "keep_objects".
 
     Returns:

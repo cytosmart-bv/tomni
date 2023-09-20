@@ -300,14 +300,25 @@ class AnnotationManager(object):
         ]
 
     def to_contours(self) -> List[np.ndarray]:
-        """Transform AM object to a collection of cv2 contours.
+        """
+        Transform an AnnotationManager object to a collection of OpenCV-style contours.
+
+        This method generates a collection of contours from the annotations stored in the AnnotationManager object.
+        Supported annotation type for conversion is 'Polygon'. Each contour is represented as a NumPy array of shape
+        (N, 1, 2), where N is the number of points in the contour, and each point has (x, y) coordinates.
 
         Raises:
-            ValueError: Raises error when annotations are not of type `Polygon`.
+            ValueError: If any annotation in the AnnotationManager is not of type 'Polygon'.
 
         Returns:
-            List[np.ndarray]: Collection of contours as [[[x_0, y_0],..., [x_n, y_n]], ... ,[[x_0, y_0],..., [x_m, y_m]]]
+            List[np.ndarray]: A collection of contours, where each contour is represented as a NumPy array.
+
+        Note:
+            - This method supports only annotations of type 'Polygon' for conversion to contours.
+            - Each contour is represented as a NumPy array of shape (N, 1, 2), where N is the number of points in
+              the contour, and each point has (x, y) coordinates.
         """
+
         if not all(
             [isinstance(annotation, Polygon) for annotation in self._annotations]
         ):
@@ -321,15 +332,24 @@ class AnnotationManager(object):
         return contours
 
     def to_binary_mask(self, shape: Tuple[int, int]) -> np.ndarray:
-        """Transform an AM object to a binary mask.
-        Annotations can only be polygon or ellipse.
+        """
+        Transform an AnnotationManager object to a binary mask.
+
+        This method generates a binary mask from the annotations stored in the AnnotationManager object.
+        Supported annotation types for conversion are polygon and ellipse.
 
         Args:
-            shape (Tuple[int, int]): Shape of the new binary mask.
+            shape (Tuple[int, int]): The shape (width, height) of the new binary mask.
 
         Returns:
-            np.ndarray: A binary mask in [0, 1].
+            np.ndarray: A binary mask where annotated regions are represented by 1 (True) and
+            non-annotated regions are represented by 0 (False).
+
+        Note:
+            - This method supports annotations of type Polygon and Ellipse for conversion to a binary mask.
+            - The binary mask represents annotated regions with 1 and non-annotated regions with 0.
         """
+
         mask = np.zeros(shape, dtype=np.uint8)
         for annotation in self.annotations:
             mask = cv2.bitwise_or(mask, annotation.to_binary_mask(shape))
@@ -337,14 +357,24 @@ class AnnotationManager(object):
         return mask
 
     def to_labeled_mask(self, shape: Tuple[int, int]) -> np.ndarray:
-        """Transform an AM object to a labeled mask.
-        Annotations can only be polygon or ellipse.
+        """
+        Transform an Annotation Manager object to a labeled mask. This method generates a labeled mask from the annotations stored in the AnnotationManager object. Supported
+        annotation types for conversion are polygon and ellipse.
 
-        shape (Tuple[int, int]): Shape of the new labeled mask.
+        Args:
+            shape (Tuple[int, int]): The shape (width, height) of the new labeled mask.
 
         Returns:
-            np.ndarray: A new labeled mask.
+            np.ndarray: A new labeled mask where each labeled region corresponds to an annotation.
+
+        Raises:
+            TypeError: If the AnnotationManager contains annotations of unsupported types.
+
+        Note:
+            - This method supports annotations of type Polygon and Ellipse for conversion to a labeled mask.
+            - Each labeled region in the generated mask corresponds to an annotation, and the regions are labeled with unique integer values starting from 1.
         """
+
         mask = np.zeros(shape, dtype=np.uint8)
         label_color = 1
 
@@ -411,21 +441,32 @@ class AnnotationManager(object):
         feature: str,
         min_val: float,
         max_val: float,
-        feature_multiplier: int = 1,
+        feature_multiplier: float = 1.0,
         inplace: bool = False,
     ):
-        """Filter annotations by feature.
+        """
+        Filter annotations based on a specified feature.
+
+        This method filters annotations in the AnnotationManager based on a given feature within a specified value range.
+        Annotations that meet the filtering criteria are included in the result.
 
         Args:
-            feature (str): Feature name, i.e. `roundness` or `area`.
-            min_val (float): Minimum value to threshold.
-            max_val (float): Maximum value to threshold
-            feature_multiplier (int, optional): A multiplier used in the feature calculations. For example 1/742. Defaults to 1.
-            inplace (bool, optional): If True, filter in-place. Modifies the object internally. If False, return collection of annotations. Defaults to False.
+            feature (str): The name of the feature to use for filtering, e.g., 'roundness' or 'area'.
+            min_val (float): The minimum threshold value for the feature.
+            max_val (float): The maximum threshold value for the feature.
+            feature_multiplier (int, optional): A multiplier used in feature calculations. Defaults to 1.
+            inplace (bool, optional): If True, filter annotations in-place, modifying the object internally.
+                If False, return a collection of filtered annotations without modifying the original object. Defaults to False.
 
         Returns:
-            AnnotationManager or List[Annotation]: Collection of filtered annotions or if `inplace=True` object with filterd annotations.
+            Union[AnnotationManager, List[Annotation]]: If `inplace=True`, returns the AnnotationManager object
+            with the filtered annotations. If `inplace=False`, returns a list of filtered annotations.
+
+        Note:
+            - This method filters annotations based on a specified feature within the provided value range.
+            - The `feature_multiplier` parameter allows scaling of the feature calculation if needed.
         """
+
         filtered_annotations = []
 
         for annotation in self._annotations:

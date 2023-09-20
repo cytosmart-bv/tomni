@@ -6,7 +6,8 @@ def bbox_fitting(
     img: np.ndarray, x1: int, y1: int, x2: int, y2: int, padding_value: int = 0
 ) -> np.ndarray:
     """
-    Bounding Box Fitting Function
+    This function extracts a region of interest (ROI) from an input image based on a specified bounding box.
+    It is particularly useful for isolating specific areas of interest within an image.
 
     Parameters:
         - img (np.ndarray): The input image from which the bounding box will be extracted.

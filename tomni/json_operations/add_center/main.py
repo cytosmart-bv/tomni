@@ -15,6 +15,25 @@ def add_center(json_object: dict):
     Raises:
         ValueError: If the type of the annotation in the JSON object is not supported.
 
+    Example::
+
+        # Define a sample JSON annotation object in AxionBio format (polygon)
+        sample_json_object = {
+            "type": "polygon",
+            "points": [[100, 100], [200, 100], [200, 200], [100, 200]]
+        }
+
+        # Call the add_center function to calculate and add the center coordinates
+        add_center(sample_json_object)
+
+        # The updated JSON object will contain the added "center" key
+        # Updated JSON Object:
+        updated_json_object = {
+            'type': 'polygon',
+            'points': [[100, 100], [200, 100], [200, 200], [100, 200]],
+            'center': {'x': 150.0, 'y': 150.0}
+        }
+
     Note:
         - Supported annotation types are "ellipse" and "polygon."
         - For ellipses, no action is taken as the center is already included in the JSON object.

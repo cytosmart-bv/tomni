@@ -65,10 +65,6 @@ The name Tomni is a combination of creator (Tom) and other CytoSMART product he 
   - Binary 2 contours
 
 
-- AnnotationManager
-  - Object with several operational processes that will handle 
-
-
 ## Examples
 
 ### Diameter vs radius

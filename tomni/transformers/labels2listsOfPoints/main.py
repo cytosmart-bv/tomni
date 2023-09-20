@@ -12,10 +12,19 @@ def labels2listsOfPoints(labels: np.ndarray) -> np.ndarray:
             The labels should be non-negative integers.
 
     Returns:
-        list: A list of lists, where each inner list contains the (x, y) coordinates of points belonging
-            to the corresponding label. The list is organized such that `output[label]` contains the points
-            for the label with value `label`. The label values must start from 0 and be contiguous integers.
+        List[List[Tuple[int, int]]]: A list of lists, where each inner list contains the (x, y) coordinates
+            of points belonging to the corresponding label. The list is organized such that
+            `output[label]` contains the points for the label with value `label`. The label values must start
+            from 0 and be contiguous integers.
+
+    Raises:
+        ValueError: If the number of labels exceeds the supported limit.
+
+    Note:
+        - The function automatically determines the appropriate data type for labels based on their maximum value.
+        - It uses sparse matrix operations to efficiently extract points for each label.
     """
+
     if np.max(labels) < 256:
         dataType = np.uint8
     elif np.max(labels) < 65536:

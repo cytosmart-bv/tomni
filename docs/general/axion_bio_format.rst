@@ -5,7 +5,7 @@ Example JSON containing Ellipse and Polygon annotations::
 
     JSON = [
         {
-            "cell",
+            "label" : "cell",
             "id": "13468814-15b8-4417-a6cb-322c48a51ec4",
             "type": "ellipse",
             "center": {"x": 500, "y": 500},

@@ -14,9 +14,8 @@ def flip_json(json_object: dict, img_dim: int) -> dict:
 
     Returns:
         dict: A new JSON object with coordinates flipped over the y-axis.
-
-
     """
+
     newjson_object = copy.deepcopy(json_object)
     if json_object["type"] == "ellipse":
         newjson_object["center"]["y"] = img_dim - json_object["center"]["y"] - 1

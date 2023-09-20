@@ -38,6 +38,8 @@ def summary_json(
         ]
         keyword = "area"
 
+        output = summary_json(json_list, keyword)
+
         result = (3, 45, 15.0, 20, 10)
     """
 

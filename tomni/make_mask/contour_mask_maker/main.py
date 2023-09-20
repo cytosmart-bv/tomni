@@ -9,7 +9,8 @@ def sendErrorShape(shapeC):
 
 def make_mask_contour(img_shape: tuple, contour: Union[list, np.ndarray]) -> np.ndarray:
     """
-    Create a boolean image with the specified contour.
+    Create a binary mask from a given contour and image shape. The mask sets pixels inside the contour to 1 (True)
+    and pixels outside to 0 (False).
 
     Args:
         img_shape (tuple): The shape of the image given in image coordinates, represented as (width, height).
@@ -21,7 +22,15 @@ def make_mask_contour(img_shape: tuple, contour: Union[list, np.ndarray]) -> np.
     Raises:
         TypeError: If the provided contour is not in the form (N, 2), where N is the number of points.
 
+    Example::
+
+        # Usage example with OpenCV's contour output
+        img_shape = (640, 480)  # Width and height of the target image
+        contour = np.array([[100, 200], [200, 100], [300, 400]], dtype=np.int32)
+        mask = make_mask_contour(img_shape, contour)
+        # 'mask' will contain a binary mask representing the specified contour.
     """
+
     contour = np.array(contour, dtype=np.int32)
     shapeC = np.shape(contour)
 

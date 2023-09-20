@@ -7,8 +7,7 @@ def circularity(contour: np.ndarray) -> float:
     Calculate the circularity of a contour.
 
     The circularity of a contour is a measure of how closely it resembles a perfect circle.
-    It is calculated based on the contour's area and perimeter using the formula:
-
+    It is calculated based on the contour's area and perimeter.
 
     Args:
         contour (np.ndarray): The contour represented as an OpenCV ndarray.

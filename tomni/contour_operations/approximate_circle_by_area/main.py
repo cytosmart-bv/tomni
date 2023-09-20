@@ -23,7 +23,7 @@ def approximate_circle_by_area(contour: np.ndarray) -> Tuple[float, float, float
     Example::
 
         contour = np.array([[[1, 2]], [[2, 3]], [[3, 2]], [[2, 1]]])
-        approximate_circle_by_area(contour)
+        center_x, center_y, circle_radius = approximate_circle_by_area(contour)
         (2.0, 2.0, 1.0)
     """
     x, y = get_center(contour)
