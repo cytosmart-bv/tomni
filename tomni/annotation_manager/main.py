@@ -243,7 +243,7 @@ class AnnotationManager(object):
         min_overlap: float = 0.9,
         features: Union[List[str], None] = None,
         metric_unit: str = "",
-        feature_multiplier: int = 1,
+        feature_multiplier: float = 1,
         **kwargs,
     ) -> List[Dict]:
         """
@@ -258,7 +258,7 @@ class AnnotationManager(object):
             features (Union[List[str], None], optional): The features you want to calculate and add to the dictionary objects.
                 Defaults to None, which returns all features.
             metric_unit (str, optional): The suffix to add to the dictionary keys' names in camelCasing. Defaults to "".
-            feature_multiplier (int, optional): A multiplier used during feature calculation, e.g., 1/742. Defaults to 1.
+            feature_multiplier (float, optional): A multiplier used during feature calculation, e.g., 1/742. Defaults to 1.
 
         Note:
             - If a `mask_json` is provided, the method filters annotations based on their overlap with the mask.
