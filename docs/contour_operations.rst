@@ -1,5 +1,5 @@
 Contour Operations
-=================
+=============================
 
 This section encompasses a set of functions tailored for operations on contours. 
 

@@ -1,5 +1,5 @@
 Annotation Manager Workflow
-=========================
+=================================
 
 
 Example using binary image as input::

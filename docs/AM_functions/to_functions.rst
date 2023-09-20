@@ -5,4 +5,3 @@ Conversion functions
    :members: to_dict, to_binary_mask, to_labeled_mask, to_contours
    :show-inheritance:
 
-

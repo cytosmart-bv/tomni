@@ -58,7 +58,10 @@ def mask2json(
             If False, only return the external contours (outlines of the shapes). Defaults to False.
 
     Returns:
-        list: A list of JSON objects representing contours in the mask. Each JSON object has the following structure:
+        list: A list of JSON objects representing contours in the mask.
+
+    Example output::
+
             {
                 'type': 'polygon',
                 'points': [{'x': x1, 'y': y1}, {'x': x2, 'y': y2}, ...],
@@ -66,13 +69,11 @@ def mask2json(
                     {
                         'type': 'polygon',
                         'points': [{'x': x3, 'y': y3}, {'x': x4, 'y': y4}, ...],
-                        # More inner contours if present
                     },
-                    # More inner contours if present
                 ],
-                # More contours if present
             }
     """
+
     connectivity = 4
     if is_diagonal_connected:
         connectivity = 8
