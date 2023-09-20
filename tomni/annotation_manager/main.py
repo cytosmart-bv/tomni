@@ -454,7 +454,7 @@ class AnnotationManager(object):
             feature (str): The name of the feature to use for filtering, e.g., 'roundness' or 'area'.
             min_val (float): The minimum threshold value for the feature.
             max_val (float): The maximum threshold value for the feature.
-            feature_multiplier (int, optional): A multiplier used in feature calculations. Defaults to 1.
+            feature_multiplier (float, optional): A multiplier used in feature calculations. Defaults to 1.
             inplace (bool, optional): If True, filter annotations in-place, modifying the object internally.
                 If False, return a collection of filtered annotations without modifying the original object. Defaults to False.
 
