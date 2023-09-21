@@ -7,22 +7,34 @@ def positions2contour(
     simplify_error: float = 0,
     return_inner_contours: bool = False,
 ) -> np.ndarray:
-    """Transforms a list of positions to opencv contour format
+    """
+    Transform a list of positions into an OpenCV contour format.
 
     Args:
-        positions (np.ndarray): 2 dimensional array with shape [N, 2].
-            For the N pixels of the shape given as x, y
-        simplify_error ⚠️ (float, optional): Deprecated!!
-        return_inner_contours (bool, optional): return the internal contours.
-            These contours are around the holes with the contour
-            default: False
+        positions (np.ndarray): A 2-dimensional array with shape [N, 2], representing the x and y coordinates
+            of N pixels in the shape.
+        simplify_error (float, optional): ⚠️ Deprecated parameter. No longer used.
+        return_inner_contours (bool, optional): If True, return the internal contours (holes within the shape).
+            If False (default), return only the external contour (the outline of the shape).
 
     Raises:
-        DeprecationWarning: simplification is no longer supported
+        DeprecationWarning: The `simplify_error` parameter is deprecated and no longer supported.
 
     Returns:
-        np.ndarray: Opencv contour
+        Union[np.ndarray, Tuple[np.ndarray, List[np.ndarray]]]: If `return_inner_contours` is False, returns the
+        external contour as an OpenCV-style np.ndarray.
+        If `return_inner_contours` is True and there are internal contours, returns a tuple containing the
+        external contour as the first element and a list of internal contours as the second element.
+        Each contour is represented as an np.ndarray of shape [M, 2], where M is the number of points in the contour.
+
+    Note:
+        - The `simplify_error` parameter has been deprecated and is no longer used. Please update your code accordingly.
+        - The input `positions` should be a 2D array with two columns, where each row represents the (x, y) coordinates
+          of a pixel in the shape.
+        - The `return_inner_contours` parameter controls whether internal contours (holes within the shape) are included.
+          If set to True, both external and internal contours are returned as a tuple.
     """
+
     if simplify_error > 0:
         raise DeprecationWarning("As of Tomni 1.10 simplify is no longer supported")
 

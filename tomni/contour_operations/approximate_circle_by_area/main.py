@@ -9,15 +9,22 @@ from .. import get_center
 
 def approximate_circle_by_area(contour: np.ndarray) -> Tuple[float, float, float]:
     """
-    Returns a circle with the same area and center as the contour.
+    Approximate a circle with the same area and center as the given contour.
 
     Args:
-        contour (np.ndarray): An opencv contour of a single object
+        contour (np.ndarray): An OpenCV contour of a single object.
 
     Returns:
-        x: (float) Center x postion
-        y: (float) Center y postion
-        radius: (float) Radius of the circle
+        Tuple[float, float, float]: A tuple containing the following values:
+            - x (float): Center x position of the approximate circle.
+            - y (float): Center y position of the approximate circle.
+            - radius (float): Radius of the approximate circle.
+
+    Example::
+
+        contour = np.array([[[1, 2]], [[2, 3]], [[3, 2]], [[2, 1]]])
+        center_x, center_y, circle_radius = approximate_circle_by_area(contour)
+        (2.0, 2.0, 1.0)
     """
     x, y = get_center(contour)
     area = cv2.contourArea(contour)

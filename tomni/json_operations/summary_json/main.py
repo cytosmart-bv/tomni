@@ -9,23 +9,40 @@ from .. import add_area, add_circularity
 def summary_json(
     json_list: List[dict], keyword: str, do_copy: bool = True, rounding: int = 2
 ) -> tuple:
-    """Makes a summary of the keyword variable inside of the json objects. Function works
-       for the keyword 'area'. The summary consists of the number of objects,
-       the total sum of keyword in json_list, the mean, maximum and average keyword in json_list.
+    """
+    Create a summary of a specified keyword variable inside JSON objects.
 
     Args:
-        json_list (List[dict]): a list of jsons in standard cytosmart forma
-        keyword (str): 'area'
-        do_copy (bool, optional): When true copies the json_list and does not change it.
-                Defaults to True.
-        rounding (int, optional): the number of decimals are used in the summary. Defaults to 2.
+        json_list (List[dict]): A list of JSON objects in standard AxionBio format.
+        keyword (str): The keyword for which to create the summary (e.g., 'area').
+        do_copy (bool, optional): When True, copies the JSON list and does not modify it. Defaults to True.
+        rounding (int, optional): The number of decimals used in the summary. Defaults to 2.
 
     Raises:
-        ValueError: If a keyword is used that is not supported
+        ValueError: If an unsupported keyword is provided.
 
     Returns:
-        tuple: (Number of objects, Total sum of objects, Mean of objects, Max of objects, Min of objects)
+        tuple: A tuple containing:
+            - Number of objects
+            - Total sum of the keyword in objects
+            - Mean value of the keyword in objects
+            - Maximum value of the keyword in objects
+            - Minimum value of the keyword in objects
+
+    Example::
+
+        json_list = [
+            {"area": 10},
+            {"area": 15},
+            {"area": 20},
+        ]
+        keyword = "area"
+
+        output = summary_json(json_list, keyword)
+
+        result = (3, 45, 15.0, 20, 10)
     """
+
     if do_copy:
         copy_json_list = deepcopy(json_list)
     else:

@@ -5,8 +5,14 @@ from typing import List, Union
 
 def contours2json(contours: Union[np.ndarray, List[list]]) -> List[dict]:
     """
-    Transforms a list or array of contours into list of jsons
-    contours: (numpy.array, list) needs to be the contours produced by opencv
+    Convert a list or array of contours into a list of JSON objects in standard AxionBio format.
+
+    Args:
+        contours (numpy.ndarray or list): Contours produced by OpenCV, represented as a NumPy array or a list.
+
+    Returns:
+        List[dict]: A list of JSON objects, where each JSON object represents a contour as a polygon.
+
     """
     result = []
     for contour in contours:

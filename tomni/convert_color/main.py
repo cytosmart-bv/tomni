@@ -5,21 +5,29 @@ import cv2
 
 def convert_color(img: np.ndarray, new_color: Union[str, int]) -> np.ndarray:
     """
-    Convert a the color of an image to a wanted color, without needed to know the current color.
-    It will assume only gray, BGR, and BGRA exists (these are the common openCV color types)
+    Convert the color format of an image to the desired color space (GRAY, BGR, or BGRA).
 
     Args:
-        img (np.ndarray uint8): The image that needs to be converted. This image is gray, BGR or BGRA
-        new_color (Union[str, int]): Color the new image should be gray (1), BGR (2) or BGRA (3)
+        img (np.ndarray): The image to be converted. Supported color spaces: GRAY (1), BGR (3), and BGRA (4).
+        new_color (Union[str, int]): The desired color space for the converted image.
 
     Raises:
-        ValueError: new_color is not supported
-        ValueError: img has more then 3 dimensions or less then 2
-        ValueError: img as a number of channels that is not 1, 3, or 4
+        ValueError: If new_color is not supported.
+        ValueError: If the input image has an unsupported number of dimensions.
+        ValueError: If the input image has an unsupported number of color channels.
 
     Returns:
-        np.ndarray: converted image
+        np.ndarray: The converted image.
+
+    Note:
+        Supported values:
+
+        - (1) 'GRAY'/'GREY'
+        - (3) 'BGR'/'COLOR'/'COLOUR'
+        - (4) 'BGRA'/'TRANSPARENT'
+
     """
+
     img = img.astype(np.uint8)
     # Not getting into that debate
     if type(new_color) is str:

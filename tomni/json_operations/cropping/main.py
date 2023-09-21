@@ -9,15 +9,24 @@ def json_object_to_keep(
     json_object: dict, new_x: tuple, new_y: tuple, crop_mode: str = "remove_objects"
 ) -> bool:
     """
-    Checks if json_object is inside the cropped image.
-    json_object: (dict) following the standard cytosmart format
-    new_x (tuple) (xmin_crop, xmax_crop) the x dimensions of the cropped image
-    new_y (tuple) (ymin_crop, ymax_crop) the y dimensions of the cropped images
-    crop_mode: (string) "remove_objects" & "keep_objects". Default mode is 'remove_objects'
-                using this mode removes json_object if center is outside the crop. "keep_objects"
-                mode keeps the json objects where the center is outside the crop but parts of the
-                objects are inside the crop. For these cases creates a new json object with a new center.
-                Warning: mode "keep_objects" is still not included.
+    Check if a JSON object should be kept or removed based on its position relative to the cropped area.
+
+    Args:
+        json_object (dict): JSON object following the standard AxionBio format.
+        new_x (tuple): Tuple (xmin_crop, xmax_crop) representing the x dimensions of the cropped image.
+        new_y (tuple): Tuple (ymin_crop, ymax_crop) representing the y dimensions of the cropped image.
+        crop_mode (str): Crop mode, either "remove_objects" (default) or "keep_objects".
+
+    Returns:
+        bool: True if the JSON object should be kept, False otherwise.
+
+    Note:
+        - In "remove_objects" mode, the JSON object is removed if its center is outside the crop area.
+        - In "keep_objects" mode, JSON objects with centers outside the crop but with parts inside the
+          crop are kept, and new JSON objects are created with adjusted centers.
+
+    Raises:
+        ValueError: If the type of the annotation in the JSON object is not "polygon" or "ellipse".
     """
     if crop_mode == "remove_objects":
         x, y = 0, 0
@@ -46,49 +55,22 @@ def crop_json(
     crop_mode: str = "remove_objects",
 ) -> List[dict]:
     """
-    Takes a list of json objects (ellipse or polygon, standard cytosmart format)
-    and removes or/and translates json object in the list. If the center of a
-    json object lays outside the croped dimensions it removes the json objects.
-    json_list: (list[dict]) a list of jsons in standard cytosmart format
-    x_translation: (int) The translation in the x-direction of the cropped image
-                relative to the original image
-    y_translation: (int) The translation in the y-direction of the cropped image
-                relative to the original image
-    crop_dim: (list or tuple) (x,y) dimensions of the the cropped image
-            that relate to the list of jsons
-    crop_mode: (string) "remove_objects" & "keep_objects". Default mode is 'remove_objects'
-                using this mode removes json_object if center is outside the crop. "keep_objects"
-                mode keeps the json objects where the center is outside the crop but parts of the
-                objects are inside the crop. For these cases creates a new json object with a new center.
-                Warning: mode "keep_objects" is still not included.
+    Crop a list of JSON objects based on translation and crop dimensions.
 
-    input_json_list = [
-            {
-                "type": "ellipse",
-                "center": {"x": 2, "y": 3},
-                "radiusX": 5,
-                "radiusY": 5,
-                "angleOfRotation": 0,
-            },
-            {   "type": "ellipse",
-                "center": {"x": 4, "y": 7},
-                "radiusX": 6,
-                "radiusY": 6},
-        ]
+    Args:
+        json_list (List[dict]): A list of JSON objects in standard AxionBio format.
+        x_translation (int): The translation in the x-direction of the cropped JSON relative to the original JSON.
+        y_translation (int): The translation in the y-direction of the cropped JSON relative to the original JSON.
+        crop_dim (Union[list, tuple]): Crop dimensions (x, y) of the cropped JSON.
+        crop_mode (str): Crop mode, either "remove_objects" (default) or "keep_objects".
 
-    crop_dim = (5, 6)
-    x_translation = 2
-    y_translation = 0
+    Returns:
+        List[dict]: A list of JSON objects after cropping and translation.
 
-    expected_json_list = [
-        {
-            "type": "ellipse",
-            "center": {"x": 0, "y": 3},
-            "radiusX": 5,
-            "radiusY": 5,
-            "angleOfRotation": 0,
-        }
-    ]
+    Note:
+        - In "remove_objects" mode, JSON objects with centers outside the crop area are removed.
+        - In "keep_objects" mode, JSON objects with centers outside the crop area but with parts inside the
+          crop area are kept, and new JSON objects are created with adjusted centers.
     """
 
     new_json_list = []

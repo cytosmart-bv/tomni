@@ -133,6 +133,7 @@ Example is related to the following functions in the package
 
 Sorted alphabetically
 
+- Bram van der Velden
 - Coenraad Stijne
 - Denisa Daroţi
 - Hristo Atanasov

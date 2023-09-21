@@ -1,15 +1,23 @@
 import numpy as np
+from typing import Tuple
 
 
 def fit_rect_around_ellipse(
     x: int, y: int, r1: float, r2: float, alpha: float
-) -> (int, int, int, int):
+) -> Tuple[int, int, int, int]:
     """
-    This function gives the boundingbox around an ellipse.
-    x, y: (int, int) middle point of ellipse
-    r1: (float) longest radius
-    r2: (float) shortest radius. By definition 90 degrees away from r1
-    alpha: (float) degrees between r1 and x-axis.
+    Compute the bounding box coordinates of an ellipse given its parameters.
+
+    Args:
+        x (int): The x-coordinate of the center of the ellipse.
+        y (int): The y-coordinate of the center of the ellipse.
+        r1 (float): The longest radius of the ellipse.
+        r2 (float): The shortest radius of the ellipse, which is 90 degrees away from r1.
+        alpha (float): The degrees between r1 and x-axis.
+
+    Returns:
+        Tuple[int, int, int, int]: A tuple containing the coordinates of the bounding box in the format (x1, y1, x2, y2).
+
     Special thanks to: https://math.stackexchange.com/questions/91132/how-to-get-the-limits-of-rotated-ellipse
     """
     alpha = alpha / 180 * np.pi

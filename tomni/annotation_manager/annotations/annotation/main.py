@@ -19,7 +19,7 @@ class Annotation(ABC):
             decimals (int, optional): The number of decimals to use when rounding. Defaults to 2.
 
         Returns:
-            dict: CytoSmart Data Format dict.
+            dict: AxionBio Data Format dict.
         """
         return {
             "id": self._id,

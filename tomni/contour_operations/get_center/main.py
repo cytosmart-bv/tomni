@@ -6,15 +6,19 @@ import numpy as np
 
 def get_center(contour: np.ndarray) -> Tuple[int, int]:
     """
-    Returns the center of a contour
+    Calculate the center coordinates of a contour.
 
     Args:
-        contour (np.ndarray): An opencv contour of a single object
+        contour (np.ndarray): An OpenCV contour of a single object.
 
     Returns:
-        x: (float) Center x postion
-        y: (float) Center y postion
+        Tuple[int, int]: A tuple containing the x and y coordinates of the center.
 
+    Example::
+
+        contour = np.array([[[1, 2]], [[2, 3]], [[3, 2]], [[2, 1]]])
+        get_center(contour)
+        (2, 2)
     """
     M = cv2.moments(contour)
     if M["m00"] == 0:

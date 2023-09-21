@@ -3,23 +3,32 @@ from ...shape_fitting.fit_rect_ellipse import fit_rect_around_ellipse
 
 def json2bbox(scf_object: dict) -> tuple:
     """
-    Converts the scf_object (polygon, ellipse or circle) into a bounding box coordinates (x_min, y_min, x_max, y_max)
-    All bounding box values get round using python internal 'round' function (https://wiki.c2.com/?BankersRounding)
-    E.g:
-    scf_object = {
-        "type": "polygon"
-        "points" : [{'x' : 0, 'y' : 0}, {'x' : 20, 'y' : 0}, {'x' : 20, 'y' : 30},{'x' : 0, 'y' : 30}]
-    }
-
-    bbox = scf_object2bbox(scf_object) #(0, 0 , 20, 30)
-
-    NB: The angle of rotation for an ellipse is taken into account
+    Convert a standard AxionBio format object (polygon, ellipse, or circle) into bounding box coordinates
+    (x_min, y_min, x_max, y_max). All bounding box values are rounded using Python's internal 'round' function
+    (https://wiki.c2.com/?BankersRounding).
 
     Args:
-        scf_object (dict): single standard CytoSMART format annotations. allowed types polygon, ellipse or circle
+        scf_object (Dict[str, any]): A single annotation in standard AxionBio format. Allowed types are polygon, ellipse, or circle.
 
-    Returns
-        bounding box coordinates (tuple): (x_min, y_min, x_max, y_max)
+    Returns:
+        Tuple[int, int, int, int]: Bounding box coordinates in the format (x_min, y_min, x_max, y_max).
+
+    Note:
+        - The angle of rotation for an ellipse is taken into account.
+
+    Raises:
+        ValueError: If the type of the object is not supported.
+
+    Example::
+
+        object = {
+            "type": "polygon",
+            "points": [{'x': 0, 'y': 0}, {'x': 20, 'y': 0}, {'x': 20, 'y': 30}, {'x': 0, 'y': 30}]
+        }
+        bbox = json2bbox(object)
+        print(bbox)
+        (0, 0, 20, 30)
+
     """
 
     if "type" in scf_object:
