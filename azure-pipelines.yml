@@ -13,8 +13,8 @@ jobs:
       vmImage: 'ubuntu-latest'
 
     container:
-      image: cytosmarttestreg.azurecr.io/omni/base:36398
-      endpoint: DockerRegTest2
+      image: kubernetescluster.azurecr.io/base/imageanalysis:latest
+      endpoint: kubernetescluster
 
     steps:
       - script: |
