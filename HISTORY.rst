@@ -9,6 +9,7 @@
 - BUGFIX: Multiplied minor axis and major axis by 2 in `ellipse` class, which was currently calculated as radii instead of diameters.
 - BUGFIX: Fixed average diameter in `ellipse` class, which was calculated with radii instead of diameters.
 - BUGFIX: removed assert, which took over half the time of the entire `from_binary_mask`.
+- BUGFIX: Fixed unittest labels2listsOfPoints
 
 2.0.0-b2 (2023-08-04) 
 ------------------
