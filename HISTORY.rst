@@ -1,4 +1,55 @@
 # History
+2.0.0-b3 (2023-09-08) 
+------------------
+- Added check for rectangled contours.
+    - Adds extra point if rectangle.
+    - This allows us to initialize masks (of wells) that only consist of 4 points if required in the future.
+- Added unittests for empty and full masks from binary_mask and from_labeled_mask
+- Changed variable name in `ellipse` class from r1/r2 to diameter_1/diameter_2 etc for naming clarity.
+- BUGFIX: Multiplied minor axis and major axis by 2 in `ellipse` class, which was currently calculated as radii instead of diameters.
+- BUGFIX: Fixed average diameter in `ellipse` class, which was calculated with radii instead of diameters.
+- BUGFIX: removed assert, which took over half the time of the entire `from_binary_mask`.
+- BUGFIX: Fixed unittest labels2listsOfPoints
+
+2.0.0-b2 (2023-08-04) 
+------------------
+- Moved feature_multiplier and metric_unit to to_dict() from from_dict(). 
+- Added inner contours options 
+- added binary2contours
+- change parameters for from_binary_mask
+- made contours2polygon
+
+2.0.0-b1 (2023-07-06)
+------------------
+- AnnotationManager function from_dict is called with an optional list of features
+- Changed Polygon and Ellipse classes to include the list of features initialized by AnnotationManager
+- to_dict function now only returns features in the dictionary that were asked for in the feature list
+- Added `feature_multiplier` and `metric_unit` as inputs to apply to the features' name and value outputs.
+- Added all features to `ellipse` and `polygon`.
+- Features are now in camelCasing when output `to_dict`
+
+2.0.0-b0 (2022-11-29)
+------------------
+- CDF-Main: Implement `filter` to allow filtering of annotations by feature values (aka gating).
+- CDF-Main: Implement `from_contours`.
+- CDF-Main: Implement `to_contours`.
+- CDF-Main: Implement `from_dict`.
+- CDF-Main: Implement `to_dict`. Includes rounding.
+- CDF-Main: Implement `__len__`.
+- CDF-Main: Implement `__iter__` and `__next__`.
+- Add polygon annotation class.
+- CDF-polygon: Implement `__eq__`
+- CDF-polygon: Remove useless point
+- Add ellipse annotation class.
+- CDF-ellipse: Implement `__eq__`
+- CDF-ellipse: Set all rotations between 0 and 90, flip radii if needed
+- Renamed `CytoSmartDataFormat` to `AnnotationManager`
+- Add `is_in_mask` for `Ellipse` and `Polygon`
+- Add `min_overlap`-parameter in `to_dict` to apply masks to filter annotations
+- Add `to_binary_mask` and `to_labeled_mask` for `AnnotationManager`, `Ellipse` and `Polygon`
+- Add init-function `from_binary_mask` and `from_labeled_mask` to `AnnotationManager`
+- Bugfix: Fixed a bug where `simplify_line` returns empty list when passing two points.
+- Add option to to compress polygons in `to_dict()`.
 1.17.0 (2023-07-26)
 - Add binary2contours
 

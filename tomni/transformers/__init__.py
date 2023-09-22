@@ -12,4 +12,5 @@ from .binary2contours import binary2contours
 from .labels2listsOfPoints import labels2listsOfPoints
 from .mask2bbox import mask2bbox
 from .mask2json import mask2json
+from .positions2contour import positions2contour
 from .vgg2json import vgg2json

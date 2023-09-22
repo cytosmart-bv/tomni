@@ -41,6 +41,8 @@ The name Tomni is a combination of creator (Tom) and other CytoSMART product he 
   - Approximate circle by area
   - Get roundness
   - Get circularity
+- CytoSMART data format
+  - Tba
 - Json operation
   - Add circularity property
   - Scale object
@@ -62,15 +64,83 @@ The name Tomni is a combination of creator (Tom) and other CytoSMART product he 
   - Labels 2 lists of points
   - Binary 2 contours
 
+
+## Examples
+
+### Diameter vs radius
+Most geometric operation use functions from OpenCV
+
+Some of these function return diameter and some radius of the circle. This is not consistent.
+
+For example, the function `cv2.minEnclosingCircle` returns the center and radius of the circle. The function `cv2.fitEllipse` returns the center and the major and minor axes of the ellipse.
+
+#### Min enclosing circle example
+```python
+import cv2
+import math
+import numpy as np
+
+points = np.array([[0, 0], [100, 0], [100, 100], [0, 100], [0, 0]], dtype=np.float32)
+
+center, radius = cv2.minEnclosingCircle(points)
+diameter = math.sqrt(50**2 + 50**2) 
+
+print("Center:", center)
+print("Major and Minor Axes:", radius)
+print("Diameter calculated with Pythagoras formula", diameter)
+
+```
+
+this results in the following output:
+```cmd
+Center: (50.0, 50.0)
+Major and Minor Axes: 70.71077728271484
+Diameter calculated with Pythagoras formula 70.71067811865476
+```
+#### Fit ellipse example
+```python
+import cv2
+import math
+import numpy as np
+
+# Generate some example points
+points = np.array([[0, 0], [100, 0], [100, 100], [0, 100], [0, 0]], dtype=np.float32)
+
+# Fit an ellipse to the points
+ellipse = cv2.fitEllipse(points)
+
+# Extract ellipse parameters
+center, axes, angle = ellipse
+
+diameter = math.sqrt(50**2 + 50**2) * 2
+
+print("Center:", center)
+print("Major and Minor Axes:", axes)
+print("Diameter calculated with Pythagoras formula", diameter)
+```
+
+this results in the following output:
+
+```cmd
+Center: (50.0, 49.95212173461914)
+Major and Minor Axes: (141.43260192871094, 141.5462188720703)
+Diameter: 141.4213562373095
+```
+Example is related to the following functions in the package
+
+
 ## Credits
 
 Sorted alphabetically
 
+- Bram van der Velden
 - Coenraad Stijne
 - Denisa Daroţi
 - Hristo Atanasov
+- Jan-Niklas Schneider
 - Jelle van Kerkvoorde
 - Kirsten Koopman
+- Lisa Koolen
 - Manon van Erp
 - Marina Tzenkova
 - Tom de Vries

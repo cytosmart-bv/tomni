@@ -7,13 +7,27 @@ import numpy as np
 
 def bbox_fitting_center(img: np.ndarray, size, padding_value: int = 0) -> np.ndarray:
     """
-    Creates an image of size 'size' ([(int) x, (int) y]) in IMAGE-Coordinates).
-    The orignal image will be centered and padded and/or cropped to fit the size.
+    Creates an image of size 'size' in IMAGE-Coordinates by centering and padding the original image.
 
-    img: numpy.ndarray
-    size: [int, int]
+    Args:
+        img (numpy.ndarray): The original image.
+        size (List[int]): The target size of the output image as [x, y].
+        padding_value (int, optional): The value used for padding. Defaults to 0.
 
-    output: numpy.ndarray
+    Returns:
+        numpy.ndarray: The resulting image of the specified size.
+
+    Raises:
+        TypeError: If img is not a numpy.ndarray.
+        ValueError: If size elements are not positive integers.
+
+    Example::
+
+        img = np.zeros((100, 100))
+        size = [50, 50]
+        result = bbox_fitting_center(img, size)
+        result.shape
+        (50, 50)  # The resulting image size.
     """
     if not isinstance(img, np.ndarray):
         raise TypeError("Img needs to be a numpy.ndarry not {}".format(type(img)))

@@ -4,30 +4,20 @@ from typing import Union
 
 def rotate_json(json_object: dict, angle: int, img_shape: Union[list, tuple]) -> dict:
     """
-    Takes in a json object (ellipse or polygon, standard cytosmart fromat) and rotates it.
-    Possible rotations are 0, 90, 180 and 270 degree.
-    json_object: (dict) following the standard cytosmart format
-    angle: (int) the angle of rotations. Can chose from 0, 90, 180, 270 degree.
-    img_shape: (list or tuple) the shape of the image the json_object is related to.
+    Rotate a JSON object (ellipse or polygon) by 0, 90, 180, or 270 degrees.
 
-    example:
-    input_json = {
-            "type": "ellipse",
-            "center": {"x": 0, "y": 2},
-            "radiusX": 5,
-            "radiusY": 5,
-            "angleOfRotation": 0,
-        }
-    angle = 90
+    Args:
+        json_object (dict): JSON object following the standard AxionBio format (ellipse or polygon).
+        angle (int): The angle of rotation. Choose from 0, 90, 180, or 270 degrees.
+        img_shape (list or tuple): The shape of the image related to the JSON object, represented as (width, height).
 
-    expected_json = {
-            "type": "ellipse",
-            "center": {"x": 4, "y": 3},
-            "radiusX": 5,
-            "radiusY": 5,
-            "angleOfRotation": 0,
-        }
+    Returns:
+        dict: A new JSON object with the specified rotation.
+
+    Raises:
+        ValueError: If the angle is not one of 0, 90, 180, or 270 degrees.
     """
+
     assert len(img_shape) == 2
 
     newjson_object = copy.deepcopy(json_object)

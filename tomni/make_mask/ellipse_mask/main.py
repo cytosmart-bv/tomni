@@ -5,17 +5,22 @@ from . import bbox_fitting
 
 
 def make_mask_ellipse(image_size, x1, y1, rx, ry):
-
     """
-    :param image_size: the size of the image
-    :param x1: x coordinate of the center of the ellipse
-    :param y1: y coordinate of the center of the ellipse
-    :param rx: the length of the radius on the x axis of the ellipse
-    :param ry: the length of the radius on the y axis of the ellipse
-    :return: an image with an ellipse of True surrounded by False
+    Create an image with an ellipse of True surrounded by False.
 
-    The big ellipse function is less precise but better at memory management.
-    The small ellipse function is more precise.
+    Args:
+        image_size (tuple): The size of the image (width, height).
+        x1 (int): The x-coordinate of the center of the ellipse.
+        y1 (int): The y-coordinate of the center of the ellipse.
+        rx (int): The length of the radius on the x-axis of the ellipse.
+        ry (int): The length of the radius on the y-axis of the ellipse.
+
+    Returns:
+        np.ndarray: An image with an ellipse represented as True values surrounded by False values.
+
+    Note:
+        - The function uses either 'make_small_mask_ellipse' or 'make_big_mask_ellipse' based on the size of the ellipse.
+        - For rotated ellipses, additional support for 'alpha' can be added in future updates.
 
     """
     x1 = int(x1)
@@ -34,27 +39,19 @@ def make_mask_ellipse(image_size, x1, y1, rx, ry):
 
 def make_small_mask_ellipse(image_size, x1, y1, rx, ry):
     """
+    Create an image with a small ellipse of True surrounded by False.
 
-    :param image_size: the size of the image
-    :param x1: x coordinate of the center of the ellipse
-    :param y1: y coordinate of the center of the ellipse
-    :param rx: the length of the radius on the x axis of the ellipse
-    :param ry: the length of the radius on the y axis of the ellipse
-    :return: an image with an ellipse of True surrounded by False
+    Args:
+        image_size (tuple): The size of the image (width, height).
+        x1 (int): The x-coordinate of the center of the ellipse.
+        y1 (int): The y-coordinate of the center of the ellipse.
+        rx (int): The length of the radius on the x-axis of the ellipse.
+        ry (int): The length of the radius on the y-axis of the ellipse.
 
-    Futere request: Variable Alpha.
+    Returns:
+        np.ndarray: An image with a small ellipse represented as True values surrounded by False values.
 
-    For rotated ellipses, the alpha value is used to find the translated points
-    alpha = angle of rotation (in degrees)
-    alpha = 0 gives no rotation of the ellipse
-
-    The sin() and cos() values are calculated using math library
-
-    The following formula can be used to calculate the coordinates:
-    circle = ((xx * math.cos(alpha) + yy * math.sin(alpha)) ** 2) * (rx ** 2) +\
-             # ((xx * math.sin(alpha) - yy * math.cos(alpha)) ** 2) * (ry ** 2)
     """
-
     yy, xx = np.mgrid[: image_size[1], : image_size[0]]
 
     xx = xx.astype(np.int32)
@@ -79,13 +76,18 @@ def make_small_mask_ellipse(image_size, x1, y1, rx, ry):
 
 def make_big_mask_ellipse(image_size, xe, ye, rex, rey):
     """
+    Create an image with a large ellipse of True surrounded by False.
 
-    :param image_size:
-    :param xe: x coordinate of the ellipse
-    :param ye: y coordinate of the ellipse
-    :param rex: the radius on the x axis of the ellipse
-    :param rey: the radius on the y axis of the ellipse
-    :return: an array with True and False corresponding to the ellipse mask in the image
+    Args:
+        image_size (tuple): The size of the image (width, height).
+        xe (int): The x-coordinate of the ellipse.
+        ye (int): The y-coordinate of the ellipse.
+        rex (int): The radius on the x-axis of the ellipse.
+        rey (int): The radius on the y-axis of the ellipse.
+
+    Returns:
+        np.ndarray: An image with a large ellipse represented as True values surrounded by False values.
+
     """
 
     out = cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (rex * 2, rey * 2))

@@ -2,22 +2,26 @@ from typing import Union
 
 
 def check_overlap_bbox(bb1: Union[tuple, list], bb2: Union[tuple, list]) -> bool:
-
     """
-    Checks if two bounding boxes overlap with eachother.
-    The bounding boxes are assumed the be structured as follows:
-    (xmin, ymin, xmax, ymax).
-    Warning: Touching bounding boxes are not seen as overlapping
+    Checks if two bounding boxes overlap with each other. Bounding boxes are represented
+    as tuples or lists in the format (xmin, ymin, xmax, ymax).
 
     Args:
-        bb1 (Union[tuple, list]): boundingbox 1, (x1, y1, x2 ,y2)
-        bb2 (Union[tuple, list]): boundingbox 2, (x1, y1, x2 ,y2)
+        bb1 (Union[tuple, list]): Bounding box 1, specified as (x1, y1, x2, y2).
+        bb2 (Union[tuple, list]): Bounding box 2, specified as (x1, y1, x2, y2).
 
     Raises:
-        ValueError: Length of bounding box is the wrong size
+        ValueError: If the length of either bounding box is not 4.
 
     Returns:
-        bool: if the bounding boxes are touching
+        bool: True if the bounding boxes overlap, False otherwise.
+
+    Example::
+
+        bb1 = (1, 1, 4, 4)
+        bb2 = (3, 3, 6, 6)
+        check_overlap_bbox(bb1, bb2)
+        True  # The bounding boxes overlap.
     """
     if len(bb1) != 4 or len(bb2) != 4:
         raise ValueError("The bounding boxes must be tuples or list of length 4")

@@ -6,11 +6,19 @@ def ellipse2json(
     x: int, y: int, radius: int, secondRadius: Union[None, int] = None, alpha: float = 0
 ) -> dict:
     """
-    x: (int) center x position
-    y: (int) center y position
-    radius: (int) the radius of the circle
-    secondRadius: (int, None) (optional) In case of an ellipse, this is the smallest radius of the two.
-    alpha: (float) (optional) In case of an ellipse. This is the angle between the biggest radius and the x-axis.
+    Convert ellipse parameters into a JSON object in standard AxionBio format.
+
+    Args:
+        x (int): The center x-position of the ellipse.
+        y (int): The center y-position of the ellipse.
+        radius (int): The radius of the ellipse.
+        secondRadius (int, None, optional): The smallest radius of the ellipse. Defaults to None.
+            In case of a circle or when not provided, it is assumed to be equal to 'radius'.
+        alpha (float, optional): This is the angle between the biggest radius and the x-axis.
+            Defaults to 0.
+
+    Returns:
+        dict: A JSON object representing the ellipse in standard AxionBio format.
     """
     result = []
     result = {

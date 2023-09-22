@@ -6,17 +6,18 @@ from . import bbox_fitting_center
 
 def make_mask_circle(img_shape: tuple, diameter: int) -> np.ndarray:
     """
-    This function produces a boolean image with a circle of True surrounded by False.
-    img_shape is in image-coordinates. Diameter is in pixels.
-    In case the circle is bigger than 100 pixels a different function is used.
-    The big circle function is less precise but better at memory management.
+    Create a boolean image with a circle of True surrounded by False.
 
-    img_shape: (tuple, shape (2,) ) the shape of the image given in image coordinates.
-        These can be obtained with img_dim.
-    diameter: (int) the diameter of the circle given in pixels.
+    Args:
+        img_shape (tuple): The shape of the image given in image coordinates, represented as (width, height).
+        diameter (int): The diameter of the circle in pixels.
 
-    return:
-        numpy array with type boolean
+    Returns:
+        np.ndarray: A boolean image where the area enclosed by the circle is True and the rest is False.
+
+    Note:
+        - The function uses either 'make_small_mask_circle' or 'make_big_mask_circle' based on the size of the circle.
+        - In case the diameter is greater than or equal to 100 pixels, the 'make_big_mask_circle' function is used for memory efficiency.
     """
     if diameter < 100:
         return make_small_mask_circle(img_shape, diameter)
@@ -25,6 +26,17 @@ def make_mask_circle(img_shape: tuple, diameter: int) -> np.ndarray:
 
 
 def make_small_mask_circle(img_shape, diameter):
+    """
+    Create a boolean image with a small circle of True surrounded by False.
+
+    Args:
+        img_shape (tuple): The shape of the image given in image coordinates, represented as (width, height).
+        diameter (int): The diameter of the circle in pixels.
+
+    Returns:
+        np.ndarray: A boolean image with a small circle represented as True values surrounded by False values.
+
+    """
     xx, yy = np.mgrid[: img_shape[1], : img_shape[0]] * 2
 
     xx = xx.astype(np.int32)
@@ -40,6 +52,17 @@ def make_small_mask_circle(img_shape, diameter):
 
 
 def make_big_mask_circle(img_shape, diameter):
+    """
+    Create a boolean image with a large circle of True surrounded by False.
+
+    Args:
+        img_shape (tuple): The shape of the image given in image coordinates, represented as (width, height).
+        diameter (int): The diameter of the circle in pixels.
+
+    Returns:
+        np.ndarray: A boolean image with a large circle represented as True values surrounded by False values.
+
+    """
     out = cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (diameter, diameter))
     out = bbox_fitting_center(out, img_shape)
     return out.astype(bool)
