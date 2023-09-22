@@ -3,17 +3,22 @@ import numpy as np
 
 
 def roundness(contour: np.ndarray) -> float:
-    r"""
-    Returns roundess of the contour
-    Roundness is determined by difference in areas of the contour and enclosing circle
-    Roundness = :math:`\frac{A}{r_e^2 \pi}`
-    With :math:`r_e` being the radius of the enclosing circle.
+    """
+    Calculate the roundness of a contour.
+
+    The roundness is determined by the ratio of the area of the contour to the area of
+    the minimum enclosing circle.
 
     Args:
-        contour (np.ndarray): An opencv contour of a single object
+        contour (np.ndarray): An OpenCV contour of a single object.
 
     Returns:
-        float: roundess number between 0 and 1
+        float: The roundness value, ranging from 0 to 1, where 1 indicates a perfect circle.
+
+    Examples:
+        >>> contour = np.array([[[1, 2]], [[2, 3]], [[3, 2]], [[2, 1]]])
+        >>> roundness(contour)
+        0.8367346938775511
     """
 
     area = cv2.contourArea(contour)

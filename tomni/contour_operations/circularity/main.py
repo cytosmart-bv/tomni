@@ -4,29 +4,27 @@ import numpy as np
 
 def circularity(contour: np.ndarray) -> float:
     """
-    Calculates the circularity of a contour.
-    This is based on the perimeter and area of the contour.
-    A circle will give the smallest area for a given perimeter, so this is 1.
+    Calculate the circularity of a contour.
 
-    The smaller the area is for a perimeter the less circular the contour is.
-    So the closer is get to 0.
-
-    The formula works from calculating the r**2 based on Area and Perimeter
-    Area based:
-    r**2 = A/pi
-
-    Perimeter based:
-    r**2 = (p/2*pi)**2
-
-    Dividing these two gives circularity
-    c = (A/pi) / (p/2*pi)**2 = (4 * pi * A) / (p**2)
+    The circularity of a contour is a measure of how closely it resembles a perfect circle.
+    It is calculated based on the contour's area and perimeter.
 
     Args:
-        contour (np.ndarray): Contour as given by opencv
+        contour (np.ndarray): The contour represented as an OpenCV ndarray.
 
     Returns:
-        float: circularity (0 < c <= 1)
+        float: The circularity value, where 0 < circularity <= 1.
+
+    Example:
+        >>> contour = np.array([[[1, 2]], [[2, 3]], [[3, 2]], [[2, 1]]])
+        >>> circularity(contour)
+        0.7853981633974483  # Approximate circularity of a square.
+
+    Note:
+        - Formula: Circularity = (4 * π * area) / (perimeter^2)
+        - Circularities close to 0 indicate more irregular shapes, while circularities close to 1 suggest shapes that closely resemble a perfect circle.
     """
+
     # calculate size
     area = cv2.contourArea(contour)
 

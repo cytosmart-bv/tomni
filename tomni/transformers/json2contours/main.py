@@ -3,11 +3,19 @@ import numpy as np
 
 def json2contours(json: dict) -> np.ndarray:
     """
-    Set a default json format object to a contour.
-    json: (dict) the objects needs:
-        'points': (if polygon) list of dict of form {x: ..., y: ...}
-        'type': needs to be polygon
+    Convert a JSON object in a default AxionBio format to a contour represented as a NumPy array.
+
+    Args:
+        json (dict): A JSON object containing 'points' in the form of a list of dictionaries
+                     with keys 'x' and 'y', and 'type' set to 'polygon'.
+
+    Returns:
+        np.ndarray: A contour represented as a NumPy array.
+
+    Raises:
+        ValueError: If the 'type' in the JSON object is not 'polygon' or missing.
     """
+
     if json.get("type", "").lower() == "polygon":
         result = [[[i["x"], i["y"]]] for i in json["points"]]
     else:

@@ -238,7 +238,7 @@ class Ellipse(Annotation):
         feature_multiplier: int = 1,
         **kwargs,
     ) -> dict:
-        """Returns a dictionary of the annotation in cytosmart format.
+        """Returns a dictionary of the annotation in AxionBio format.
 
         Args:
             decimals (int, optional): The number of decimals to use when rounding. Defaults to 2.
@@ -252,7 +252,7 @@ class Ellipse(Annotation):
             ValueError: It raises and error if any of the features are not compatible with the Annotation Manager.
 
         Returns:
-            dict: a dictionary of the annotation in cytosmart format with the calculated features.
+            dict: a dictionary of the annotation in AxionBio format with the calculated features.
         """
         self._feature_multiplier = feature_multiplier
 
@@ -318,7 +318,7 @@ class Ellipse(Annotation):
         """Check if an ellipse is within a binary mask.
 
         Args:
-            mask_json (List[dict]): A list of dict masks in cytosmart dict format.
+            mask_json (List[dict]): A list of dict masks in AxionBio dict format.
             min_overlap (float, optional): Minimum overlap required between the ellipse and the mask, expressed as a value between 0 and 1. Defaults to 0.9.
 
         Returns:

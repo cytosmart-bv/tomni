@@ -6,34 +6,26 @@ def bbox_fitting(
     img: np.ndarray, x1: int, y1: int, x2: int, y2: int, padding_value: int = 0
 ) -> np.ndarray:
     """
-    Bounding box fitting:
-    Using cropping and padding to fit an image to the bounding box.
-    Relative to the 0,0 of the input image the image gets cropped and padded to fit with x1, y1, x2 and y2.
-    The result is including the pixels x1, x2, y1 and y2.
-    So a 0, 0, 9, 9 gives an 10x10 result.
+    This function extracts a region of interest (ROI) from an input image based on a specified bounding box.
+    It is particularly useful for isolating specific areas of interest within an image.
 
-    WARNING:
-    Coordinates are IMAGE-coordinates. So that is the same pillow and OpenCV uses but swapped from what Numpy and Scipy use (ARRAY-coordinates).
-    Yes, I hate it too.
-
-    Args:
-        img: (np.ndarray): The image the bounding box will be extracted from
-
-        x1: (int): Lowest value of X
-
-        y1: (int): Lowest value of Y
-
-        x2: (int): Highest value of X
-
-        y2: (int): Highest value of Y
-
-        padding_value: (int, optional): Every pixel outside the image bit inside the bounding box will get this value.
-        Defaults to 0.
+    Parameters:
+        - img (np.ndarray): The input image from which the bounding box will be extracted.
+        - x1 (int): The lowest value of X-coordinate for the bounding box.
+        - y1 (int): The lowest value of Y-coordinate for the bounding box.
+        - x2 (int): The highest value of X-coordinate for the bounding box.
+        - y2 (int): The highest value of Y-coordinate for the bounding box.
+        - padding_value (int, optional): The value assigned to pixels outside the image but within the bounding box. Defaults to 0.
 
     Returns:
-        np.ndarray: Extracted patch within the bounding box from the image
-    """
-    """
+        - np.ndarray: The extracted image patch within the specified bounding box.
+
+    Raises:
+        - TypeError: If img is not a numpy.ndarray.
+        - ValueError: If x1, y1, x2, or y2 are not positive integers.
+
+    Note:
+        The coordinates used in this function are in IMAGE coordinates, which follow the convention used by Pillow and OpenCV but are swapped compared to the Numpy and Scipy convention (ARRAY coordinates). Please be mindful of this difference.
 
     """
 

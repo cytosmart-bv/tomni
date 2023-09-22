@@ -57,7 +57,9 @@ def are_boundingboxes_overlapping(
         return True
 
 
-def create_ellipse(center: Tuple[int, int], radii: Tuple[int, int], angle: Union[int, None] = 0):
+def create_ellipse(
+    center: Tuple[int, int], radii: Tuple[int, int], angle: Union[int, None] = 0
+):
     if radii[0] < 0 or radii[1] < 0:
         raise ValueError("Radi cannot be negative")
     circ = point.Point(center).buffer(1)
@@ -71,7 +73,7 @@ def object2shape(annotation_object: dict):
     """Convert object dict to shapely shape.
 
     Args:
-        object (dict): An annotation object in cytosmart format.
+        object (dict): An annotation object in AxionBio format.
 
     Raises:
         ValueError: If type of the annotation object is unknown.
@@ -108,8 +110,8 @@ def overlap_object(object_1: dict, object_2: dict) -> float:
     """This function calculates the overlap percentage of the first object with the second object.
 
     Args:
-        object1 (dict): JSON object1 in cytosmart format
-        object2 (dict): JSON object2 in cytosmart format
+        object1 (dict): JSON object1 in AxionBio format
+        object2 (dict): JSON object2 in AxionBio format
 
     Returns:
         int: overlap percentage.
