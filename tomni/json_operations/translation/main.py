@@ -37,24 +37,30 @@ def translation_json(json_object: dict, x_translation: int, y_translation: int):
     """
     newjson_object = json_object.copy()
     if json_object["type"] == "ellipse":
-        newjson_object["center"]["x"] = int(
-            round(json_object["center"]["x"] + x_translation)
+        newjson_object["center"] = translate_coordinates(
+            json_object["center"], x_translation, y_translation
         )
-        newjson_object["center"]["y"] = int(
-            round(json_object["center"]["y"] + y_translation)
-        )
-
     elif json_object["type"] == "polygon":
-        all_points = []
-        for point in json_object["points"]:
-            all_points.append(
-                {
-                    "x": int(round(point["x"] + x_translation)),
-                    "y": int(round(point["y"] + y_translation)),
-                }
-            )
-        newjson_object["points"] = all_points
+        newjson_object["points"] = [
+            translate_coordinates(point, x_translation, y_translation)
+            for point in json_object["points"]
+        ]
+        if "inner_points" in json_object:
+            newjson_object["inner_points"] = [
+                [
+                    translate_coordinates(point, x_translation, y_translation)
+                    for point in inner_points
+                ]
+                for inner_points in json_object["inner_points"]
+            ]
     else:
         raise ValueError(f"type {json_object['type']} is not supported")
 
     return newjson_object
+
+
+def translate_coordinates(point, x_translation, y_translation):
+    return {
+        "x": int(round(point["x"] + x_translation)),
+        "y": int(round(point["y"] + y_translation)),
+    }
