@@ -125,6 +125,41 @@ class TestScaleObject(TestCase):
 
         self.assertDictEqual(result, expectedDict)
 
+    def test_polygon_inner_contours_empty(self):
+        inputDict = {
+            "type": "polygon",
+            "points": [
+                {"x": 500, "y": 52},
+                {"x": 500, "y": 100},
+                {"x": 540, "y": 100},
+                {"x": 540, "y": 52},
+            ],
+            "id": "unicorn",
+            "parents": [],
+            "children": [],
+            "inner_points": [],
+        }
+        translation_x = -150
+        translation_y = 10
+
+        expectedDict = {
+            "type": "polygon",
+            "points": [
+                {"x": 350, "y": 62},
+                {"x": 350, "y": 110},
+                {"x": 390, "y": 110},
+                {"x": 390, "y": 62},
+            ],
+            "id": "unicorn",
+            "parents": [],
+            "children": [],
+            "inner_points": [],
+        }
+
+        result = translation_json(inputDict, translation_x, translation_y)
+
+        self.assertDictEqual(result, expectedDict)
+
     def test_unknown_type(self):
         inputDict = {
             "type": "unicornType",
