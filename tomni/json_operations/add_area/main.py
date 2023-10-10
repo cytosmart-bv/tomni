@@ -1,5 +1,8 @@
 import math
+
 import cv2
+import numpy as np
+
 from ...transformers import json2contours
 
 
@@ -48,8 +51,15 @@ def add_area(json_object: dict) -> None:
         area = math.pi * json_object["radiusX"] * json_object["radiusY"]
 
     elif type_anno == "polygon":
-        contour = json2contours(json_object)
-        area = cv2.contourArea(contour)
+        outer_contour = json2contours(json_object)
+        area = cv2.contourArea(outer_contour)
+        if "inner_points" in json_object:
+            for inner_contour in json_object["inner_points"]:
+                inner_contour_result = np.array(
+                    [[i["x"], i["y"]] for i in inner_contour], dtype=np.int32
+                )
+                inner_area = cv2.contourArea(inner_contour_result)
+                area -= inner_area
     else:
         raise ValueError(f"{type_anno} is not supported")
 

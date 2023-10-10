@@ -1,9 +1,11 @@
+from __future__ import absolute_import
+
 from unittest import TestCase
 
 from .main import translation_json
 
 
-class TestScaleObject(TestCase):
+class TestTranslateObject(TestCase):
     def test_ellipses(self):
         inputDict = {
             "type": "ellipse",

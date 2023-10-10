@@ -1,6 +1,6 @@
-from unittest import TestCase
-import numpy as np
 import math
+from unittest import TestCase
+
 from .main import add_area
 
 
@@ -30,6 +30,100 @@ class TestAddAreaJson(TestCase):
             "id": "unicorn",
             "parents": [],
             "children": [],
+            "area": 100.0,
+        }
+
+        add_area(json_object)
+
+        self.assertDictEqual(json_object, expected_result)
+
+    def test_happy_flow_inner_contours(self):
+        json_object = {
+            "type": "polygon",
+            "points": [
+                {"x": 0, "y": 10},
+                {"x": 10, "y": 10},
+                {"x": 10, "y": 0},
+                {"x": 0, "y": 0},
+            ],
+            "id": "unicorn",
+            "parents": [],
+            "children": [],
+            "inner_points": [
+                [
+                    {"x": 0, "y": 3},
+                    {"x": 3, "y": 3},
+                    {"x": 3, "y": 0},
+                    {"x": 0, "y": 0},
+                ],
+                [
+                    {"x": 0, "y": 2},
+                    {"x": 2, "y": 2},
+                    {"x": 2, "y": 0},
+                    {"x": 0, "y": 0},
+                ],
+            ],
+        }
+
+        expected_result = {
+            "type": "polygon",
+            "points": [
+                {"x": 0, "y": 10},
+                {"x": 10, "y": 10},
+                {"x": 10, "y": 0},
+                {"x": 0, "y": 0},
+            ],
+            "id": "unicorn",
+            "parents": [],
+            "children": [],
+            "inner_points": [
+                [
+                    {"x": 0, "y": 3},
+                    {"x": 3, "y": 3},
+                    {"x": 3, "y": 0},
+                    {"x": 0, "y": 0},
+                ],
+                [
+                    {"x": 0, "y": 2},
+                    {"x": 2, "y": 2},
+                    {"x": 2, "y": 0},
+                    {"x": 0, "y": 0},
+                ],
+            ],
+            "area": 87.0,
+        }
+
+        add_area(json_object)
+
+        self.assertDictEqual(json_object, expected_result)
+
+    def test_happy_flow_inner_contours_empty(self):
+        json_object = {
+            "type": "polygon",
+            "points": [
+                {"x": 0, "y": 10},
+                {"x": 10, "y": 10},
+                {"x": 10, "y": 0},
+                {"x": 0, "y": 0},
+            ],
+            "id": "unicorn",
+            "parents": [],
+            "children": [],
+            "inner_points": [],
+        }
+
+        expected_result = {
+            "type": "polygon",
+            "points": [
+                {"x": 0, "y": 10},
+                {"x": 10, "y": 10},
+                {"x": 10, "y": 0},
+                {"x": 0, "y": 0},
+            ],
+            "id": "unicorn",
+            "parents": [],
+            "children": [],
+            "inner_points": [],
             "area": 100.0,
         }
 
