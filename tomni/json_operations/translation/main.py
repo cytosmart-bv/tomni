@@ -59,7 +59,17 @@ def translation_json(json_object: dict, x_translation: int, y_translation: int):
     return newjson_object
 
 
-def translate_coordinates(point, x_translation, y_translation):
+def translate_coordinates(point: dict, x_translation: int, y_translation: int) -> dict:
+    """Translate 2D coordinates by adding specified translations.
+
+    Args:
+        point (dict): A dictionary representing 2D coordinates with 'x' and 'y' keys.
+        x_translation (int): The amount to translate in the x-axis.
+        y_translation (int): The amount to translate in the y-axis.
+
+    Returns:
+        dict: A new dictionary with translated coordinates.
+    """
     return {
         "x": int(round(point["x"] + x_translation)),
         "y": int(round(point["y"] + y_translation)),
