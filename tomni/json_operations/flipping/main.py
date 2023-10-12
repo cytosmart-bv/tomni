@@ -54,33 +54,3 @@ def flip_coordinates(coordinates: dict, img_dim: int) -> dict:
         dict: A new dictionary with coordinates flipped over the y-axis.
     """
     return {"x": coordinates["x"], "y": img_dim - coordinates["y"] - 1}
-
-    # if json_object["type"] == "ellipse":
-    #     newjson_object["center"]["y"] = img_dim - json_object["center"]["y"] - 1
-
-    # elif json_object["type"] == "polygon":
-    #     for point_n in range(len(newjson_object["points"])):
-    #         newjson_object["points"][point_n]["y"] = (
-    #             img_dim - json_object["points"][point_n]["y"] - 1
-    #         )
-    #     if "inner_points" in json_object:
-    #         for inner_contour_n, inner_contour in enumerate(
-    #             newjson_object["inner_points"]
-    #         ):
-    #             for inner_point_n in range(len(inner_contour)):
-    #                 newjson_object["inner_points"][inner_contour_n][inner_point_n][
-    #                     "y"
-    #                 ] = (
-    #                     img_dim
-    #                     - json_object["inner_points"][inner_contour_n][inner_point_n][
-    #                         "y"
-    #                     ]
-    #                     - 1
-    #                 )
-
-    # else:
-    #     raise TypeError(
-    #         f"The type {json_object['type']} is not found in flipping augmentation"
-    #     )
-
-    # return newjson_object

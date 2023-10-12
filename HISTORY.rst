@@ -1,5 +1,12 @@
 # History
 
+2.2.0 (2023-11-10)
+------------------
+- function add_area subtracts the inner area when inner points are present.
+- function flipping now flips the inner contours as well.
+- function rotation now rotates inner contours.
+- function scale_json now scales inner contours.
+
 2.1.0 (2023-10-04)
 ------------------
 - translation_json function can now also translate the inner points 
