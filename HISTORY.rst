@@ -1,4 +1,9 @@
 # History
+
+2.1.0 (2023-10-04)
+------------------
+- translation_json function can now also translate the inner points 
+
 2.0.0-b3 (2023-09-08) 
 ------------------
 - Added check for rectangled contours.
