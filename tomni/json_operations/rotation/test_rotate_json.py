@@ -1,4 +1,5 @@
 from unittest import TestCase
+
 from .main import rotate_json
 
 
@@ -37,6 +38,28 @@ class TestRotatePatch(TestCase):
         true_json = rotate_json(input_json, 0, (5, 5))
         self.assertDictEqual(true_json, expected_json)
 
+    def test_rotation_expected_0_polygon_inner_points(self):
+        input_json = {
+            "type": "polygon",
+            "points": [{"x": 1, "y": 1}, {"x": 1, "y": 5}],
+            "inner_points": [
+                [{"x": 1, "y": 1}, {"x": 1, "y": 5}],
+                [{"x": 2, "y": 1}, {"x": 1, "y": 2}],
+            ],
+        }
+
+        expected_json = {
+            "type": "polygon",
+            "points": [{"x": 1, "y": 1}, {"x": 1, "y": 5}],
+            "inner_points": [
+                [{"x": 1, "y": 1}, {"x": 1, "y": 5}],
+                [{"x": 2, "y": 1}, {"x": 1, "y": 2}],
+            ],
+        }
+
+        true_json = rotate_json(input_json, 0, (5, 5))
+        self.assertDictEqual(true_json, expected_json)
+
     def test_rotation_expected_90(self):
         input_json = {
             "type": "ellipse",
@@ -57,15 +80,22 @@ class TestRotatePatch(TestCase):
         self.assertDictEqual(true_json, expected_json)
 
     def test_rotation_expected_90_polygon(self):
-
         input_json = {
             "type": "polygon",
             "points": [{"x": 1, "y": 1}, {"x": 1, "y": 5}],
+            "inner_points": [
+                [{"x": 1, "y": 1}, {"x": 1, "y": 5}],
+                [{"x": 2, "y": 1}, {"x": 1, "y": 2}],
+            ],
         }
 
         expected_json = {
             "type": "polygon",
             "points": [{"x": 4, "y": 1}, {"x": 0, "y": 1}],
+            "inner_points": [
+                [{"x": 4, "y": 1}, {"x": 0, "y": 1}],
+                [{"x": 4, "y": 2}, {"x": 3, "y": 1}],
+            ],
         }
         true_json = rotate_json(input_json, 90, (6, 5))
 
@@ -104,6 +134,27 @@ class TestRotatePatch(TestCase):
         true_json = rotate_json(input_json, 180, (6, 5))
         self.assertDictEqual(true_json, expected_json)
 
+    def test_rotation_expected_180_polygon_inner_points(self):
+        input_json = {
+            "type": "polygon",
+            "points": [{"x": 1, "y": 1}, {"x": 1, "y": 5}],
+            "inner_points": [
+                [{"x": 1, "y": 1}, {"x": 1, "y": 5}],
+                [{"x": 2, "y": 1}, {"x": 1, "y": 2}],
+            ],
+        }
+
+        expected_json = {
+            "type": "polygon",
+            "points": [{"x": 3, "y": 4}, {"x": 3, "y": 0}],
+            "inner_points": [
+                [{"x": 3, "y": 4}, {"x": 3, "y": 0}],
+                [{"x": 2, "y": 4}, {"x": 3, "y": 3}],
+            ],
+        }
+        true_json = rotate_json(input_json, 180, (6, 5))
+        self.assertDictEqual(true_json, expected_json)
+
     def test_rotation_expected_270_polygon(self):
         input_json = {
             "type": "polygon",
@@ -113,6 +164,29 @@ class TestRotatePatch(TestCase):
         expected_json = {
             "type": "polygon",
             "points": [{"x": 1, "y": 3}, {"x": 4, "y": 3}],
+        }
+
+        true_json = rotate_json(input_json, 270, (6, 5))
+
+        self.assertDictEqual(true_json, expected_json)
+
+    def test_rotation_expected_270_polygon_inner_points(self):
+        input_json = {
+            "type": "polygon",
+            "points": [{"x": 1, "y": 1}, {"x": 1, "y": 4}],
+            "inner_points": [
+                [{"x": 1, "y": 1}, {"x": 1, "y": 5}],
+                [{"x": 2, "y": 1}, {"x": 1, "y": 2}],
+            ],
+        }
+
+        expected_json = {
+            "type": "polygon",
+            "points": [{"x": 1, "y": 3}, {"x": 4, "y": 3}],
+            "inner_points": [
+                [{"x": 1, "y": 3}, {"x": 5, "y": 3}],
+                [{"x": 1, "y": 2}, {"x": 2, "y": 3}],
+            ],
         }
 
         true_json = rotate_json(input_json, 270, (6, 5))
@@ -137,6 +211,21 @@ class TestRotatePatch(TestCase):
         }
 
         true_json = rotate_json(input_json, 270, (6, 5))
+        self.assertDictEqual(true_json, expected_json)
+
+    def test_rotation_expected_180_polygon_inner_points_empty(self):
+        input_json = {
+            "type": "polygon",
+            "points": [{"x": 1, "y": 1}, {"x": 1, "y": 5}],
+            "inner_points": [],
+        }
+
+        expected_json = {
+            "type": "polygon",
+            "points": [{"x": 3, "y": 4}, {"x": 3, "y": 0}],
+            "inner_points": [],
+        }
+        true_json = rotate_json(input_json, 180, (6, 5))
         self.assertDictEqual(true_json, expected_json)
 
     def test_angle_not_multiple_90(self):

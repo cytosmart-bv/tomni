@@ -35,24 +35,39 @@ def scale_json(json_object: dict, scaling_factor: float):
     if json_object["type"] == "ellipse":
         newjson_object["radiusX"] = int(round(json_object["radiusX"] * scaling_factor))
         newjson_object["radiusY"] = int(round(json_object["radiusY"] * scaling_factor))
-        newjson_object["center"]["x"] = int(
-            round(json_object["center"]["x"] * scaling_factor)
-        )
-        newjson_object["center"]["y"] = int(
-            round(json_object["center"]["y"] * scaling_factor)
+        newjson_object["center"] = scale_coordinates(
+            json_object["center"], scaling_factor
         )
 
     elif json_object["type"] == "polygon":
-        all_points = []
-        for point in json_object["points"]:
-            all_points.append(
-                {
-                    "x": int(round(point["x"] * scaling_factor)),
-                    "y": int(round(point["y"] * scaling_factor)),
-                }
-            )
-        newjson_object["points"] = all_points
+        newjson_object["points"] = [
+            scale_coordinates(point, scaling_factor) for point in json_object["points"]
+        ]
+        if "inner_points" in json_object:
+            newjson_object["inner_points"] = [
+                [
+                    scale_coordinates(inner_point, scaling_factor)
+                    for inner_point in inner_points
+                ]
+                for inner_points in json_object["inner_points"]
+            ]
     else:
         raise ValueError(f"type {json_object['type']} is not supported")
 
     return newjson_object
+
+
+def scale_coordinates(point: dict, scaling_factor: float) -> dict:
+    """Scale a 2D point by a specified scaling factor.
+
+    Args:
+        point (dict): A dictionary representing the 2D point with 'x' and 'y' coordinates.
+        scaling_factor (float): The multiplier to scale the point.
+
+    Returns:
+        dict: A new dictionary representing the scaled 2D point.
+    """
+    return {
+        "x": int(round(point["x"] * scaling_factor)),
+        "y": int(round(point["y"] * scaling_factor)),
+    }

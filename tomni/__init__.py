@@ -3,7 +3,7 @@
 
 __author__ = """Tom Nijhof & Jelle van Kerkvoorde & Bram van der Velden"""
 __email__ = "bram.vandervelden@axionbio.com & jelle.vankerkvoorde@axionbio.com"
-__version__ = "2.1.0"
+__version__ = "2.2.0"
 
 from .bbox_fitting import bbox_fitting, bbox_fitting_center
 from .bbox_operations import check_overlap_bbox
