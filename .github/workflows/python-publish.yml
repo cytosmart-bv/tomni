@@ -14,7 +14,8 @@ on:
       - main # Set a branch to deploy
   release:
     types: [published]
-
+  workflow_dispatch:
+    
 permissions:
   contents: read
 
