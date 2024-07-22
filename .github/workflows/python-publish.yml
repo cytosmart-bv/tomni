@@ -40,10 +40,10 @@ jobs:
       - name: Build package
         run: python -m build
       - name: Show settings
-        run: echo ${{ secrets.PYPI_URL }}
+        run: echo ${{ vars.PYPI_URL }}
       - name: Publish package
         uses: pypa/gh-action-pypi-publish@27b31702a0e7fc50959f5ad993c78deac1bdfc29
         with:
           user: __token__
           password: ${{ secrets.PYPI_API_TOKEN }}
-          repository-url: ${{ secrets.PYPI_URL }}
+          repository-url: ${{ vars.PYPI_URL }}
