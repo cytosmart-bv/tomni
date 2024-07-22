@@ -2,12 +2,12 @@
 name = "tomni"
 dynamic = ["version"]
 dependencies = [
-  "Numpy>=2.0.0, <3",
-  "opencv-python-headless>=4.10.0.84, <5",
+  "Numpy>=1.18.0, <3",
+  "opencv-python-headless>=4.3.0.38, <4.11.0.0",
   "numpy_indexed>=0.3.5, <0.4",
   "scipy>=1.4.1, <2",
-  "simplification>=0.7.12, <1",
-  "Shapely>=2, <3",
+  "simplification>=0.6.11, <1",
+  "Shapely>=1.8, <3",
 ]
 readme = "README.md"
 keywords = ["crlf", "lf", "line-ending", "checker"]
