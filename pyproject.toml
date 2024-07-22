@@ -11,7 +11,7 @@ dependencies = [
 ]
 readme = "README.md"
 keywords = ["crlf", "lf", "line-ending", "checker"]
-license = { text = "MIT" }
+license = { text = "Apache License" }
 requires-python = ">=3.8"
 authors = [
   { name = "Tom Nijhof", email = "-" },
@@ -32,7 +32,7 @@ classifiers = [
   "Programming Language :: Python :: 3.10",
   "Programming Language :: Python :: 3.11",
   "Development Status :: 4 - Beta",
-  "License :: OSI Approved :: MIT License",
+  "License :: OSI Approved :: Apache License",
 ]
 
 [tool.hatch.build.targets.wheel]
