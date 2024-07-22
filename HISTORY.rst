@@ -1,5 +1,10 @@
 # History
 
+2.2.1 (2024-07-22)
+------------------
+- Update numpy, opencv, and shapely requirements
+- Upgrade setup.cfg to use pyproject.toml
+
 2.2.0 (2023-11-10)
 ------------------
 - function add_area subtracts the inner area when inner points are present.
