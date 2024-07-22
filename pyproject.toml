@@ -2,8 +2,8 @@
 name = "tomni"
 dynamic = ["version"]
 dependencies = [
-  "Numpy>=1.18, <2",
-  "opencv-python-headless>=4.3.0.38,<4.7.0.0",
+  "Numpy>=2.0.0, <3",
+  "opencv-python-headless>=4.10.0.84, <5",
   "numpy_indexed>=0.3.5, <0.4",
   "scipy>=1.4.1, <2",
   "simplification>=0.7.12, <1",
