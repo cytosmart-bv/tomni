@@ -42,12 +42,12 @@ test = [
 ]
 
 [tool.hatch.build.targets.wheel]
-only-include = ["tomni"]
-sources = ["tomni"]
+only-include = ["src"]
+sources = ["src"]
 
 [build-system]
 requires = ["hatchling>=1.8.0", "hatch-vcs", "hatch-fancy-pypi-readme"]
 build-backend = "hatchling.build"
 
 [tool.hatch.version]
-path = "tomni/__init__.py"
+path = "src/tomni/__init__.py"
