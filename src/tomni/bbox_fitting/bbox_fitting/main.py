@@ -14,7 +14,7 @@ def bbox_fitting(
         - y1 (int): The lowest value of Y-coordinate for the bounding box.
         - x2 (int): The highest value of X-coordinate for the bounding box.
         - y2 (int): The highest value of Y-coordinate for the bounding box.
-        - padding_value (int, optional): The value assigned to pixels outside the image but within the bounding box. Defaults to 0.
+        - padding_value (float, optional): The value assigned to pixels outside the image but within the bounding box. Defaults to 0.
 
     Returns:
         - np.ndarray: The extracted image patch within the specified bounding box.
