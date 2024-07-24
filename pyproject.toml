@@ -41,6 +41,11 @@ test = [
     "pytest>=8.3.1,<9",
 ]
 
+[project.urls]
+Documentation = "https://tomni.cytosmart.com/"
+Changelog = "https://github.com/cytosmart-bv/tomni/blob/main/HISTORY.rst"
+Repository = "https://github.com/cytosmart-bv/tomni"
+
 [tool.hatch.build.targets.wheel]
 only-include = ["src"]
 sources = ["src"]

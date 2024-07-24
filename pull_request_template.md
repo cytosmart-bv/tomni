@@ -7,7 +7,7 @@ Before submitting/accepting this Pull Request, please make sure:
 - [ ] `HISTORY.rst` is updated
 - [ ] Function is tested
 - [ ] `(docstring)` is added or updated
-- [ ] All needed package are in [requirements.txt](requirements.txt)
+- [ ] All needed package are in [pyproject.toml](pyproject.toml)
 
 **For new function**
 
@@ -26,7 +26,7 @@ Before submitting/accepting this Pull Request, please make sure:
 - [ ] `HISTORY.rst` is updated
 - [ ] Function is tested
 - [ ] `(docstring)` is added or updated
-- [ ] All needed package are in [requirements.txt](requirements.txt)
+- [ ] All needed package are in [pyproject.toml](pyproject.toml)
 
 **For new function**
 
