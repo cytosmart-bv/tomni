@@ -41,13 +41,18 @@ test = [
     "pytest>=8.3.1,<9",
 ]
 
+[project.urls]
+Documentation = "https://tomni.cytosmart.com/"
+Changelog = "https://github.com/cytosmart-bv/tomni/blob/main/HISTORY.rst"
+Repository = "https://github.com/cytosmart-bv/tomni"
+
 [tool.hatch.build.targets.wheel]
-only-include = ["tomni"]
-sources = ["tomni"]
+only-include = ["src"]
+sources = ["src"]
 
 [build-system]
 requires = ["hatchling>=1.8.0", "hatch-vcs", "hatch-fancy-pypi-readme"]
 build-backend = "hatchling.build"
 
 [tool.hatch.version]
-path = "tomni/__init__.py"
+path = "src/tomni/__init__.py"
