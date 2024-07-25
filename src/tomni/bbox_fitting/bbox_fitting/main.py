@@ -1,9 +1,8 @@
-import cv2
 import numpy as np
-
+from tomni import img_dim
 
 def bbox_fitting(
-    img: np.ndarray, x1: int, y1: int, x2: int, y2: int, padding_value: int = 0
+    img: np.ndarray, x1: int, y1: int, x2: int, y2: int, padding_value: float = 0
 ) -> np.ndarray:
     """
     This function extracts a region of interest (ROI) from an input image based on a specified bounding box.
@@ -15,7 +14,7 @@ def bbox_fitting(
         - y1 (int): The lowest value of Y-coordinate for the bounding box.
         - x2 (int): The highest value of X-coordinate for the bounding box.
         - y2 (int): The highest value of Y-coordinate for the bounding box.
-        - padding_value (int, optional): The value assigned to pixels outside the image but within the bounding box. Defaults to 0.
+        - padding_value (float, optional): The value assigned to pixels outside the image but within the bounding box. Defaults to 0.
 
     Returns:
         - np.ndarray: The extracted image patch within the specified bounding box.
@@ -63,16 +62,21 @@ def bbox_fitting(
     pad_top = -min(0, y1)
     pad_bottom = max(y2 - img.shape[0], 0)
 
+    # Only grey scale and colored images are supported
+    if len(np.shape(img)) == 2:
+        padding = ((pad_top, pad_bottom), (pad_left, pad_right))
+    elif len(np.shape(img)) == 3:
+        padding = ((pad_top, pad_bottom), (pad_left, pad_right), (0, 0))
+    else:
+        raise TypeError("Only grey scale and colored images are supported")
+    
     img = img[cy1:cy2, cx1:cx2]
 
-    img = cv2.copyMakeBorder(
+    img = np.pad(
         img,
-        top=pad_top,
-        bottom=pad_bottom,
-        left=pad_left,
-        right=pad_right,
-        borderType=cv2.BORDER_CONSTANT,
-        value=padding_value,
+        padding,
+        mode="constant",
+        constant_values=padding_value,
     )
 
     return img

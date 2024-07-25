@@ -1,5 +1,9 @@
 # History
 
+2.2.2 (2024-07-24)
+------------------
+- Update bbox_fitting so padding_value can be float
+
 2.2.1 (2024-07-22)
 ------------------
 - Update numpy, opencv, and shapely requirements

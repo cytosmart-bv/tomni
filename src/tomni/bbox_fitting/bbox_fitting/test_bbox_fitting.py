@@ -14,7 +14,12 @@ class TestBbox_fitting(TestCase):
             [0, 1, 1, 1, 0],
         ]
         with self.assertRaises(TypeError):
-            result = bbox_fitting(input_array, 1, 1, 3, 3)
+            bbox_fitting(input_array, 1, 1, 3, 3)
+
+    def test_error_4d_arrays(self):
+        input_array = np.zeros((5, 5, 5, 3))
+        with self.assertRaises(TypeError):
+            bbox_fitting(input_array, 1, 1, 3, 3)
 
     def test_raise_warning_float_cor(self):
         input_array = np.array(
@@ -27,13 +32,13 @@ class TestBbox_fitting(TestCase):
             ]
         )
         with self.assertRaises(ValueError):
-            result = bbox_fitting(input_array, 1.1, 1, 3, 3)
+            bbox_fitting(input_array, 1.1, 1, 3, 3)
         with self.assertRaises(ValueError):
-            result = bbox_fitting(input_array, 1, 1.3, 3, 3)
+            bbox_fitting(input_array, 1, 1.3, 3, 3)
         with self.assertRaises(ValueError):
-            result = bbox_fitting(input_array, 1, 1, 3.9, 3)
+            bbox_fitting(input_array, 1, 1, 3.9, 3)
         with self.assertRaises(ValueError):
-            result = bbox_fitting(input_array, 1, 1, 3, 3.0)
+            bbox_fitting(input_array, 1, 1, 3, 3.0)
 
     def test_crop_5x5_3x3(self):
         input_array = np.array(
@@ -125,6 +130,31 @@ class TestBbox_fitting(TestCase):
         )
 
         result = bbox_fitting(input_array, -1, -1, 4, 6)
+        np.testing.assert_array_equal(expected, result)
+
+    def test_padding_3x3_5x7_float(self):
+        input_array = np.array(
+            [
+                [5, 1, 1],
+                [1, 1, 2],
+                [1, 1, 3],
+            ],
+            dtype=float,
+        )
+
+        expected = np.array(
+            [
+                [0.8, 0.8, 0.8, 0.8, 0.8],
+                [0.8, 5, 1, 1, 0.8],
+                [0.8, 1, 1, 2, 0.8],
+                [0.8, 1, 1, 3, 0.8],
+                [0.8, 0.8, 0.8, 0.8, 0.8],
+                [0.8, 0.8, 0.8, 0.8, 0.8],
+                [0.8, 0.8, 0.8, 0.8, 0.8],
+            ]
+        )
+
+        result = bbox_fitting(input_array, -1, -1, 4, 6, padding_value=0.8)
         np.testing.assert_array_equal(expected, result)
 
     def test_padding_and_cropping_3x3_3x4(self):

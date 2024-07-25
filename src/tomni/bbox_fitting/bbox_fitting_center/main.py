@@ -5,14 +5,14 @@ from math import ceil
 import numpy as np
 
 
-def bbox_fitting_center(img: np.ndarray, size, padding_value: int = 0) -> np.ndarray:
+def bbox_fitting_center(img: np.ndarray, size, padding_value: float = 0) -> np.ndarray:
     """
     Creates an image of size 'size' in IMAGE-Coordinates by centering and padding the original image.
 
     Args:
         img (numpy.ndarray): The original image.
         size (List[int]): The target size of the output image as [x, y].
-        padding_value (int, optional): The value used for padding. Defaults to 0.
+        padding_value (float, optional): The value used for padding. Defaults to 0.
 
     Returns:
         numpy.ndarray: The resulting image of the specified size.
